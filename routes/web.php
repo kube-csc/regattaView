@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\BoardController;
+use App\Http\Controllers\InstructionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/*
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
+*/
+
+Route::get('/',                                                    [HomeController::class, 'index']);
+Route::get('/Anfahrt',                                             [HomeController::class, 'journey']);
+Route::get('/Impressum',                                           [HomeController::class, 'imprint']);
+Route::get('/Information/{information}',                           [HomeController::class, 'instructionShow']);
