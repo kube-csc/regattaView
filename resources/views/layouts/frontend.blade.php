@@ -5,9 +5,15 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Squadfree Bootstrap Template - Index</title>
-    <meta content="" name="descriptison">
-    <meta content="" name="keywords">
+    @php
+        $vereinsname = str_replace('_', ' ', env('Verein_Domain'));
+    @endphp
+    <title> @yield( 'title' , '$vereinsname' ) </title>
+    @php
+        // ToDo: Meta Conten bearbeiten
+        $description = str_replace('_', ' ', env('Verein_description'));
+        $keywords    = str_replace('_', ' ', env('Verein_Keywords'));
+    @endphp
 
     <!-- Favicons -->
     <link href="/assets/img/favicon.png" rel="icon">
@@ -42,23 +48,24 @@
     <div class="container d-flex align-items-center">
 
         <div class="logo mr-auto">
-            <h1 class="text-light"><a href="{{env('APP_URL')}}"><span>{{ str_replace('_' , ' ' , env('Verein_Domain')) }}</span></a></h1>
+            <h1 class="text-light"><a href="{{env('APP_URL')}}"><span>{{ str_replace('_' , ' ' , env('ViewRegatta_Domain')) }}</span></a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
-            <!-- <a href="index.html"><img src="/assets/img/logo.png" alt="" class="img-fluid"></a>-->
+            <!-- <a href="index.html"><img src="/assets/img/logo.png" alt="" class="img-fluid"></a> -->
         </div>
 
         <nav class="nav-menu d-none d-lg-block">
             <ul>
                 <!-- <li class="active"><a href="index.html">Home</a></li> -->
-                <li class="{{ Request::is('home') ? 'active' : '' }}"><a href="/#about">Home</a></li>
+                <li class="active"><a href="#about">Home</a></li>
                 <li><a href="#portfolio">Aktueller Stand</a></li>
                 <li><a href="#team">Team</a></li>
-                <li class="drop-down"><a href="">Rennen</a>
+                <li class="drop-down"><a href="">Programm</a>
                     <ul>
-                        <li><a href="#">alle Rennen</a></li>
-                        <li><a href="#">nicht verloste Rennen</a></li>
-                        <li><a href="#">verloste Rennen</a></li>
-                        <li><a href="#">gewertete Rennen</a></li>
+                        <li><a href="/Programm">alle Rennen</a></li>
+                        <li><a href="/Programm/nichtVerlost">nicht verloste Rennen</a></li>
+                        <li><a href="/Programm/verlost">verloste Rennen</a></li>
+                        <li><a href="/Programm/startbereit">startbereit Rennen</a></li>
+                        <li><a href="/Ergebnisse">gewertete Rennen</a></li>
                     </ul>
                 </li>
                 <li><a href="#contact">Kontakt</a></li>
@@ -124,10 +131,10 @@
                     <br>
                     <h4>Weitere Webseiten</h4>
                     <ul>
-                        <li><a href="http://www.kel-datteln.de/index.php?sprung=regatta/eventausgabe.php&amp;menu=regatta&amp;terminsammler=1" target="_blank" class="bx bx-link-external">Rennsportregatta</a></li>
+                        <li><a href="https://www.kel-datteln.de/index.php?sprung=regatta/eventausgabe.php&amp;menu=regatta&amp;terminsammler=1" target="_blank" class="bx bx-link-external">Rennsportregatta</a></li>
                         <li><a href="http://www.day-of-dragons.de" target="_blank" class="bx bx-link-external">Day of Dragons</a></li>
-                        <li><a href="http://sup.kel-datteln.de"    target="_blank" class="bx bx-link-external">SUP Kurse</a></li>
-                        <li><a href="http://oc.kel-datteln.de"     target="_blank" class="bx bx-link-external">Outrigger für Vereinsmitglieder Buchen</a></li>
+                        <li><a href="https://sup.kel-datteln.de"    target="_blank" class="bx bx-link-external">SUP Kurse</a></li>
+                        <li><a href="https://oc.kel-datteln.de"     target="_blank" class="bx bx-link-external">Outrigger für Vereinsmitglieder Buchen</a></li>
                     </ul>
                 </div>
 

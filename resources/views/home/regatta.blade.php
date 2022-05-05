@@ -28,9 +28,13 @@
                             @endif
                         </div>
                         <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
-                            <!-- <i class="bx bx-cube-alt"></i> -->
-                            <h4></h4>
-                            <p></p>
+                            <i class="bx bx-home"></i>
+                            <h4>Anschrift:</h4>
+                            <p>
+                                {{ str_replace('_', ' ', env('Verein_Name')) }}<br>
+                                {{ str_replace('_', ' ', env('Verein_Strasse')) }}<br>
+                                {{ str_replace('_', ' ', env('Verein_PLZ')) }} {{ str_replace('_', ' ', env('Verein_Ort')) }}
+                            </p>
                         </div>
                         <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="300">
                             <!-- <i class="bx bx-images"></i> -->
