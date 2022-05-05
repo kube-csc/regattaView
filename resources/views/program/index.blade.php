@@ -30,6 +30,7 @@
                         <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
                             <div class="icon-box" data-aos="fade-up" data-aos-delay="{{ $delay }}">
                     @endif
+                            <p>Rennen: {{ $race->nummer }}</p>
                             <h4 class="title">{{ $race->rennBezeichnung }}</h4>
                             <p class="description">um {{ date("h:i", strtotime($race->uhrzeit)) }} am {{ date("d.m.Y", strtotime($race->datumvon)) }}</p>
                             @if($race->beschreibung != '')
