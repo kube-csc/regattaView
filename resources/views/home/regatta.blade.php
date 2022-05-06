@@ -13,6 +13,7 @@
                     <!-- <a href="#" class="about-btn">About us <i class="bx bx-chevron-right"></i></a> -->
                 </div>
             </div>
+            @php /*
             <div class="col-xl-7 d-flex align-items-stretch">
                 <div class="icon-boxes d-flex flex-column justify-content-center">
                     <div class="row">
@@ -49,6 +50,8 @@
                     </div>
                 </div><!-- End .content-->
             </div>
+            */
+            @endphp
         </div>
 
     </div>

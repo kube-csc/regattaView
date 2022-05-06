@@ -10,7 +10,7 @@
 
         @include('home.counts')
 
-        <!-- include('home.ctaSection') -->
+        @include('home.ctaSection')
 
         <! -- include('home.testimonials') -->
 

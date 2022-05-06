@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Home;
 use App\Models\board;
+use App\Models\report;
 use App\Models\SportSection;
 use App\Models\Event;
 use App\Models\Race;
@@ -21,6 +22,7 @@ class HomeController extends Controller
     public function index()
     {
         $serverdomain        = $_SERVER["HTTP_HOST"];
+
         $abteilungHomes      = SportSection::where('status' , '2')
             ->orwhere('domain' , $serverdomain)
             ->orderby('status')
@@ -58,6 +60,22 @@ class HomeController extends Controller
                 ->count();
         }
 
+        $temp=0;
+        $eventDokumentes = Report::where('event_id' , $event->id)
+            ->where('visible' , 1)
+            ->where('webseite' , 1)
+            ->where('verwendung' , '>' , 1)
+            ->where('verwendung' , '<' , 6)
+            ->where('typ' , '>' , 9)
+            ->where('typ' , '<' , 13)
+            ->where(function ($query) use ($temp) {
+                $query->where('bild'  , "!=" , NULL)
+                    ->orwhere('image' , "!=" , NULL);
+            })
+            ->orderby('verwendung')
+            ->orderby('position')
+            ->get();
+
         $boards=board::where('sportSection_id' , $sportSection_id)
             ->join('board_users as bu' , 'bu.board_id' , '=' , 'boards.id')
             ->join('users as us' , 'bu.boardUser_id' , '=' , 'us.id')
@@ -77,6 +95,7 @@ class HomeController extends Controller
                 'raceNewCount'                => $raceNewCount,
                 'raceProgrammCount'           => $raceProgrammCount,
                 'raceResoultCount'            => $raceResoultCount,
+                'eventDokumentes'             => $eventDokumentes
             ]
         );
     }
