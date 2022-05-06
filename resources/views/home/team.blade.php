@@ -10,8 +10,6 @@
                  */
                 @endphp
                 <p>
-                    Die Ansprechpartner der {{ str_replace('_' , ' ' , env('Verein_Name')) }} stehen Dir per E-Mail zur Verfügung.
-                    Weitere Personen aus dem Team findest Du unter den {{ str_replace('_' , ' ' , env('Menue_Abteilung')) }} und auf der Startseite.
                 </p>
             </div>
 

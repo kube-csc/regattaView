@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Home;
 use App\Models\board;
-use App\Models\report;
+use App\Models\Report;
 use App\Models\SportSection;
 use App\Models\Event;
 use App\Models\Race;
@@ -21,18 +21,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $serverdomain        = $_SERVER["HTTP_HOST"];
-
-        $abteilungHomes      = SportSection::where('status' , '2')
-            ->orwhere('domain' , $serverdomain)
-            ->orderby('status')
-            ->get();
-
-        foreach ($abteilungHomes as $abteilungHome) {
-            $sportSection_id = $abteilungHome->id;
-            $sportSectionTeamName= $abteilungHome->abteilungTeamBezeichnung;
-        }
-
         $events = Event::where('datumbis' , '>=' , Carbon::now()->toDateString())
             ->where('regatta' , '1')
             ->where('verwendung' , 0)
@@ -45,7 +33,7 @@ class HomeController extends Controller
         $raceProgrammCount = 0;
         $raceResoultCount = 0;
         foreach($events as $event) {
-            $sportSection_id = $event->id;
+            $sportSection_id = $event->sportSection_id;
             $raceCount = Race::where('event_id', $event->id)->count();
             $raceNewCount = Race::where('event_id', $event->id)
                 ->where('programmDatei' , Null)
@@ -75,6 +63,14 @@ class HomeController extends Controller
             ->orderby('verwendung')
             ->orderby('position')
             ->get();
+
+        $abteilungHomes      = SportSection::where('id' , $sportSection_id)
+            ->orderby('status')
+            ->get();
+
+        foreach ($abteilungHomes as $abteilungHome) {
+            $sportSectionTeamName= $abteilungHome->abteilungTeamBezeichnung;
+        }
 
         $boards=board::where('sportSection_id' , $sportSection_id)
             ->join('board_users as bu' , 'bu.board_id' , '=' , 'boards.id')
