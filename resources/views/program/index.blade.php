@@ -12,13 +12,13 @@
                     <h2>{{ $ueberschrift }}</h2>
                     <p>
                        <a href="/Programm">
-                           <button type = "button" class = "btn btn-primary rounded-bottom">alle Rennen</button>
+                           <button type = "button" class = "btn btn-primary rounded-bottom m-2">alle Rennen</button>
                        </a>
                        <a href="/Programm/geplante">
-                           <button type = "button" class = "btn btn-primary rounded-bottom">geplante Rennen</button>
+                           <button type = "button" class = "btn btn-primary rounded-bottom m-2">geplante Rennen</button>
                        </a>
                        <a href="/Ergebnisse">
-                           <button type = "button" class = "btn btn-primary rounded-bottom">gewertete Rennen</button>
+                           <button type = "button" class = "btn btn-primary rounded-bottom m-2">gewertete Rennen</button>
                        </a>
                     </p>
                 </div>
@@ -40,7 +40,7 @@
                     @endif
                             <p>Rennen: {{ $race->nummer }}</p>
                             <h4 class="title">{{ $race->rennBezeichnung }}</h4>
-                            <p class="description">um {{ date("h:i", strtotime($race->uhrzeit)) }} am {{ date("d.m.Y", strtotime($race->datumvon)) }}</p>
+                            <p class="description">am {{ date("d.m.Y", strtotime($race->datumvon)) }} um {{ date("H:i", strtotime($race->uhrzeit)) }}</p>
                             @if($race->beschreibung != '')
                                 <b>Notiz zum Rennen:</b><br>
                                 <p>{!!  $race->beschreibung !!}</p>
@@ -63,7 +63,7 @@
                             @endif
                             <!-- <p>{ $race->updated_at->diffForHumans() }}</p> -->
                             <p>geändert am<br>
-                               {{ date("d.m.y", strtotime($race->updated_at)) }} um {{ date("h:i", strtotime($race->updated_at)) }} Uhr
+                               {{ date("d.m.y", strtotime($race->updated_at)) }} um {{ date("H:i", strtotime($race->updated_at)) }} Uhr
                             </p>
                         </div>
                     </div>
