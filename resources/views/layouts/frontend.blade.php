@@ -56,19 +56,17 @@
         <nav class="nav-menu d-none d-lg-block">
             <ul>
                 <!-- <li class="active"><a href="index.html">Home</a></li> -->
-                <li class="active"><a href="#about">Home</a></li>
-                <li><a href="#portfolio">Aktueller Stand</a></li>
-                <li><a href="#team">Team</a></li>
+                <li class="active"><a href="/#about">Home</a></li>
+                <li><a href="/#portfolio">Aktueller Stand</a></li>
+                <li><a href="/#team">Team</a></li>
                 <li class="drop-down"><a href="">Programm</a>
                     <ul>
                         <li><a href="/Programm">alle Rennen</a></li>
-                        <li><a href="/Programm/nichtVerlost">nicht verloste Rennen</a></li>
-                        <li><a href="/Programm/verlost">verloste Rennen</a></li>
-                        <li><a href="/Programm/startbereit">startbereit Rennen</a></li>
+                        <li><a href="/Programm/geplante">geplante Rennen</a></li>
                         <li><a href="/Ergebnisse">gewertete Rennen</a></li>
                     </ul>
                 </li>
-                <li><a href="#contact">Kontakt</a></li>
+                <li><a href="/#contact">Kontakt</a></li>
             </ul>
         </nav><!-- .nav-menu -->
 

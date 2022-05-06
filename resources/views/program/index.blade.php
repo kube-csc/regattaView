@@ -11,12 +11,20 @@
                 <div class="section-title" data-aos="fade-in" data-aos-delay="50">
                     <h2>{{ $ueberschrift }}</h2>
                     <p>
-
+                       <a href="/Programm">
+                           <button type = "button" class = "btn btn-primary rounded-bottom">alle Rennen</button>
+                       </a>
+                       <a href="/Programm/geplante">
+                           <button type = "button" class = "btn btn-primary rounded-bottom">geplante Rennen</button>
+                       </a>
+                       <a href="/Ergebnisse">
+                           <button type = "button" class = "btn btn-primary rounded-bottom">gewertete Rennen</button>
+                       </a>
                     </p>
                 </div>
                 @php
                     $i=0;
-                    $delay=100;
+                    $delay=75;
                 @endphp
                 @foreach($races as $race)
                 @if($i==0)
@@ -53,6 +61,10 @@
                               <b>Notiz zum Ergebnis:</b><br>
                               <p>{!!  $race->ergebnisBeschreibung !!}</p>
                             @endif
+                            <!-- <p>{ $race->updated_at->diffForHumans() }}</p> -->
+                            <p>geändert am<br>
+                               {{ date("d.m.y", strtotime($race->updated_at)) }} um {{ date("h:i", strtotime($race->updated_at)) }} Uhr
+                            </p>
                         </div>
                     </div>
                     @if ($loop->last)
@@ -65,7 +77,7 @@
                 <br>
                   @php($i=0)
                 @endif
-                @php($delay=$delay+50)
+                @php($delay=$delay+25)
                 @endforeach
             </div>
         </section><!-- End Services Section -->

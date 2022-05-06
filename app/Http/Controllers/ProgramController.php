@@ -26,55 +26,15 @@ class ProgramController extends Controller
             ->get();
 
         foreach($events as $event) {
-            $races = Race::where('event_id', $event->id)->get();
+            $races = Race::where('event_id', $event->id)
+                ->orderby('datumvon')
+                ->orderby('uhrzeit')
+                ->get();
         }
         return view('program.index')->with(
             [
                 'races'        => $races,
                 'ueberschrift' => 'Programm von allen Rennen'
-            ]);
-    }
-
-    public function indexProgramNot()
-    {
-        $events = Event::where('datumbis' , '>=' , Carbon::now()->toDateString())
-            ->where('regatta' , '1')
-            ->where('verwendung' , 0)
-            ->orderby('datumvon')
-            ->limit(1)
-            ->get();
-
-        foreach($events as $event) {
-            $races = Race::where('event_id', $event->id)
-                ->where('programmDatei' , Null)
-                ->where('ergebnisDatei' , Null)
-                ->get();
-        }
-        return view('program.index')->with(
-            [
-                'races'        => $races,
-                'ueberschrift' => 'Programm von nicht verloste Rennen'
-            ]);
-    }
-
-    public function indexProgramRaffled()
-    {
-        $events = Event::where('datumbis' , '>=' , Carbon::now()->toDateString())
-            ->where('regatta' , '1')
-            ->where('verwendung' , 0)
-            ->orderby('datumvon')
-            ->limit(1)
-            ->get();
-
-        foreach($events as $event) {
-            $races = Race::where('event_id', $event->id)
-                ->where('programmDatei' , '!=' , Null)
-                ->get();
-        }
-        return view('program.index')->with(
-            [
-                'races'        => $races,
-                'ueberschrift' => 'Programm von nicht verloste Rennen'
             ]);
     }
 
@@ -90,13 +50,15 @@ class ProgramController extends Controller
         foreach($events as $event) {
             $races = Race::where('event_id', $event->id)
                 ->where('programmDatei' , '!=' , Null)
-                ->where('programmDatei' , Null)
+                ->where('ergebnisDatei' , Null)
+                ->orderby('datumvon')
+                ->orderby('uhrzeit')
                 ->get();
         }
         return view('program.index')->with(
             [
                 'races'        => $races,
-                'ueberschrift' => 'Programm von startbereiten Rennen'
+                'ueberschrift' => 'Programm von verlosten Rennen die noch nicht gestartet sind.'
             ]);
     }
 
@@ -112,12 +74,14 @@ class ProgramController extends Controller
         foreach($events as $event) {
             $races = Race::where('event_id', $event->id)
                 ->where('ergebnisDatei' , '!=' , Null)
+                ->orderby('datumvon' , 'desc')
+                ->orderby('uhrzeit' , 'desc')
                 ->get();
         }
         return view('program.index')->with(
             [
                 'races'        => $races,
-                'ueberschrift' => 'Ergebnisse'
+                'ueberschrift' => 'Ergebnisse der Rennen'
             ]);
     }
 

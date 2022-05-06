@@ -28,7 +28,5 @@ Route::get('/Impressum',                                           [HomeControll
 Route::get('/Information/{information}',                           [HomeController::class, 'instructionShow']);
 
 Route::get('/Programm',                                            [ProgramController::class, 'index'])                ->name('program.index');
-Route::get('/Programm/nichtVerlost',                               [ProgramController::class, 'indexProgramNot'])      ->name('program.indexProgramNot');
-Route::get('/Programm/verlost',                                    [ProgramController::class, 'indexProgramRaffled'])  ->name('program.indexProgramRaffled');
-Route::get('/Programm/startbereit',                                [ProgramController::class, 'indexNotResult'])       ->name('program.indexNotResult');
+Route::get('/Programm/geplante',                                   [ProgramController::class, 'indexNotResult'])       ->name('program.indexNotResult');
 Route::get('/Ergebnisse',                                          [ProgramController::class, 'indexResult'])          ->name('program.indexResult');
