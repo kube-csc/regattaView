@@ -22,6 +22,7 @@
                        </a>
                     </p>
                 </div>
+
                 @php
                     $i=0;
                     $delay=75;
@@ -61,10 +62,14 @@
                               <b>Notiz zum Ergebnis:</b><br>
                               <p>{!!  $race->ergebnisBeschreibung !!}</p>
                             @endif
+                            @php /*
+                             ToDo: Ausgeblendet weil die Vereinsverwaltung noch die Ververzeit und nicht die Locale Zeit speichert
                             <!-- <p>{ $race->updated_at->diffForHumans() }}</p> -->
                             <p>geändert am<br>
                                {{ date("d.m.y", strtotime($race->updated_at)) }} um {{ date("H:i", strtotime($race->updated_at)) }} Uhr
                             </p>
+                            */
+                            @endphp
                         </div>
                     </div>
                     @if ($loop->last)
@@ -79,6 +84,19 @@
                 @endif
                 @php($delay=$delay+25)
                 @endforeach
+
+                <div class="section-title" data-aos="fade-in" data-aos-delay="{{ $delay }}">
+                        <a href="/Programm">
+                            <button type = "button" class = "btn btn-primary rounded-bottom m-2">alle Rennen</button>
+                        </a>
+                        <a href="/Programm/geplante">
+                            <button type = "button" class = "btn btn-primary rounded-bottom m-2">geplante Rennen</button>
+                        </a>
+                        <a href="/Ergebnisse">
+                            <button type = "button" class = "btn btn-primary rounded-bottom m-2">gewertete Rennen</button>
+                        </a>
+                </div>
+
             </div>
         </section><!-- End Services Section -->
     </main><!-- End #main -->

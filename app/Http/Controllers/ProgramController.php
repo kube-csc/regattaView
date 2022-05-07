@@ -51,6 +51,7 @@ class ProgramController extends Controller
             $races = Race::where('event_id', $event->id)
                 ->where('programmDatei' , '!=' , Null)
                 ->where('ergebnisDatei' , Null)
+                ->where('datumvon' , '>=' , Carbon::now()->toDateString())
                 ->orderby('datumvon')
                 ->orderby('uhrzeit')
                 ->get();
