@@ -50,9 +50,9 @@
                                                 @endif
                                     @endif
                                                 @if( $eventDokumente->bild != NULL)
-                                                    <li><a href="/storage/eventDokumente/{{ $eventDokumente->bild }}" target="_blank">{{ $eventDokumente->titel }}</a></li>
+                                                    <li><a href="{{env('Verein_URL')}}/storage/eventDokumente/{{ $eventDokumente->bild }}" target="_blank">{{ $eventDokumente->titel }}</a></li>
                                                 @else
-                                                    <li><a href="/daten/text/{{ $eventDokumente->image }}" target="_blank">{{ $eventDokumente->titel }}</a></li>
+                                                    <li><a href="{{env('Verein_URL')}}/daten/text/{{ $eventDokumente->image }}" target="_blank">{{ $eventDokumente->titel }}</a></li>
                                                 @endif
                                 @endforeach
                                             </ul>
