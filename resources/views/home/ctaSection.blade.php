@@ -13,14 +13,13 @@
     <div class="container" data-aos="zoom-in">
 
         <div class="text-center">
-            <h3>Dokumente</h3>
+            <h3>Programm und Ergebnisse</h3>
             <p>
-             Hier findet Ihr die Dokumente zum Event
+               Hier finden Sie das Programm und die Ergebnisse für jedes Rennen.
             </p>
-            @foreach($eventDokumentes as $eventDokumente)
-               @php($groupflak=$eventDokumente->verwendung)
-               <a class="cta-btn" href="{{env('Verein_URL')}}/storage/eventDokumente/{{ $eventDokumente->bild }}" target="_blank">{{ $verwendung[$groupflak] }}</a>
-            @endforeach
+            <a class="cta-btn" href="/Programm">alle Rennen</a>
+            <a class="cta-btn" href="/Programm/geplante">geplante Rennen</a>
+            <a class="cta-btn" href="/Ergebnisse">gewertete Rennen</a>
         </div>
 
     </div>

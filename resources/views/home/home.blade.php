@@ -8,9 +8,9 @@
 
         @include('home.regatta')
 
-        @include('home.counts')
-
         @include('home.ctaSection')
+
+        @include('home.counts')
 
         <! -- include('home.testimonials') -->
 

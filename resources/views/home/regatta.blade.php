@@ -13,6 +13,55 @@
                     <!-- <a href="#" class="about-btn">About us <i class="bx bx-chevron-right"></i></a> -->
                 </div>
             </div>
+            @if($eventDokumentes->count()>0)
+                @php
+                    $groupflak=0;
+                    $verwendung = [
+                         "2" => "Ausschreibung",
+                         "3" => "Programm",
+                         "4" => "Ergebnisse",
+                         "5" => "Plakat/Flyer",
+                     ];
+                @endphp
+                <div class="col-xl-7 d-flex align-items-stretch">
+                    <div class="icon-boxes d-flex flex-column justify-content-center">
+                        <div class="row">
+                            <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
+                                <i class="bx bx-file"></i>
+                                <h4>Dokumente:</h4>
+                                @foreach($eventDokumentes as $eventDokumente)
+                                    @if($loop->first)
+                                        @php
+                                            $groupflak=$eventDokumente->verwendung;
+                                        @endphp
+                                        <ul>
+                                            <li>{{ $verwendung[$groupflak] }}</li>
+                                            <ul>
+                                    @else
+                                               @if($eventDokumente->verwendung != $groupflak)
+                                                   @php
+                                                       $groupflak=$eventDokumente->verwendung;
+                                                   @endphp
+                                            </ul>
+                                        </ul>
+                                        <ul>
+                                            <li>{{ $verwendung[$groupflak] }}</li>
+                                            <ul>
+                                                @endif
+                                    @endif
+                                                @if( $eventDokumente->bild != NULL)
+                                                    <li><a href="/storage/eventDokumente/{{ $eventDokumente->bild }}" target="_blank">{{ $eventDokumente->titel }}</a></li>
+                                                @else
+                                                    <li><a href="/daten/text/{{ $eventDokumente->image }}" target="_blank">{{ $eventDokumente->titel }}</a></li>
+                                                @endif
+                                @endforeach
+                                            </ul>
+                                        </ul>
+                            </div>
+                        </div>
+                    </div><!-- End .content-->
+                </div>
+            @endif
             @php /*
             <div class="col-xl-7 d-flex align-items-stretch">
                 <div class="icon-boxes d-flex flex-column justify-content-center">
@@ -53,7 +102,6 @@
             */
             @endphp
         </div>
-
     </div>
 </section><!-- End About Section -->
 @endforeach
