@@ -21,35 +21,40 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $events = Event::where('datumbis' , '>=' , Carbon::now()->toDateString())
-            ->where('regatta' , '1')
-            ->where('verwendung' , 0)
-            ->orderby('datumvon')
+        $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
+            ->where('events.regatta' , '1')
+            ->where('events.verwendung' , 0)
+            ->orderby('events.datumvon' , 'desc')
             ->limit(1)
             ->get();
 
-        $raceCount = 0;
-        $raceNewCount = 0;
-        $raceProgrammCount = 0;
-        $raceResoultCount = 0;
+        $eventId = 0;
+        $sportSectionId = 0;
+
+        // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
         foreach($events as $event) {
-            $sportSection_id = $event->sportSection_id;
-            $raceCount = Race::where('event_id', $event->id)->count();
-            $raceNewCount = Race::where('event_id', $event->id)
-                ->where('programmDatei' , Null)
-                ->where('ergebnisDatei' , Null)
-                ->count();
-            $raceProgrammCount = Race::where('event_id', $event->id)
-                ->where('programmDatei' , '!=' , Null)
-                ->where('ergebnisDatei' , Null)
-                ->count();
-            $raceResoultCount = Race::where('event_id', $event->id)
-                ->where('ergebnisDatei' , '!=' , Null)
-                ->count();
+            $sportSectionId = $event->sportSection_id;
+            $eventId        = $event->event_id;
         }
 
+        $raceCount      = Race::where('event_id', $eventId)->count();
+
+        $raceNewCount   = Race::where('event_id', $eventId)
+            ->where('programmDatei' , Null)
+            ->where('ergebnisDatei' , Null)
+            ->count();
+
+        $raceProgrammCount = Race::where('event_id', $eventId)
+            ->where('programmDatei' , '!=' , Null)
+            ->where('ergebnisDatei' , Null)
+            ->count();
+
+        $raceResoultCount = Race::where('event_id', $eventId)
+            ->where('ergebnisDatei' , '!=' , Null)
+            ->count();
+
         $temp=0;
-        $eventDokumentes = Report::where('event_id' , $event->id)
+        $eventDokumentes = Report::where('event_id' , $eventId)
             ->where('visible' , 1)
             ->where('webseite' , 1)
             ->where('verwendung' , '>' , 1)
@@ -64,15 +69,16 @@ class HomeController extends Controller
             ->orderby('position')
             ->get();
 
-        $abteilungHomes      = SportSection::where('id' , $sportSection_id)
+        $abteilungHomes = SportSection::where('id' , $sportSectionId)
             ->orderby('status')
             ->get();
 
+        $sportSectionTeamName="";
         foreach ($abteilungHomes as $abteilungHome) {
             $sportSectionTeamName= $abteilungHome->abteilungTeamBezeichnung;
         }
 
-        $boards=board::where('sportSection_id' , $sportSection_id)
+        $boards=board::where('sportSection_id' , $sportSectionId)
             ->join('board_users as bu' , 'bu.board_id' , '=' , 'boards.id')
             ->join('users as us' , 'bu.boardUser_id' , '=' , 'us.id')
             ->leftjoin('board_portraits as bp' , 'bu.boardUser_id' , '=' , 'bp.postenUser_id')

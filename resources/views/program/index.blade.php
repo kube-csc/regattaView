@@ -7,18 +7,17 @@
         <!-- ======= Services Section ======= -->
         <section id="services" class="services">
             <div class="container">
-
                 <div class="section-title" data-aos="fade-in" data-aos-delay="50">
                     <h2>{{ $ueberschrift }}</h2>
                     <p>
                        <a href="/Programm">
-                           <button type = "button" class = "btn btn-primary rounded-bottom m-2">alle Rennen</button>
+                           <button type = "button" class = "btn btn-primary rounded-lg m-2">alle Rennen</button>
                        </a>
                        <a href="/Programm/geplante">
-                           <button type = "button" class = "btn btn-primary rounded-bottom m-2">geplante Rennen</button>
+                           <button type = "button" class = "btn btn-primary rounded-lg m-2">geplante Rennen</button>
                        </a>
                        <a href="/Ergebnisse">
-                           <button type = "button" class = "btn btn-primary rounded-bottom m-2">gewertete Rennen</button>
+                           <button type = "button" class = "btn btn-primary rounded-lg m-2">gewertete Rennen</button>
                        </a>
                     </p>
                 </div>
@@ -87,13 +86,13 @@
 
                 <div class="section-title" data-aos="fade-in" data-aos-delay="{{ $delay }}">
                         <a href="/Programm">
-                            <button type = "button" class = "btn btn-primary rounded-bottom m-2">alle Rennen</button>
+                            <button type = "button" class = "btn btn-primary rounded-lg m-2">alle Rennen</button>
                         </a>
                         <a href="/Programm/geplante">
-                            <button type = "button" class = "btn btn-primary rounded-bottom m-2">geplante Rennen</button>
+                            <button type = "button" class = "btn btn-primary rounded-lg m-2">geplante Rennen</button>
                         </a>
                         <a href="/Ergebnisse">
-                            <button type = "button" class = "btn btn-primary rounded-bottom m-2">gewertete Rennen</button>
+                            <button type = "button" class = "btn btn-primary rounded-lg m-2">gewertete Rennen</button>
                         </a>
                 </div>
 

@@ -18,19 +18,24 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        $events = Event::where('datumbis' , '>=' , Carbon::now()->toDateString())
-            ->where('regatta' , '1')
-            ->where('verwendung' , 0)
-            ->orderby('datumvon')
+        $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
+            ->where('events.regatta' , '1')
+            ->where('events.verwendung' , 0)
+            ->orderby('events.datumvon' , 'desc')
             ->limit(1)
             ->get();
 
+        // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
+        $eventId=0;
         foreach($events as $event) {
-            $races = Race::where('event_id', $event->id)
-                ->orderby('datumvon')
-                ->orderby('uhrzeit')
-                ->get();
+           $eventId=$event->event_id;
         }
+
+        $races = Race::where('event_id', $eventId)
+            ->orderby('rennDatum')
+            ->orderby('rennUhrzeit')
+            ->get();
+
         return view('program.index')->with(
             [
                 'races'        => $races,
@@ -40,22 +45,27 @@ class ProgramController extends Controller
 
     public function indexNotResult()
     {
-        $events = Event::where('datumbis' , '>=' , Carbon::now()->toDateString())
-            ->where('regatta' , '1')
-            ->where('verwendung' , 0)
-            ->orderby('datumvon')
+        $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
+            ->where('events.regatta' , '1')
+            ->where('events.verwendung' , 0)
+            ->orderby('events.datumvon' , 'desc')
             ->limit(1)
             ->get();
 
+        // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
+        $eventId=0;
         foreach($events as $event) {
-            $races = Race::where('event_id', $event->id)
-                ->where('programmDatei' , '!=' , Null)
-                ->where('ergebnisDatei' , Null)
-                ->where('datumvon' , '>=' , Carbon::now()->toDateString())
-                ->orderby('datumvon')
-                ->orderby('uhrzeit')
-                ->get();
+            $eventId=$event->event_id;
         }
+
+        $races = Race::where('event_id', $eventId)
+            ->where('programmDatei' , '!=' , Null)
+            ->where('ergebnisDatei' , Null)
+            ->where('rennDatum' , '>=' , Carbon::now()->toDateString())
+            ->orderby('rennDatum')
+            ->orderby('rennUhrzeit')
+            ->get();
+
         return view('program.index')->with(
             [
                 'races'        => $races,
@@ -65,20 +75,25 @@ class ProgramController extends Controller
 
     public function indexResult()
     {
-        $events = Event::where('datumbis' , '>=' , Carbon::now()->toDateString())
-            ->where('regatta' , '1')
-            ->where('verwendung' , 0)
-            ->orderby('datumvon')
+        $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
+            ->where('events.regatta' , '1')
+            ->where('events.verwendung' , 0)
+            ->orderby('events.datumvon' , 'desc')
             ->limit(1)
             ->get();
 
+        // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
+        $eventId=0;
         foreach($events as $event) {
-            $races = Race::where('event_id', $event->id)
-                ->where('ergebnisDatei' , '!=' , Null)
-                ->orderby('datumvon' , 'desc')
-                ->orderby('uhrzeit' , 'desc')
-                ->get();
+            $eventId=$event->event_id;
         }
+
+        $races = Race::where('event_id', $eventId)
+            ->where('ergebnisDatei' , '!=' , Null)
+            ->orderby('rennDatum' , 'desc')
+            ->orderby('rennUhrzeit' , 'desc')
+            ->get();
+
         return view('program.index')->with(
             [
                 'races'        => $races,
