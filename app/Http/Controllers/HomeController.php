@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Home;
 use App\Models\board;
+use App\Models\RegattaInformation;
 use App\Models\Report;
 use App\Models\SportSection;
 use App\Models\Event;
@@ -36,6 +37,20 @@ class HomeController extends Controller
             $sportSectionId = $event->sportSection_id;
             $eventId        = $event->event_id;
         }
+
+        $temp=0;
+        $regattaInformations = RegattaInformation::where('event_id' , $eventId)
+            ->where(function ($query) use ($temp) {
+                $query->where('startDatumVerschoben' , "<=" , Carbon::now())
+                    ->orwhere('startDatumAktiv' , 0);
+            })
+            ->where(function ($query) use ($temp) {
+                $query->where('endDatumVerschoben' , ">=" , Carbon::now())
+                    ->orwhere('endDatumAktiv' , 0);
+            })
+            ->where('visible' , 1)
+            ->orderby('position')
+            ->get();
 
         $raceCount      = Race::where('event_id', $eventId)->count();
 
@@ -97,30 +112,10 @@ class HomeController extends Controller
                 'raceNewCount'                => $raceNewCount,
                 'raceProgrammCount'           => $raceProgrammCount,
                 'raceResoultCount'            => $raceResoultCount,
-                'eventDokumentes'             => $eventDokumentes
+                'eventDokumentes'             => $eventDokumentes,
+                'regattaInformations'         => $regattaInformations
             ]
         );
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreHomeRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreHomeRequest $request)
-    {
-        //
     }
 
     /**
@@ -130,40 +125,6 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Home $home)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Home  $home
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Home $home)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateHomeRequest  $request
-     * @param  \App\Models\Home  $home
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateHomeRequest $request, Home $home)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Home  $home
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Home $home)
     {
         //
     }

@@ -5,6 +5,7 @@
 
         <div class="row no-gutters">
             <div class="content col-xl-5 d-flex align-items-stretch" data-aos="fade-up">
+              @if($regattaInformations->count()==0)
                 <div class="content">
                     <h3>{{ $event->ueberschrift }}</h3>
                     <p>
@@ -12,7 +13,42 @@
                     </p>
                     <!-- <a href="#" class="about-btn">About us <i class="bx bx-chevron-right"></i></a> -->
                 </div>
+              @else
+                  @foreach($regattaInformations as $regattaInformation)
+                    @if($loop->first)
+                      <div class="content">
+                          <h3>{{ $regattaInformation->informationTittel }}</h3>
+                          <p>
+                              {!! $regattaInformation->informationBeschreibung !!}
+                          </p>
+                      </div>
+                    @endif
+                  @endforeach
+              @endif
             </div>
+            @php
+              $delay=50;
+            @endphp
+            <div class="col-xl-7 d-flex align-items-stretch">
+                <div class="icon-boxes d-flex flex-column justify-content-center">
+                    <div class="row">
+            @foreach($regattaInformations as $regattaInformation)
+                @if($loop->first)
+                @else
+                                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="{{ $delay }}">
+                                    <i class="bx bx-file"></i>
+                                    <h4>{{ $regattaInformation->informationTittel }}</h4>
+                                        <p>
+                                            {!! $regattaInformation->informationBeschreibung !!}
+                                        </p>
+                                </div>
+
+                    @php
+                        $delay=$delay+50;
+                    @endphp
+                @endif
+            @endforeach
+
             @if($eventDokumentes->count()>0)
                 @php
                     $groupflak=0;
@@ -23,10 +59,8 @@
                          "5" => "Plakat/Flyer",
                      ];
                 @endphp
-                <div class="col-xl-7 d-flex align-items-stretch">
-                    <div class="icon-boxes d-flex flex-column justify-content-center">
-                        <div class="row">
-                            <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
+
+                            <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="{{ $delay }}">
                                 <i class="bx bx-file"></i>
                                 <h4>Dokumente:</h4>
                                 @foreach($eventDokumentes as $eventDokumente)

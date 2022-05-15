@@ -1,3 +1,70 @@
+<h1>Präsentation von Regatten</h1>
+<p>
+Eingesetzt z.B. für ein Kanuverein
+</p>
+
+<a href="https://live.kel-datteln.de">Beispiel einer Regatta</a>
+
+<h2>Installierte Programme</h2>
+<ul>
+  <li>Installation von Laravel 8.*</li>
+</ul>
+
+<h2>Frontend</h2>
+<ul>
+<li>Leanding Page
+    <ul>
+        <li>Beschreibung der Events</li> 
+          <li>Dokumente zum Herunterladen
+              <ul>
+                <li>Ausschreibungsunterlagen</li>
+                <li>Programmunterlagen</li>
+                <li>Ergebnislisten</li>
+                <li>Flyer / Plakat</li>
+              </ul>
+          </li>
+        </li>
+        <li>Präsentation des Teams der Veranstaltung</li>
+       <li>Kontakt des Vereins inc. Map</li>
+    </ul> 
+<li>Liste der Rennen nach Zeitplan
+  <ul>
+    <li>Alle Rennen</li>
+    <li>verloste Rennen</li>
+    <li>gewertete Rennen</li>
+  </ul> 
+  </li>
+  <li>Footer
+    <ul>
+        <li>Links zu Webseiten der Abteilungen/Sportgruppen</li>
+        <li>Impresssum</li>
+        <li>Datenschutzerklärung</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>Backend</h2>
+<h3>Externe Vereinsverwaltung</h3>
+<ul>
+  <li><a href="https://github.com/kube-csc/vereinsverwaltung" target="_blank"></a>zum GitHub Projekt Vereinsverwaltung</li>
+</ul>
+
+<h2>Installation</h2>
+<ul>
+   <li>https://github.com/kube-csc/regattaView.git</li>
+   <li>.env Datei ausfüllen (Es werden auch Informationen über den Verein abgefragt.)</li>
+   <li>Composer herunterladen curl -sS https://getcomposer.org/installer</li>
+   <li>Installation des Composer </li>
+   <li>composer.phar install</li>
+</ul>
+
+<h2>Update</h2>
+<ul>
+   <li>git pull origin main</li>
+</ul>
+<br>
+<hr>
+<br>
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
