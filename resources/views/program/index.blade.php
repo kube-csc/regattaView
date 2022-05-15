@@ -40,7 +40,7 @@
                     @endif
                             <p>Rennen: {{ $race->nummer }}</p>
                             <h4 class="title">{{ $race->rennBezeichnung }}</h4>
-                            @if($race->verspaetungUhrzeit!="00:00:00)
+                            @if($race->verspaetungUhrzeit!="00:00:00")
                                <p class="description">am {{ date("d.m.Y", strtotime($race->rennDatum)) }} um {{ date("H:i", strtotime($race->verspaetungUhrzeit)) }}</p>
                             @else
                                <p class="description">am {{ date("d.m.Y", strtotime($race->rennDatum)) }} um {{ date("H:i", strtotime($race->rennUhrzeit)) }}</p>
