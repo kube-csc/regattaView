@@ -16,9 +16,9 @@
                     <i class="bx bx-map"></i>
                     <h3>Adresse</h3>
                     <p>
-                        {{ str_replace('_', ' ', env('Verein_Name')) }}<br>
-                        {{ str_replace('_', ' ', env('Verein_Strasse')) }}<br>
-                        {{ str_replace('_', ' ', env('Verein_PLZ')) }} {{ str_replace('_', ' ', env('Verein_Ort')) }}
+                        {{ str_replace('_', ' ', env('VEREIN_NAME')) }}<br>
+                        {{ str_replace('_', ' ', env('VEREIN_STRASSE')) }}<br>
+                        {{ str_replace('_', ' ', env('VEREIN_PLZ')) }} {{ str_replace('_', ' ', env('VEREIN_ORT)) }}
                     </p>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                 <div class="info-box  mb-4">
                     <i class="bx bx-envelope"></i>
                     <h3>Email</h3>
-                    <p><a href="mailto:{{ str_replace('_', ' ', env('Verein_Email')) }}">{{ str_replace('_', ' ', env('Verein_Email')) }}</a></p>
+                    <p><a href="mailto:{{ str_replace('_', ' ', env('VEREIN_EMAIL')) }}">{{ str_replace('_', ' ', env('VEREIN_EMAIL')) }}</a></p>
                 </div>
             </div>
 
@@ -36,11 +36,11 @@
                     <i class="bx bx-phone-call"></i>
                     <h3>Telefon</h3>
                     <p>
-                        @if(env('Verein_Telefon')<>"")
-                            <strong>Tel: </strong>{{ str_replace('_', ' ', env('Verein_Telefon')) }}<br>
+                        @if(env('VEREIN_TELEFON')<>"")
+                            <strong>Tel: </strong>{{ str_replace('_', ' ', env('VEREIN_TELEFON')) }}<br>
                         @endif
-                        @if(env('Verein_Fax')<>"")
-                            <strong>Fax: </strong>{{ str_replace('_', ' ', env('Verein_Fax')) }}<br>
+                        @if(env('VEREIN_FAX')<>"")
+                            <strong>Fax: </strong>{{ str_replace('_', ' ', env('VEREIN_FAX')) }}<br>
                         @endif
                     </p>
                 </div>

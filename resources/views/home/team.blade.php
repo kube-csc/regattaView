@@ -27,10 +27,10 @@
                                         @endif
                                         <div class="pic">
                                             @if(isset($board->postenPortraet))
-                                                <img src="http://www.{{ env('Verein_Domain') }}/storage/boardPortrait/{{ $board->postenPortraet }}" class="img-fluid"
+                                                <img src="{{ env('VEREIN_URL') }}/storage/boardPortrait/{{ $board->postenPortraet }}" class="img-fluid"
                                                      alt="{{ $board->geschlecht=='m' ? $board->postenMaenlich : $board->postenWeiblich }}">
                                             @else
-                                                <img src="http://www.{{ env('Verein_Domain') }}/asset/img/postenLeer.jpg" class="img-fluid">
+                                                <img src="{{ env('VEREIN_URL') }}/asset/img/postenLeer.jpg" class="img-fluid">
                                             @endif
                                         </div>
                                         <div class="member-info">
