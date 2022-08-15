@@ -11,8 +11,8 @@
     <title> @yield( 'title' , '$Vereinsname' ) </title>
     @php
         // ToDo: Meta Conten bearbeiten
-        $description = str_replace('_', ' ', env('Verein_description'));
-        $keywords    = str_replace('_', ' ', env('Verein_Keywords'));
+        $description = str_replace('_', ' ', env('VEREIN_KEYWORDS'));
+        $keywords    = str_replace('_', ' ', env('VEREIN_DESCRIPTION'));
     @endphp
 
     <!-- Favicons -->
@@ -32,6 +32,8 @@
 
     <!-- Template Main CSS File -->
     <link href="/assets/css/style.css" rel="stylesheet">
+
+    @include('layouts.header')
 
     <!-- =======================================================
     * Template Name: Squadfree - v2.2.0
@@ -76,8 +78,8 @@
 <section id="hero">
     <div class="hero-container" data-aos="fade-up">
         @php
-            $Verein = str_replace('_', ' ', env('Verein_Name'));
-            $SLogen = str_replace('_', ' ', env('Verein_SLogen'));
+            $Verein = str_replace('_', ' ', env('VEREIN_NAME'));
+            $SLogen = str_replace('_', ' ', env('VEREIN_SLOGEN'));
         @endphp
         <h1>{{ $Verein }}</h1>
         <h2>{{ $SLogen }}</h2>
@@ -101,7 +103,7 @@
 
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-info" data-aos="fade-up" data-aos-delay="50">
-                        <h3>{{ str_replace('_', ' ', env('Verein_Name')) }}</h3>
+                        <h3>{{ str_replace('_', ' ', env('VEREIN_NAME')) }}</h3>
                         <?php
                         /*
                           <p class="pb-3"><em>Qui repudiandae et eum dolores alias sed ea. Qui suscipit veniam excepturi quod.</em></p>
@@ -109,17 +111,17 @@
                         */
                         ?>
                         <p>
-                            {{ str_replace('_', ' ', env('Verein_Name')) }}<br>
-                            {{ str_replace('_', ' ', env('Verein_Strasse')) }}<br>
-                            {{ str_replace('_', ' ', env('Verein_PLZ')) }} {{ str_replace('_', ' ', env('Verein_Ort')) }}<br>
-                            @if(env('Verein_Telefon')<>"")
-                                <i class="icofont-telephone"></i>{{ str_replace('_' , ' ' , env('Verein_Telefon')) }}<br>
+                            {{ str_replace('_', ' ', env('VEREIN_NAME')) }}<br>
+                            {{ str_replace('_', ' ', env('VEREIN_STRASSE')) }}<br>
+                            {{ str_replace('_', ' ', env('VEREIN_PLZ')) }} {{ str_replace('_', ' ', env('VEREIN_ORT')) }}<br>
+                            @if(env('VEREIN_TELEFON')<>"")
+                                <i class="icofont-telephone"></i>{{ str_replace('_' , ' ' , env('VEREIN_TELEFON')) }}<br>
                             @endif
-                            @if(env('Verein_Fax')<>"")
-                                <i class="icofont-fax"></i>{{ str_replace('_' , ' ' , env('Verein_Fax')) }}<br>
+                            @if(env('VEREIN_FAX')<>"")
+                                <i class="icofont-fax"></i>{{ str_replace('_' , ' ' , env('VEREIN_FAX')) }}<br>
                             @endif
                             <i class="icofont-email"></i>
-                            <a href="mailto:{{ str_replace('_' , ' ' , env('Verein_Email')) }}">{{ str_replace('_' , ' ' , env('Verein_Email')) }}</a>
+                            <a href="mailto:{{ str_replace('_' , ' ' , env('VEREIN_EMAIL')) }}">{{ str_replace('_' , ' ' , env('VEREIN_EMAIL')) }}</a>
                         </p>
 
                         <div class="social-links mt-3">
