@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     @php
-        $vereinsname = str_replace('_', ' ', env('Verein_Domain'));
+        $vereinsname = str_replace('_', ' ', env('VEREIN_DOMAIN'));
     @endphp
     <title> @yield( 'title' , '$vereinsname' ) </title>
     @php

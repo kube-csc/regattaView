@@ -50,13 +50,13 @@
                                 <p>{!!  $race->beschreibung !!}</p>
                             @endif
                             @if($race->programmDatei != Null)
-                                <p><a href="{{env('Verein_URL')}}/storage/raceDokumente/{{ $race->programmDatei }}" target="_blank">
+                                <p><a href="{{env('VEREIN_URL')}}/storage/raceDokumente/{{ $race->programmDatei }}" target="_blank">
                                         <i class="bx bxs-file-doc"></i>Programm
                                     </a>
                                 </p>
                             @endif
                             @if($race->ergebnisDatei != Null)
-                              <p><a href="{{env('Verein_URL')}}/storage/raceDokumente/{{ $race->ergebnisDatei }}" target="_blank">
+                              <p><a href="{{env('VEREIN_URL')}}/storage/raceDokumente/{{ $race->ergebnisDatei }}" target="_blank">
                                       <i class="bx bxs-file-doc"></i>Ergebnisse
                                   </a>
                               </p>

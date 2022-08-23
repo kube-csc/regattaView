@@ -6,9 +6,9 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     @php
-        $Vereinsname = str_replace('_', ' ', env('Verein_Domain'));
+        $vereinsname = str_replace('_', ' ', env('VEREIN_DOMAIN'));
     @endphp
-    <title> @yield( 'title' , '$Vereinsname' ) </title>
+    <title> @yield( 'title' , '$vereinsname' ) </title>
     @php
         // ToDo: Meta Conten bearbeiten
         $description = str_replace('_', ' ', env('VEREIN_KEYWORDS'));
@@ -50,7 +50,7 @@
     <div class="container d-flex align-items-center">
 
         <div class="logo mr-auto">
-            <h1 class="text-light"><a href="{{env('APP_URL')}}"><span>{{ str_replace('_' , ' ' , env('ViewRegatta_Domain')) }}</span></a></h1>
+            <h1 class="text-light"><a href="{{env('APP_URL')}}"><span>{{ str_replace('_' , ' ' , env('VIEWREGATTA_DOMAIN')) }}</span></a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="index.html"><img src="/assets/img/logo.png" alt="" class="img-fluid"></a> -->
         </div>
