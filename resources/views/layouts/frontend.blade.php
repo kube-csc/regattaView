@@ -67,6 +67,7 @@
                         <li><a href="/Tabellen">Tabellen</a></li>
                     </ul>
                 </li>
+                <li><a href="/Dokumente">Dokumente</a></li>
                 <li><a href="/#contact">Kontakt</a></li>
             </ul>
         </nav><!-- .nav-menu -->
