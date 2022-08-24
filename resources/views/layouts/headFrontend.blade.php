@@ -66,6 +66,7 @@
                         <li><a href="/Programm">alle Rennen</a></li>
                         <li><a href="/Programm/geplante">geplante Rennen</a></li>
                         <li><a href="/Ergebnisse">gewertete Rennen</a></li>
+                        <li><a href="/Tabellen">Tabellen</a></li>
                     </ul>
                 </li>
                 <li><a href="/#contact">Kontakt</a></li>

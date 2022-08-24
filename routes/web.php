@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\TabeleController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\InstructionController;
 /*
@@ -30,3 +31,5 @@ Route::get('/Information/{information}',                           [HomeControll
 Route::get('/Programm',                                            [ProgramController::class, 'index'])                ->name('program.index');
 Route::get('/Programm/geplante',                                   [ProgramController::class, 'indexNotResult'])       ->name('program.indexNotResult');
 Route::get('/Ergebnisse',                                          [ProgramController::class, 'indexResult'])          ->name('program.indexResult');
+
+Route::get('/Tabellen',                                            [TabeleController::class, 'index'])                 ->name('program.index');

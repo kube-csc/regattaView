@@ -20,6 +20,7 @@
             <a class="cta-btn" href="/Programm">alle Rennen</a>
             <a class="cta-btn" href="/Programm/geplante">geplante Rennen</a>
             <a class="cta-btn" href="/Ergebnisse">gewertete Rennen</a>
+            <a class="cta-btn" href="/Tabellen">Tabellen</a>
         </div>
 
     </div>

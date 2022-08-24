@@ -1,6 +1,6 @@
 @extends('layouts.frontend')
 
-@section('title' ,'Programm')
+@section('title' ,'Tabellen')
 
 @section('content')
     <main id="main">
@@ -29,7 +29,7 @@
                     $i=0;
                     $delay=75;
                 @endphp
-                @foreach($races as $race)
+                @foreach($tabeles as $tabele)
                 @if($i==0)
                 <div class="row">
                 @endif
@@ -41,38 +41,28 @@
                         <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
                             <div class="icon-box" data-aos="fade-up" data-aos-delay="{{ $delay }}">
                     @endif
-                            <p>Rennen: {{ $race->nummer }}</p>
-                            <h4 class="title">{{ $race->rennBezeichnung }}</h4>
-                            @if($race->verspaetungUhrzeit!="00:00:00")
-                               <p class="description">am {{ date("d.m.Y", strtotime($race->rennDatum)) }} um {{ date("H:i", strtotime($race->verspaetungUhrzeit)) }}</p>
-                            @else
-                               <p class="description">am {{ date("d.m.Y", strtotime($race->rennDatum)) }} um {{ date("H:i", strtotime($race->rennUhrzeit)) }}</p>
-                            @endif
-                            @if($race->beschreibung != '')
-                                <b>Notiz zum Rennen:</b><br>
-                                <p>{!!  $race->beschreibung !!}</p>
-                            @endif
-                            @if($race->programmDatei != Null)
-                                <p><a href="{{env('VEREIN_URL')}}/storage/raceDokumente/{{ $race->programmDatei }}" target="_blank">
-                                        <i class="bx bxs-file-doc"></i>Programm
+                            <h4 class="title">{{ $tabele->ueberschrift }}</h4>
+                            @if($tabele->tabelleDatei != Null)
+                                <p><a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $tabele->tabelleDatei }}" target="_blank">
+                                        <i class="bx bxs-file-doc"></i>Tabelle
                                     </a>
                                 </p>
                             @endif
-                            @if($race->ergebnisDatei != Null)
-                              <p><a href="{{env('VEREIN_URL')}}/storage/raceDokumente/{{ $race->ergebnisDatei }}" target="_blank">
-                                      <i class="bx bxs-file-doc"></i>Ergebnisse
+                            @if($tabele->ergebnisDatei != Null)
+                              <p><a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $tabele->ergebnisDatei }}" target="_blank">
+                                      <i class="bx bxs-file-doc"></i>Tabelle
                                   </a>
                               </p>
                             @endif
-                            @if($race->ergebnisBeschreibung != '')
-                              <b>Notiz zum Ergebnis:</b><br>
-                              <p>{!!  $race->ergebnisBeschreibung !!}</p>
+                            @if($tabele->beschreibung != '')
+                              <b>Notiz zur Tabelle:</b><br>
+                              <p>{!!  $tabele->beschreibung !!}</p>
                             @endif
                             @php /*
-                             ToDo: Ausgeblendet weil die Vereinsverwaltung noch die Ververzeit und nicht die Locale Zeit speichert
-                            <!-- <p>{ $race->updated_at->diffForHumans() }}</p> -->
+                             ToDo: Ausgeblendet weil die Vereinsverwaltung noch die Serverzeit und nicht die Locale Zeit speichert
+                            <!-- <p>{ $tabele->updated_at->diffForHumans() }}</p> -->
                             <p>geändert am<br>
-                               {{ date("d.m.y", strtotime($race->updated_at)) }} um {{ date("H:i", strtotime($race->updated_at)) }} Uhr
+                               {{ date("d.m.y", strtotime($tabele->updated_at)) }} um {{ date("H:i", strtotime($tabele->updated_at)) }} Uhr
                             </p>
                             */
                             @endphp
@@ -102,7 +92,7 @@
                             <button type = "button" class = "btn btn-primary rounded-lg m-2">gewertete Rennen</button>
                         </a>
                         <a href="/Tabellen">
-                            <button type = "button" class = "btn btn-primary rounded-lg m-2">Tabellen</button>
+                           <button type = "button" class = "btn btn-primary rounded-lg m-2">Tabellen</button>
                         </a>
                 </div>
 
