@@ -3,6 +3,7 @@
 @section('title' ,'Programm')
 
 @section('content')
+
     <main id="main">
         <!-- ======= Services Section ======= -->
         <section id="services" class="services">
@@ -33,7 +34,6 @@
                 @if($i==0)
                 <div class="row">
                 @endif
-
                     @if ($loop->first)
                         <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
                             <div class="icon-box" data-aos="fade-up">
@@ -43,14 +43,21 @@
                     @endif
                             <p>Rennen: {{ $race->nummer }}</p>
                             <h4 class="title">{{ $race->rennBezeichnung }}</h4>
-                            @if($race->verspaetungUhrzeit!="00:00:00")
-                               <p class="description">am {{ date("d.m.Y", strtotime($race->rennDatum)) }} um {{ date("H:i", strtotime($race->verspaetungUhrzeit)) }}</p>
-                            @else
-                               <p class="description">am {{ date("d.m.Y", strtotime($race->rennDatum)) }} um {{ date("H:i", strtotime($race->rennUhrzeit)) }}</p>
-                            @endif
+                            <p class="description">{{ date("d.m.Y", strtotime($race->rennDatum)) }} {{ date("H:i", strtotime($race->rennUhrzeit)) }} Uhr
+                                @php
+                                    $to   = explode(":" , $race->rennUhrzeit);
+                                    $from = explode(":" , $race->verspaetungUhrzeit);
+                                    $timto=$to[0]*60+$to[1];
+                                    $timfrom=$from[0]*60+$from[1];
+                                    $diff_in_minutes=$timfrom-$timto;
+                                @endphp
+                                @if($diff_in_minutes>5 && $race->programmDatei != Null )
+                                   <br>Vorraussichtlich: {{ date("H:i", strtotime($race->verspaetungUhrzeit)) }} Uhr
+                                @endif
+                            </p>
                             @if($race->beschreibung != '')
                                 <b>Notiz zum Rennen:</b><br>
-                                <p>{!!  $race->beschreibung !!}</p>
+                                <p>{!! $race->beschreibung !!}</p>
                             @endif
                             @if($race->programmDatei != Null)
                                 <p><a href="{{env('VEREIN_URL')}}/storage/raceDokumente/{{ $race->programmDatei }}" target="_blank">
@@ -68,14 +75,9 @@
                               <b>Notiz zum Ergebnis:</b><br>
                               <p>{!!  $race->ergebnisBeschreibung !!}</p>
                             @endif
-                            @php /*
-                             ToDo: Ausgeblendet weil die Vereinsverwaltung noch die Ververzeit und nicht die Locale Zeit speichert
-                            <!-- <p>{ $race->updated_at->diffForHumans() }}</p> -->
-                            <p>geändert am<br>
-                               {{ date("d.m.y", strtotime($race->updated_at)) }} um {{ date("H:i", strtotime($race->updated_at)) }} Uhr
+                            <p>geändert:<br>
+                               {{ date("d.m.y", strtotime($race->updated_at)) }} {{ date("H:i", strtotime($race->updated_at)) }} Uhr
                             </p>
-                            */
-                            @endphp
                         </div>
                     </div>
                     @if ($loop->last)

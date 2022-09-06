@@ -32,6 +32,7 @@ class ProgramController extends Controller
         }
 
         $races = Race::where('event_id', $eventId)
+            ->where('visible' , 1)
             ->orderby('rennDatum')
             ->orderby('rennUhrzeit')
             ->get();
@@ -46,6 +47,7 @@ class ProgramController extends Controller
     public function indexNotResult()
     {
         $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
+            ->where('ra.visible' , 1)   // ToDo: Events koennen noch nit mit visible abgefragt werden
             ->where('events.regatta' , '1')
             ->where('events.verwendung' , 0)
             ->orderby('events.datumvon' , 'desc')
@@ -59,6 +61,7 @@ class ProgramController extends Controller
         }
 
         $races = Race::where('event_id', $eventId)
+            ->where('visible' , 1)
             ->where('programmDatei' , '!=' , Null)
             ->where('ergebnisDatei' , Null)
             ->where('rennDatum' , '>=' , Carbon::now()->toDateString())
@@ -76,6 +79,7 @@ class ProgramController extends Controller
     public function indexResult()
     {
         $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
+            ->where('ra.visible' , 1)   // ToDo: Events koennen noch nit mit visible abgefragt werden
             ->where('events.regatta' , '1')
             ->where('events.verwendung' , 0)
             ->orderby('events.datumvon' , 'desc')
@@ -89,6 +93,7 @@ class ProgramController extends Controller
         }
 
         $races = Race::where('event_id', $eventId)
+            ->where('visible' , 1)
             ->where('ergebnisDatei' , '!=' , Null)
             ->orderby('rennDatum' , 'desc')
             ->orderby('rennUhrzeit' , 'desc')

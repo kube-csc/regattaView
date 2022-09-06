@@ -582,7 +582,7 @@ section {
   font-size: 40px;
     /* color: #67b0d1; */
     color: #0062cc;
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .about .icon-boxes .icon-box h4 {
@@ -622,6 +622,24 @@ section {
   z-index: 1;
 }
 
+/*--------------------------------------------------------------
+# Angepasst Regattaview
+--------------------------------------------------------------*/
+.services .icon-box a:link {
+    color: black;
+}
+
+.services .icon-box a:hover {
+    color: white;
+}
+
+.services .icon-box a:active  {
+    color: cornflowerblue;
+}
+/*--------------------------------------------------------------
+# Angepasst Regattaview Ende
+--------------------------------------------------------------*/
+
 .services .icon-box::before {
   content: '';
   position: absolute;
@@ -635,8 +653,8 @@ section {
 }
 
 .services .icon-box:hover::before {
-    /* background: #67b0d1; */
-    background: #0062cc;
+  /* background: #67b0d1; */
+  background: #0062cc;
   top: 0;
   border-radius: 0px;
 }

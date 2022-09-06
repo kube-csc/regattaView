@@ -32,10 +32,10 @@ class TabeleController extends Controller
 
         $tabeles = Tabele::where('event_id', $eventId)
             ->where('tabelleVisible' , 1)
-            ->where('finaleAnzeigen' , '<' , Carbon::now()->toDateString())
+            ->where('finaleAnzeigen' , '<' , Carbon::now()->toDateTimeString())
             ->where(function ($query) use ($eventId) {
                 $query->where('tabelleDatei' , '!=' , Null)
-                    ->orwhere('beschreibung' , '!=' , NULL);
+                      ->orwhere('beschreibung' , '!=' , NULL);
             })
             ->orderby('tabelleDatumVon')
             ->orderby('tabelleLevelBis')

@@ -32,7 +32,7 @@ class HomeController extends Controller
         $eventId = 0;
         $sportSectionId = 0;
 
-        // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
+        // Es wird $event->event_id verwendet weil die id in events und races vorhanden ist und events->id mit races->id überschrieben
         foreach($events as $event) {
             $sportSectionId = $event->sportSection_id;
             $eventId        = $event->event_id;
@@ -52,19 +52,24 @@ class HomeController extends Controller
             ->orderby('position')
             ->get();
 
-        $raceCount      = Race::where('event_id', $eventId)->count();
+        $raceCount = Race::where('event_id', $eventId)
+            ->where('visible' , 1)
+            ->count();
 
-        $raceNewCount   = Race::where('event_id', $eventId)
+        $raceNewCount = Race::where('event_id', $eventId)
+            ->where('visible' , 1)
             ->where('programmDatei' , Null)
             ->where('ergebnisDatei' , Null)
             ->count();
 
         $raceProgrammCount = Race::where('event_id', $eventId)
+            ->where('visible' , 1)
             ->where('programmDatei' , '!=' , Null)
             ->where('ergebnisDatei' , Null)
             ->count();
 
         $raceResoultCount = Race::where('event_id', $eventId)
+            ->where('visible' , 1)
             ->where('ergebnisDatei' , '!=' , Null)
             ->count();
 
