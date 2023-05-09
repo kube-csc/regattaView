@@ -51,7 +51,7 @@
                                     $timfrom=$from[0]*60+$from[1];
                                     $diff_in_minutes=$timfrom-$timto;
                                 @endphp
-                                @if($diff_in_minutes>5 && $race->programmDatei != Null )
+                                @if($diff_in_minutes>5 && $race->programmDatei != Null && $race->ergebnisDatei == Null)
                                    <br>Voraussichtlich: {{ date("H:i", strtotime($race->verspaetungUhrzeit)) }} Uhr
                                 @endif
                             </p>

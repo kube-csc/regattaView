@@ -151,7 +151,6 @@
                     <br>
                     <h4>Weitere Webseiten</h4>
                     <ul>
-                        <li><a href="https://www.kel-datteln.de/index.php?sprung=regatta/eventausgabe.php&amp;menu=regatta&amp;terminsammler=1" target="_blank" class="bx bx-link-external">Rennsportregatta</a></li>
                         <li><a href="http://www.day-of-dragons.de" target="_blank" class="bx bx-link-external">Day of Dragons</a></li>
                         <li><a href="https://sup.kel-datteln.de"    target="_blank" class="bx bx-link-external">SUP Kurse</a></li>
                         <li><a href="https://oc.kel-datteln.de"     target="_blank" class="bx bx-link-external">Outrigger für Vereinsmitglieder Buchen</a></li>
