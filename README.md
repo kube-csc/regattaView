@@ -1,14 +1,25 @@
 <h1>Präsentation von Regatten</h1>
 <p>
-Eingesetzt z.B. für ein Kanuverein
+Eingesetzt z.B. für die Rennsport- und Drachenbootregatta eines Kanuvereins
 </p>
 
 <a href="https://live.kel-datteln.de">Beispiel einer Regatta</a>
 
 <h2>Installierte Programme</h2>
 <ul>
-  <li>Installation von Laravel 8.*</li>
+  <li>Insallation Laravel 8.* mit jetstream 2.* , livewire 2.* teams  und tailwindcss
+  <a href="https://jetstream.laravel.com/2.x/introduction.html"></a>
+  <a href="https://jetstream.laravel.com/2.x/stacks/livewire.html"></a></li>
+  <li><a href="https://bootstrapmade.com/squadfree-free-bootstrap-template-creative/">BootstrapMade.com </a></li>
+  <li><a href="https://boxicons.com/">boxicons</a>(Forntend)</li>
+  <li><a href="https://tailwindcss.com/">Tailwindcss</a>(Backend)</li>
+<li>.htaccess für ionos.de (1und1.de) Server</li>
 </ul>
+
+<h2>Benötigte Lizenzen</h2>
+Es wird eine Lizenz für
+<a href="https://bootstrapmade.com/squadfree-free-bootstrap-template-creative/">Squadfree von bootstrapmade</a>
+benötigt.
 
 <h2>Frontend</h2>
 <ul>
@@ -27,11 +38,12 @@ Eingesetzt z.B. für ein Kanuverein
         <li>Präsentation des Teams der Veranstaltung</li>
        <li>Kontakt des Vereins inc. Map</li>
     </ul> 
-<li>Liste der Rennen nach Zeitplan
+<li>Liste der Rennen nach Zeitplan incl. Verspätung
   <ul>
     <li>Alle Rennen</li>
     <li>verloste Rennen</li>
     <li>gewertete Rennen</li>
+    <li>Tabellen</li>
   </ul> 
   </li>
   <li>Footer
@@ -45,9 +57,8 @@ Eingesetzt z.B. für ein Kanuverein
 
 <h2>Backend</h2>
 <h3>Externe Vereinsverwaltung</h3>
-<ul>
-  <li><a href="https://github.com/kube-csc/vereinsverwaltung" target="_blank"></a>zum GitHub Projekt Vereinsverwaltung</li>
-</ul>
+<p><a href="https://github.com/kube-csc/vereinsverwaltung" target="_blank"></a>zum GitHub Projekt Vereinsverwaltung ab V00.03.xx</p>
+
 
 <h2>Installation</h2>
 <ul>
@@ -56,6 +67,11 @@ Eingesetzt z.B. für ein Kanuverein
    <li>Composer herunterladen curl -sS https://getcomposer.org/installer</li>
    <li>Installation des Composer </li>
    <li>composer.phar install</li>
+   <li>in Ordner "public sind die folgenden Dateien anzulegen:
+   <ul>
+     <li>apple-touch-icon.png</li>
+     <li>favicon.ico</li>
+   </ul>
 </ul>
 
 <h2>Update</h2>
