@@ -19,8 +19,10 @@
     <link href="/favicon.ico" rel="icon">
     <link href="/apple-touch-icon.png" rel="apple-touch-icon">
 
+    <?php /*
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    */ ?>
 
     <!-- Vendor CSS Files -->
     <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -79,12 +81,14 @@
 
 <section id="hero">
     <div class="hero-container" data-aos="fade-up">
-        @php
+
+        <?php
             $Verein = str_replace('_', ' ', env('VEREIN_NAME'));
-            $SLogen = str_replace('_', ' ', env('VEREIN_SLOGEN'));
-        @endphp
+            $Slogen = str_replace('_', ' ', env('VEREIN_SLOGEN'));
+        ?>
+
         <h1>{{ $Verein }}</h1>
-        <h2>{{ $SLogen }}</h2>
+        <h2>{{ $Slogen }}</h2>
         <?php // ToDo:     <a href="#about" class="btn-get-started scrollto"><i class="bx bx-chevrons-down"></i></a> ?>
         <a href="#about" class="btn-get-started scrollto"><i class="bx bx-chevrons-down"></i></a>
         @php
@@ -95,6 +99,7 @@
         @endphp
     </div>
 </section><!-- End Hero -->
+
 @yield('content')
 
 <!-- ======= Footer ======= -->
