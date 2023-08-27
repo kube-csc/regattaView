@@ -7,12 +7,9 @@ Eingesetzt z.B. für die Rennsport- und Drachenbootregatta eines Kanuvereins
 
 <h2>Installierte Programme</h2>
 <ul>
-  <li>Insallation Laravel 8.* mit jetstream 2.* , livewire 2.* teams  und tailwindcss
-  <a href="https://jetstream.laravel.com/2.x/introduction.html"></a>
-  <a href="https://jetstream.laravel.com/2.x/stacks/livewire.html"></a></li>
-  <li><a href="https://bootstrapmade.com/squadfree-free-bootstrap-template-creative/">BootstrapMade.com </a></li>
-  <li><a href="https://boxicons.com/">boxicons</a>(Forntend)</li>
-  <li><a href="https://tailwindcss.com/">Tailwindcss</a>(Backend)</li>
+  <li><a href="https://jetstream.laravel.com/2.x/introduction.html" target="_blank">Laravel 9.*</a>
+  <li><a href="https://bootstrapmade.com/squadfree-free-bootstrap-template-creative/" target="_blank">BootstrapMade.com </a></li>
+  <li><a href="https://boxicons.com/" target="_blank">boxicons</a></li>
 <li>.htaccess für ionos.de (1und1.de) Server</li>
 </ul>
 
@@ -23,41 +20,44 @@ benötigt.
 
 <h2>Frontend</h2>
 <ul>
-<li>Leanding Page
-    <ul>
-        <li>Beschreibung der Events</li> 
-          <li>Dokumente zum Herunterladen
+    <li>Leanding Page
+        <ul>
+            <li>Beschreibung der Events</li> 
+            <li>Dokumente zum Herunterladen
               <ul>
                 <li>Ausschreibungsunterlagen</li>
                 <li>Programmunterlagen</li>
                 <li>Ergebnislisten</li>
                 <li>Flyer / Plakat</li>
               </ul>
-          </li>
-        </li>
-        <li>Präsentation des Teams der Veranstaltung</li>
-       <li>Kontakt des Vereins inc. Map</li>
-    </ul> 
-<li>Liste der Rennen nach Zeitplan incl. Verspätung
-  <ul>
-    <li>Alle Rennen</li>
-    <li>verloste Rennen</li>
-    <li>gewertete Rennen</li>
-    <li>Tabellen</li>
-  </ul> 
-  </li>
-  <li>Footer
-    <ul>
+            </li>
+            <li>Präsentation des Teams der Regatta</li>
+            <li>Kontakt des Vereins inc. Map</li>
+        </ul> 
+    </li>
+    <li>Liste der Rennen nach Zeitplan incl. Verspätungen der Startzeit
+      <ul>
+        <li>Alle Rennen</li>
+        <li>verloste Rennen</li>
+        <li>gewertete Rennen</li>
+        <li>Tabellen</li>
+      </ul> 
+    </li>
+    <li>Footer
+      <ul>
         <li>Links zu Webseiten der Abteilungen/Sportgruppen</li>
         <li>Impresssum</li>
         <li>Datenschutzerklärung</li>
-    </ul>
-  </li>
+      </ul>
+    </li>
 </ul>
 
 <h2>Backend</h2>
-<h3>Externe Vereinsverwaltung</h3>
-<p><a href="https://github.com/kube-csc/vereinsverwaltung" target="_blank"></a>zum GitHub Projekt Vereinsverwaltung ab V00.03.xx</p>
+<p>
+Die die Verwaltung der Regatta muss die APP Vereinsverwaltung installiert werden.
+<a href="https://github.com/kube-csc/vereinsverwaltung" target="_blank"></a>
+zum GitHub Projekt Vereinsverwaltung ab V00.03.xx
+</p>
 
 
 <h2>Installation</h2>
@@ -78,7 +78,14 @@ benötigt.
 <ul>
    <li>git pull origin main</li>
 </ul>
-<br>
+<h2>Zugehörige Projekte</h2>
+<h3>Helferlisten</h3>
+<p>
+Helferliste ist eine APP, die eine Liste von Personen verwaltet, die bereit sind, bei einem Event, einer Veranstaltung oder einem Projekt zu helfen. 
+Die Liste enthält die Namen und E-Mail-Adressen der Helfer. Die Helferliste wird von der Person oder Organisation erstellt, die für die Organisation der Veranstaltung verantwortlich ist. Die Liste kann verwendet werden, um 
+die Helfer zu koordinieren und sicherzustellen, dass alle Aufgaben abgedeckt sind.<br>
+Die Version V00.01.XX <a href="https://github.com/kube-csc/helferplanung.git" target="_blank">https://github.com/kube-csc/helferplanung.git</a> ist kompatibel mit der Version V00.04.XX <a href="https://github.com/kube-csc/helferplanung.git" target="_blank">https://github.com/kube-csc/helferplanung.git</a>.
+</p>
 <hr>
 <br>
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
