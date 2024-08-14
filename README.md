@@ -56,7 +56,7 @@ benötigt.
 <p>
 Die die Verwaltung der Regatta muss die APP Vereinsverwaltung installiert werden.
 <a href="https://github.com/kube-csc/vereinsverwaltung" target="_blank"></a>
-zum GitHub Projekt Vereinsverwaltung ab V00.03.xx
+zum GitHub Projekt Vereinsverwaltung ab V00.05.xx
 </p>
 
 
