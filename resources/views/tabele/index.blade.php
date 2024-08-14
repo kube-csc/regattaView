@@ -48,12 +48,6 @@
                                     </a>
                                 </p>
                             @endif
-                            @if($tabele->ergebnisDatei != Null)
-                              <p><a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $tabele->ergebnisDatei }}" target="_blank">
-                                      <i class="bx bxs-file-doc"></i>Tabelle
-                                  </a>
-                              </p>
-                            @endif
                             @if($tabele->beschreibung != '')
                               <b>Notiz zur Tabelle:</b><br>
                               <p>{!!  $tabele->beschreibung !!}</p>

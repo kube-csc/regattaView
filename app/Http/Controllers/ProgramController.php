@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lane;
 use App\Models\Program;
 use App\Models\Event;
 use App\Models\Race;
@@ -14,7 +15,7 @@ class ProgramController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function index()
     {
@@ -37,8 +38,7 @@ class ProgramController extends Controller
             ->orderby('rennUhrzeit')
             ->get();
 
-        return view('program.index')->with(
-            [
+        return view('program.index')->with([
                 'races'        => $races,
                 'ueberschrift' => 'Programm von allen Rennen'
             ]);
@@ -47,7 +47,7 @@ class ProgramController extends Controller
     public function indexNotResult()
     {
         $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-            ->where('ra.visible' , 1)   // ToDo: Events koennen noch nit mit visible abgefragt werden
+            ->where('ra.visible' , 1)   // ToDo: Events koennen noch nicht mit visible abgefragt werden
             ->where('events.regatta' , '1')
             ->where('events.verwendung' , 0)
             ->orderby('events.datumvon' , 'desc')
@@ -62,7 +62,10 @@ class ProgramController extends Controller
 
         $races = Race::where('event_id', $eventId)
             ->where('visible' , 1)
-            ->where('programmDatei' , '!=' , Null)
+            ->where(function($query) {
+                $query->where('programmDatei', '!=', Null)
+                    ->orWhere('status', '2');
+            })
             ->where('ergebnisDatei' , Null)
             ->where('rennDatum' , '>=' , Carbon::now()->toDateString())
             ->orderby('rennDatum')
@@ -79,7 +82,7 @@ class ProgramController extends Controller
     public function indexResult()
     {
         $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-            ->where('ra.visible' , 1)   // ToDo: Events koennen noch nit mit visible abgefragt werden
+            ->where('ra.visible' , 1)   // ToDo: Events koennen noch nicht mit visible abgefragt werden
             ->where('events.regatta' , '1')
             ->where('events.verwendung' , 0)
             ->orderby('events.datumvon' , 'desc')
@@ -94,7 +97,14 @@ class ProgramController extends Controller
 
         $races = Race::where('event_id', $eventId)
             ->where('visible' , 1)
-            ->where('ergebnisDatei' , '!=' , Null)
+            ->where(function($query) {
+                $query->where('ergebnisDatei', '!=', Null)
+                    ->orWhere('status', '4');
+            })
+            ->where(function($query) {
+                $query->where('veroeffentlichungUhrzeit', '<', Carbon::now()->toTimeString())
+                    ->orWhere('rennDatum', '<', Carbon::now()->toDateString());
+            })
             ->orderby('rennDatum' , 'desc')
             ->orderby('rennUhrzeit' , 'desc')
             ->get();
@@ -136,6 +146,38 @@ class ProgramController extends Controller
     public function show(Program $program)
     {
         //
+    }
+
+    public function laneOccupancy($raceId)
+    {
+        $race = Race::find($raceId);
+
+        $lanes = Lane::where('rennen_id', $raceId)
+            ->orderBy('bahn')
+            ->get();
+
+        return view('program.laneOccupancy')->with(
+            [
+                'race'         => $race,
+                'lanes'        => $lanes,
+                'ueberschrift' => 'Bahnbelegung'
+            ]);
+    }
+
+    public function result($raceId)
+    {
+        $race = Race::find($raceId);
+
+        $lanes = Lane::where('rennen_id', $raceId)
+            ->orderBy('platz')
+            ->get();
+
+        return view('program.result')->with(
+            [
+                'race'         => $race,
+                'lanes'        => $lanes,
+                'ueberschrift' => 'Bahnbelegung'
+            ]);
     }
 
     /**

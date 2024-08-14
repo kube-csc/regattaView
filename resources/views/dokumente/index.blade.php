@@ -44,7 +44,7 @@
                                                 @if( $eventDokumente->bild != NULL)
                                                     <li>
                                                         <a href="{{ env('VEREIN_URL') }}/storage/eventDokumente/{{ $eventDokumente->bild }}" target="_blank">{{ $eventDokumente->titel }}</a>
-                                                        geändert: {{ date("d.m.y", strtotime($eventDokumente->updated_at)) }} {{ date("H:i", strtotime($eventDokumente->updated_at)) }} Uhr
+                                                        aktualisiert: {{ date("d.m.y", strtotime($eventDokumente->updated_at)) }} {{ date("H:i", strtotime($eventDokumente->updated_at)) }} Uhr
                                                     </li>
                                                 @else
                                                     <li><a href="{{ env('VEREIN_URL') }}/daten/text/{{ $eventDokumente->image }}" target="_blank">{{ $eventDokumente->titel }}</a></li>

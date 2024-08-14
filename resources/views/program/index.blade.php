@@ -43,7 +43,8 @@
                     @endif
                             <p>Rennen: {{ $race->nummer }}</p>
                             <h4 class="title">{{ $race->rennBezeichnung }}</h4>
-                            <p class="description">{{ date("d.m.Y", strtotime($race->rennDatum)) }} {{ date("H:i", strtotime($race->rennUhrzeit)) }} Uhr
+                            <p class="description">
+                                {{ date("d.m.Y", strtotime($race->rennDatum)) }} {{ date("H:i", strtotime($race->rennUhrzeit)) }} Uhr
                                 @php
                                     $to   = explode(":" , $race->rennUhrzeit);
                                     $from = explode(":" , $race->verspaetungUhrzeit);
@@ -51,9 +52,9 @@
                                     $timfrom=$from[0]*60+$from[1];
                                     $diff_in_minutes=$timfrom-$timto;
                                 @endphp
-                                @if($diff_in_minutes>5 && $race->programmDatei != Null && $race->ergebnisDatei == Null)
-                                   <br>Voraussichtlich: {{ date("H:i", strtotime($race->verspaetungUhrzeit)) }} Uhr
-                                @endif
+                                @if($diff_in_minutes>5 && ($race->programmDatei != Null && $race->ergebnisDatei == Null) || ($race->status == 2))
+                                    <br>Voraussichtlich: {{ date("H:i", strtotime($race->verspaetungUhrzeit)) }} Uhr
+                                 @endif
                             </p>
                             @if($race->beschreibung != '')
                                 <b>Notiz zum Rennen:</b><br>
@@ -61,21 +62,43 @@
                             @endif
                             @if($race->programmDatei != Null)
                                 <p><a href="{{env('VEREIN_URL')}}/storage/raceDokumente/{{ $race->programmDatei }}" target="_blank">
-                                        <i class="bx bxs-file-doc"></i>Programm
+                                        <i class="bx bxs-file-doc"></i>Programm Dokument
                                     </a>
                                 </p>
                             @endif
-                            @if($race->ergebnisDatei != Null)
-                              <p><a href="{{env('VEREIN_URL')}}/storage/raceDokumente/{{ $race->ergebnisDatei }}" target="_blank">
-                                      <i class="bx bxs-file-doc"></i>Ergebnisse
-                                  </a>
-                              </p>
+                            @if($race->status <= 3)
+                                    <p><a href="/Bahnbelegung/{{$race->id}}">
+                                            <i class="bx bxs-info-circle"></i>Bahnbelegung
+                                        </a>
+                                    </p>
+                            @endif
+                            @if($race->veroeffentlichungUhrzeit < Illuminate\Support\Carbon::now()->toTimeString() || $race->rennDatum < Illuminate\Support\Carbon::now()->toDateString())
+                                @if($race->status == 4)
+                                    <p><a href="/Ergebnis/{{$race->id}}">
+                                            <i class="bx bxs-info-circle"></i>Ergebnis
+                                        </a>
+                                    </p>
+                                @endif
+                                @if($race->ergebnisDatei != Null)
+                                    <p><a href="{{env('VEREIN_URL')}}/storage/raceDokumente/{{ $race->ergebnisDatei }}" target="_blank">
+                                            <i class="bx bxs-file-doc"></i>Ergebnisse Dokument
+                                        </a>
+                                    </p>
+                                @endif
+                            @else
+                                    @if($race->status >= 3 && $race->status <= 4)
+                                        <p><a href="/Bahnbelegung/{{$race->id}}">
+                                                <i class="bx bxs-info-circle"></i>Bahnbelegung
+                                            </a>
+                                            Ergebnisse bei der Siegerehrung
+                                        </p>
+                                    @endif
                             @endif
                             @if($race->ergebnisBeschreibung != '')
                               <b>Notiz zum Ergebnis:</b><br>
-                              <p>{!!  $race->ergebnisBeschreibung !!}</p>
+                              <p>{!! $race->ergebnisBeschreibung !!}</p>
                             @endif
-                            <p>geändert:<br>
+                            <p>aktualisiert:<br>
                                {{ date("d.m.y", strtotime($race->updated_at)) }} {{ date("H:i", strtotime($race->updated_at)) }} Uhr
                             </p>
                         </div>
@@ -111,4 +134,5 @@
             </div>
         </section><!-- End Services Section -->
     </main><!-- End #main -->
+
 @endsection

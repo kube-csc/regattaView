@@ -13,7 +13,7 @@ class TabeleController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
      */
     public function index()
     {
@@ -32,7 +32,10 @@ class TabeleController extends Controller
 
         $tabeles = Tabele::where('event_id', $eventId)
             ->where('tabelleVisible' , 1)
-            ->where('veroeffentlichungUhrzeit' , '<' , Carbon::now()->toDateTimeString())
+            ->where(function($query) {
+                $query->where('finaleAnzeigen', '<', Carbon::now()->toTimeString())
+                    ->orWhere('tabelleDatumVon', '<', Carbon::now()->toDateString());
+            })
             ->where(function ($query) use ($eventId) {
                 $query->where('tabelleDatei' , '!=' , Null)
                       ->orwhere('beschreibung' , '!=' , NULL);
