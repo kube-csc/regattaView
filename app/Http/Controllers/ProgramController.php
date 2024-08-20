@@ -150,23 +150,91 @@ class ProgramController extends Controller
 
     public function laneOccupancy($raceId)
     {
+        $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
+            ->where('ra.visible' , 1)   // ToDo: Events koennen noch nicht mit visible abgefragt werden
+            ->where('events.regatta' , '1')
+            ->where('events.verwendung' , 0)
+            ->orderby('events.datumvon' , 'desc')
+            ->limit(1)
+            ->get();
+
+        // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
+        $eventId=0;
+        foreach($events as $event) {
+            $eventId=$event->event_id;
+        }
+
         $race = Race::find($raceId);
 
         $lanes = Lane::where('rennen_id', $raceId)
             ->orderBy('bahn')
             ->get();
 
+        // Vorheriges Rennen
+        $previousRace = Race::where('event_id', $eventId)
+            ->where('rennDatum', $race->rennDatum)
+            ->where('rennUhrzeit', '<=', $race->rennUhrzeit)
+            ->where('id', '!=', $raceId)
+            ->where('status', '>=', 2)
+            ->where('status', '<=', 4)
+            ->orderBy('rennUhrzeit', 'desc')
+            ->first();
+
+        // Nächstes Rennen
+        $nextRace = Race::where('event_id', $eventId)
+            ->where('rennDatum', $race->rennDatum)
+            ->where('rennUhrzeit', '>=', $race->rennUhrzeit)
+            ->where('id', '!=', $raceId)
+            ->where('status', '>=', 2)
+            ->where('status', '<=', 4)
+            ->orderBy('rennUhrzeit', 'asc')
+            ->first();
+
         return view('program.laneOccupancy')->with(
             [
                 'race'         => $race,
                 'lanes'        => $lanes,
+                'previousRace' => $previousRace,
+                'nextRace'     => $nextRace,
                 'ueberschrift' => 'Bahnbelegung'
             ]);
     }
 
     public function result($raceId)
     {
+        $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
+            ->where('ra.visible' , 1)   // ToDo: Events koennen noch nicht mit visible abgefragt werden
+            ->where('events.regatta' , '1')
+            ->where('events.verwendung' , 0)
+            ->orderby('events.datumvon' , 'desc')
+            ->limit(1)
+            ->get();
+
+        // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
+        $eventId=0;
+        foreach($events as $event) {
+            $eventId=$event->event_id;
+        }
+
         $race = Race::find($raceId);
+
+        // Vorheriges Rennen
+        $previousRace = Race::where('event_id', $eventId)
+            ->where('rennDatum', $race->rennDatum)
+            ->where('rennUhrzeit', '<=', $race->rennUhrzeit)
+            ->where('id', '!=', $raceId)
+            ->where('status',  4)
+            ->orderBy('rennUhrzeit', 'desc')
+            ->first();
+
+        // Nächstes Rennen
+        $nextRace = Race::where('event_id', $eventId)
+            ->where('rennDatum', $race->rennDatum)
+            ->where('rennUhrzeit', '>=', $race->rennUhrzeit)
+            ->where('id', '!=', $raceId)
+            ->where('status', 4)
+            ->orderBy('rennUhrzeit', 'asc')
+            ->first();
 
         $lanes = Lane::where('rennen_id', $raceId)
             ->orderBy('platz')
@@ -175,6 +243,8 @@ class ProgramController extends Controller
         return view('program.result')->with(
             [
                 'race'         => $race,
+                'previousRace' => $previousRace,
+                'nextRace'     => $nextRace,
                 'lanes'        => $lanes,
                 'ueberschrift' => 'Bahnbelegung'
             ]);

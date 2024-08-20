@@ -19,7 +19,10 @@
                                     $platz++
                                 @endphp
                                 <label for="name">Platz:</label>
-                                {{ $platz }} {{ $lane->regattaTeam->teamname }}
+                                {{ $platz }}
+                                @if($lane->mannschaft_id!=Null)
+                                    {{ $lane->regattaTeam->teamname }}
+                                @endif
                                 <br>
                             @endforeach
                         </p>

@@ -17,7 +17,10 @@
                                 $bahn++
                             @endphp
                             <label for="name">Bahn:</label>
-                            {{ $bahn}} {{ $lane->regattaTeam->teamname }}
+                            {{ $bahn}}
+                            @if($lane->mannschaft_id!=Null)
+                                {{ $lane->regattaTeam->teamname }}
+                            @endif
                             <br>
                         @endforeach
                         @php

@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RegattaTeam extends Model
 {
-    use HasFactory;
+    public function teamWertungsGruppe()
+    {
+        return $this->belongsTo(RaceType::class, 'gruppe_id');
+    }
 }

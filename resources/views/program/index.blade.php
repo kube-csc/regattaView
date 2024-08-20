@@ -66,7 +66,7 @@
                                     </a>
                                 </p>
                             @endif
-                            @if($race->status <= 3)
+                            @if($race->status >= 2 && $race->status <= 4)
                                     <p><a href="/Bahnbelegung/{{$race->id}}">
                                             <i class="bx bxs-info-circle"></i>Bahnbelegung
                                         </a>

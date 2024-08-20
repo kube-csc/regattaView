@@ -43,12 +43,23 @@
                             @php
                                 $platz++
                             @endphp
-                                 <label for="name">Platz:</label>
-                                 {{ $platz }}<br>
-                                 <label for="name">Bahn:</label>
-                                {{ $lane->bahn }} {{ $lane->regattaTeam->teamname }}
-                                <br><br>
+                              <label for="name">Platz:</label>
+                              {{ $platz }}<br>
+                              <label for="name">Bahn:</label>
+                              {{ $lane->bahn }}
+                              @if($lane->mannschaft_id!=Null)
+                                {{ $lane->regattaTeam->teamname }}
+                              @endif
+                              <br><br>
                         @endforeach
+                    </p>
+                    <p>
+                        @if($previousRace)
+                            <a href="{{ url('/Ergebnis/'.$previousRace->id) }}" class="btn btn-primary">&larr; Zurück</a>
+                        @endif
+                        @if($nextRace)
+                            <a href="{{ url('/Ergebnis/'.$nextRace->id) }}" class="btn btn-primary">Weiter &rarr;</a>
+                        @endif
                     </p>
                 </div>
             </div>
