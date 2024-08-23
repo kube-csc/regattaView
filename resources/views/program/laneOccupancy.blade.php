@@ -12,7 +12,11 @@
                     <h2>{{ $ueberschrift }}</h2>
                     <p>
                         <label for="name">Nummer:</label>
-                        {{ $race->nummer }} {{ $race->rennBezeichnung }}
+                        @if(is_numeric($race->nummer))
+                            {{ $race->nummer }}. {{ $race->rennBezeichnung }}
+                        @else
+                            {{ $race->nummer }} / {{ $race->rennBezeichnung }}
+                        @endif
                         <br>
                         @if($race->raceTabele->ueberschrift)
                             <label for="name">Tabelle:</label>
@@ -45,6 +49,8 @@
                             {{ $lane->bahn }}
                             @if($lane->mannschaft_id!=Null)
                                 {{ $lane->regattaTeam->teamname }}
+                            @else
+                                <br>Frei
                             @endif
                             <br><br>
                         @endforeach
