@@ -6,6 +6,7 @@ use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\TabeleController;
 use App\Http\Controllers\DokumenteController;
 use App\Http\Controllers\OBSLiveController;
+use App\Http\Controllers\SpeekerController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\InstructionController;
 /*
@@ -44,3 +45,8 @@ Route::get('/Dokumente',                                           [DokumenteCon
 Route::get('/OBSLive/Ergebniss',                                   [OBSLiveController::class, 'result'])               ->name('obsLive.result');
 Route::get('/OBSLive/Bahnbelegung',                                [OBSLiveController::class, 'laneOccupancy'])        ->name('obsLive.laneOccupancy');
 Route::get('/OBSLive/Naechstesrennen',                             [OBSLiveController::class, 'nextRace'])             ->name('obsLive.nextRace');
+
+Route::get('/Sprecher/{speekerId?}',                               [SpeekerController::class, 'show'])                 ->name('speeker.show');
+Route::post('/Sprecher/Auswahl',                                   [SpeekerController::class, 'choose'])               ->name('speeker.choose');
+Route::get('/Sprecher/Mannschaft/{teamId}/{raceId}',               [SpeekerController::class, 'teamShow'])             ->name('speeker.teamShow');
+Route::post('/Sprecher/Mannschaft/Auswahl',                            [SpeekerController::class, 'teamChoose'])           ->name('speeker.teamChoose');
