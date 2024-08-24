@@ -125,9 +125,9 @@ class OBSLiveController extends Controller
 
         $races = Race::where('event_id', $eventId)
             ->where('visible' , 1)
-            ->where('status' , 4)
+            ->where('status' , 2)
             ->orderby('rennDatum')
-            ->orderby('rennUhrzeit', 'desc')
+            ->orderby('rennUhrzeit')
             ->limit(1)
             ->get();
 

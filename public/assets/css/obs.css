@@ -3,16 +3,14 @@ body {
     color: #de0a0a;
 }
 
-/*--------------------------------------------------------------
-# Sections General
---------------------------------------------------------------*/
 section {
     padding: 60px 0;
 }
 
 .section-title {
     text-align: center;
-    padding-bottom: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
     background-color: rgba(14, 20, 148, 0.61);
 }
 
@@ -20,14 +18,14 @@ section {
     font-size: 48px;
     font-weight: bold;
     position: relative;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     color: rgb(255, 255, 255);
     z-index: 2;
 }
 
 .section-title p {
     margin-bottom: 0;
-    font-size: 18px;
+    font-size: 24px;
     color: rgb(255, 255, 255);
 }
 
@@ -38,7 +36,6 @@ section {
 
 .section-race p {
     margin: 0;
-    margin-right: 30px;
     font-size: 24px;
     color: rgb(255, 255, 255);
 }
