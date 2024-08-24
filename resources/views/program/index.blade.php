@@ -87,9 +87,7 @@
                                 @endif
                             @else
                                     @if($race->status >= 3 && $race->status <= 4)
-                                        <p><a href="/Bahnbelegung/{{$race->id}}">
-                                                <i class="bx bxs-info-circle"></i>Bahnbelegung
-                                            </a>
+                                        <p>
                                             Ergebnisse bei der Siegerehrung
                                         </p>
                                     @endif
