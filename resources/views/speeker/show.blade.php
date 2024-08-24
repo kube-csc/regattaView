@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-md-6 ">
                         <div class="box">
-                            @if($raceNext1->id != Null)
+                            @if($raceNext1!= Null)
                                 <a href="/Sprecher/{{ $raceNext1->id  }}" class="me-2">
                                     <button type="button" class="btn btn-secondary ml-2">akuallisieren</button>
                                 </a>
@@ -34,7 +34,7 @@
                                 </a>
                             @endif
                             <a href="/Sprecher" class="me-2">
-                                <button type="button" class="btn btn-secondary ml-2">aktuelle Zeit</button>
+                                <button type="button" class="btn btn-secondary ml-2">Aktuell</button>
                             </a>
                             @if($nachId>0)
                             <a href="/Sprecher/{{ $nachId }}" class="me-2">
@@ -61,7 +61,7 @@
                             @if($raceNext1==Null  && $raceResoult1==Null)
                                 <h2>Es sind keine Rennen vorhanden</h2>
                             @endif
-                            @if($raceNext1!=Null)
+                            @if($raceNext1!=Null && $raceResoult1==Null)
                                 @php
                                     $bahn=0;
                                 @endphp
@@ -69,7 +69,7 @@
                                 <p>
                                     @if($raceNext1->status < 2)
                                         <br>Rennen noch nicht gesetzt<br><br>
-                                    @endif
+                                    @else
                                     @foreach($lanesNext1 as $lane)
                                         @php
                                             $bahn++;
@@ -83,9 +83,12 @@
                                                     <button type="button" class="btn btn-secondary ml-2">Info</button>
                                                 </a>
                                             @endif
+                                        @else
+                                            frei
                                         @endif
                                         <br>
                                     @endforeach
+                                    @endif
                                     @php
                                         $to   = explode(":" , $raceNext1->rennUhrzeit);
                                         $from = explode(":" , $raceNext1->verspaetungUhrzeit);
@@ -101,6 +104,7 @@
                                 </p>
                             @endif
                             @if($raceResoult1!=Null)
+                                <h2>{{ $raceResoult1->rennBezeichnung }}</h2>
                                 @if($victoCremony1==0)
                                     <p>
                                         @php
@@ -114,13 +118,18 @@
                                             {{ $platz }}
                                             @if($lane->mannschaft_id!=Null)
                                                 {{ $lane->regattaTeam->teamname }}
+                                                @if($lane->regattaTeam->beschreibung != Null)
+                                                    <a href="/Sprecher/Mannschaft/{{ $lane->mannschaft_id }}/{{ $raceResoult1->id }}" class="me-2">
+                                                        <button type="button" class="btn btn-secondary ml-2">Info</button>
+                                                    </a>
+                                                @endif
                                             @endif
                                             <br>
                                         @endforeach
                                     </p>
                                 @else
                                     <p>
-                                        Ergebnis wird auf der Siegerehrung bekannt gegeben
+                                        Ergebnis wird auf der Siegerehrung bekannt gegeben.
                                     </p>
                                 @endif
                             @endif
@@ -140,18 +149,26 @@
                                 <p>
                                     @if($raceNext2->status < 2)
                                         <br>Rennen noch nicht gesetzt<br><br>
+                                    @else
+                                          @foreach($lanesNext2 as $lane)
+                                                @php
+                                                    $bahn++;
+                                                @endphp
+                                                <label for="name">Bahn:</label>
+                                                {{ $bahn}}
+                                                @if($lane->mannschaft_id!=Null)
+                                                    {{ $lane->regattaTeam->teamname }}
+                                                    @if($lane->regattaTeam->beschreibung != Null)
+                                                        <a href="/Sprecher/Mannschaft/{{ $lane->mannschaft_id }}/{{ $raceNext2->id }}" class="me-2">
+                                                            <button type="button" class="btn btn-secondary ml-2">Info</button>
+                                                        </a>
+                                                    @endif
+                                                @else
+                                                    frei
+                                                @endif
+                                                <br>
+                                          @endforeach
                                     @endif
-                                    @foreach($lanesNext2 as $lane)
-                                            @php
-                                                $bahn++;
-                                            @endphp
-                                            <label for="name">Bahn:</label>
-                                            {{ $bahn}}
-                                            @if($lane->mannschaft_id!=Null)
-                                                {{ $lane->regattaTeam->teamname }}
-                                            @endif
-                                            <br>
-                                        @endforeach
                                     @php
                                         $to   = explode(":" , $raceNext2->rennUhrzeit);
                                         $from = explode(":" , $raceNext2->verspaetungUhrzeit);
@@ -160,12 +177,13 @@
                                         $diff_in_minutes=$timfrom-$timto;
                                     @endphp
                                     Startzeit: {{ date("H:i", strtotime($raceNext2->rennUhrzeit)) }} Uhr
-                                    @if($diff_in_minutes>5 && ($raceNext2->programmDatei != Null && $race->ergebnisDatei == Null) || ($raceNext2->status <= 2))
-                                        <br>Voraussichtlich: {{ date("H:i", strtotime($raceNext1->verspaetungUhrzeit)) }} Uhr
+                                    @if($diff_in_minutes>5 && ($raceNext2->programmDatei != Null && $raceNext2->ergebnisDatei == Null) || ($raceNext2->status <= 2))
+                                        <br>Voraussichtlich: {{ date("H:i", strtotime($raceNext2->verspaetungUhrzeit)) }} Uhr
                                     @endif
                                 </p>
                             @endif
-                            @if($raceResoult2!=Null)
+                            @if($raceResoult2!=Null && $raceNext2==Null)
+                                <h2>{{ $raceResoult2->rennBezeichnung }}</h2>
                                 @if($victoCremony2==0)
                                     <p>
                                         @php
@@ -185,7 +203,7 @@
                                     </p>
                                 @else
                                     <p>
-                                        Ergebnis wird auf der Siegerehrung bekannt gegeben
+                                        Ergebnis wird auf der Siegerehrung bekannt gegeben.
                                     </p>
                                 @endif
                             @endif

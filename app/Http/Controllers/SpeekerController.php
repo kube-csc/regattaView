@@ -26,13 +26,21 @@ class SpeekerController extends Controller
 
             $races = Race::where('event_id', $eventId)
                 ->where('visible' , 1)
-                ->where('status', '<=', 2)
+                ->where('status', '<=', 3)
                 ->whereDate('rennDatum', Carbon::today())
                 ->orderby('rennUhrzeit')
                 ->limit(2)
                 ->get();
 
-            if($races->count()==0){
+            $racesResoult = Race::where('event_id', $eventId)
+                ->where('visible' , 1)
+                ->where('status', 4)
+                ->whereDate('rennDatum', Carbon::today())
+                ->orderby('rennUhrzeit' , 'desc')
+                ->limit(2)
+                ->get();
+
+            if($races->count()==0 && $racesResoult->count()==0) {
                 return view('speeker.show')->with(
                     [
                         'raceNext1'     => Null,
@@ -57,61 +65,105 @@ class SpeekerController extends Controller
                 ->orderby('rennUhrzeit')
                 ->get();
 
-            $counter = 0;
-            foreach($races as $race) {
-                $counter++;
-                if($counter == 1) {
-                    // This is the first iteration
-                    $raceNextId1 = $race->id;
-                    $raceNext1 = $race;
-                }
-                if($counter == count($races)) {
-                    // This is the last iteration
-                    $raceNextId2 = $race->id;
-                    $raceNext2 = $race;
-                    if($counter>1) {
-                        $vorId = $raceNextId2;
+            if($racesResoult->count()>0) {
+                $counter = 0;
+                foreach($racesResoult as $raceResoult) {
+                    $counter++;
+                    if($counter == 1) {
+                        $raceResoultId1 = $raceResoult->id;
+                        $raceResoult1 = $raceResoult;
+                    }
+                    if($counter == count($racesResoult)) {
+                        $raceResoultId2 = $raceResoult->id;
+                        $raceResoult2 = $raceResoult;
                     }
                 }
             }
 
-            if($nachId==0) {
-                $nach=0;
-                foreach ($raceChooses as $raceChoose) {
-                    if($raceChoose->id==$raceNextId1){
-                        if($nach>0) {
-                            $nachId = $nach;
+            if($races->count()==0){
+                $raceResoultId3 = $raceResoultId2;
+                $raceResoult3   = $raceResoult2;
+                $raceResoultId2 = $raceResoultId1;
+                $raceResoult2   = $raceResoult1;
+                $raceResoultId1 = $raceResoultId3;
+                $raceResoult1   = $raceResoult3;
+            }
+
+            If($racesResoult->count()>0) {
+                $counter = 0;
+                foreach($races as $race) {
+                    $counter++;
+                    if ($counter == 1) {
+                        // This is the first iteration
+                        $raceNextId2 = $race->id;
+                        $raceNext2 = $race;
+                        $raceNextId1 = Null;
+                        $raceNext1 = Null;
+                    }
+                    if ($counter == count($races)) {
+                        // This is the last iteration
+                        if ($counter > 1) {
+                            $vorId = $raceNextId2;
                         }
-                        break;
+                    }
+                }
+            }
+            else{
+                $counter = 0;
+                foreach($races as $race) {
+                    $counter++;
+                    if ($counter == 1) {
+                        // This is the first iteration
+                        $raceNextId1 = $race->id;
+                        $raceNext1 = $race;
+                    }
+                    if ($counter == count($races)) {
+                        // This is the last iteration
+                        $raceNextId2 = $race->id;
+                        $raceNext2 = $race;
+                        if ($counter > 1) {
+                            $vorId = $raceNextId2;
+                        }
+                    }
+                }
+            }
+
+            if($races->count()==0){
+                $raceNextId1 = Null;
+                $raceNext1   = Null;
+                $raceNextId2 = Null;
+                $raceNext2   = Null;
+                //$vorId       = Null;
+            }
+
+            $nach=0;
+            if($raceResoultId1!=Null) {
+                $raceResoultId1 = $raceResoult1->id;
+                foreach ($raceChooses as $raceChoose) {
+                    if ($raceChoose->id == $raceResoultId1) {
+                        if ($nach > 0) {
+                            $nachId = $nach;
+                            break;
+                        }
                     }
                     $nach = $raceChoose->id;
                 }
             }
 
-            $races = Race::where('event_id', $eventId)
-                ->where('visible' , 1)
-                ->where('status', '>=', 3)
-                ->where('status', '<=', 4)
-                ->whereDate('rennDatum', Carbon::today())
-                ->orderby('status')
-                ->orderby('rennUhrzeit', 'desc')
-                ->limit(2)
-                ->get();
-
-            $counter = 0;
-            foreach($races as $race) {
-                $counter++;
-                if ($counter == 1) {
-                    $raceResoultId1 = $race->id;
-                    $raceResoult1 = $race;
-                }
-                if ($counter == count($races)) {
-                    $raceResoultId2 = $race->id;
-                    $raceResoult2 = $race;
-                }
-
+            if($nachId==Null){
+               if($raceNextId1!=Null) {
+                   $raceNextId1 = $raceNext1->id;
+                    foreach ($raceChooses as $raceChoose) {
+                        if ($raceChoose->id == $raceNextId1) {
+                            if ($nach > 0) {
+                                $nachId = $nach;
+                                break;
+                            }
+                        }
+                        $nach = $raceChoose->id;
+                    }
+               }
             }
-
         }
         else {
             $race1 = Race::find($speekerId);
@@ -151,40 +203,68 @@ class SpeekerController extends Controller
                     }
                 }
                 else {
-
                     $raceNextId2 = Null;
                     $raceNext2 = Null;
                     $raceResoultId1 = Null;
                     $raceResoult1 = Null;
                     $raceResoultId2 = Null;
                     $raceResoult2 = Null;
+                }
+            }
 
+            if ($race1->status == 4) {
+                $raceResoultId1 = $race1->id;
+                $raceResoult1 = $race1;
+                $raceNextId1 = Null;
+                $raceNext1 = Null;
+                if($race2!=Null) {
+                    $vorId = $race2->id;
+                    if ($race2->status == 4) {
+                        $raceResoultId2 = $race2->id;
+                        $raceResoult2 = $race2;
+                        $raceNextId2 = Null;
+                        $raceNext2 = Null;
+                    }
+                    if ($race2->status <= 3) {
+                        $raceNextId2 = $race2->id;
+                        $raceNext2 = $race2;
+                        $raceResoultId2 = Null;
+                        $raceResoult2 = Null;
+                    }
+                }
+                else{
+                    $raceNextId2 = Null;
+                    $raceNext2 = Null;
+                    $raceResoultId2 = Null;
+                    $raceResoult2 = Null;
                 }
             }
 
             $nach=0;
-            foreach ($raceChooses as $raceChoose) {
-                if($raceChoose->id==$raceNextId1){
-                    if($nach>0) {
-                        $nachId = $nach;
-                    }
-                    break;
-                }
-                $nach = $raceChoose->id;
-            }
-
-            if($nach==0) {
+            if($raceResoultId1!=Null) {
+                $raceResoultId1 = $raceResoult1->id;
                 foreach ($raceChooses as $raceChoose) {
-                    if ($raceChoose->id == $raceResoult1) {
+                    if ($raceChoose->id == $raceResoultId1) {
                         if ($nach > 0) {
                             $nachId = $nach;
+                            break;
                         }
-                        break;
-                    }
+                      }
                     $nach = $raceChoose->id;
                 }
             }
 
+            if($nach==0 && $raceNextId1!=Null) {
+                foreach ($raceChooses as $raceChoose) {
+                    if($raceChoose->id==$raceNextId1){
+                        if($nach>0) {
+                            $nachId = $nach;
+                            break;
+                        }
+                    }
+                    $nach = $raceChoose->id;
+                }
+            }
         }
 
         if(isset($raceNextId1)) {
@@ -305,8 +385,6 @@ class SpeekerController extends Controller
 
     public function teamChoose(Request $request)
     {
-        //dd($request->teamId, $request->raceId);
-
         return redirect()->route('speeker.teamShow', [
             'teamId' => $request->teamId,
             'raceId' => $request->raceId

@@ -41,8 +41,6 @@
                             <p>
                                 {!! $team->beschreibung !!}
                             </p>
-
-
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -76,6 +74,9 @@
                                         @endforeach
                                     @endif
                                     @if($race->status == 4)
+                                        @php
+                                          $platz=0 ;
+                                        @endphp
                                         @foreach($lanes as $lane)
                                             @php
                                                 $platz++;
