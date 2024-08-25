@@ -17,7 +17,12 @@
                                 <div class="search-box d-flex">
                                     <select name="teamId" id="speekerId" class="form-control me-2">
                                         @foreach($teamsChoose as $teamChoose)
-                                            <option value="{{ $teamChoose->id }}">{{ $teamChoose->teamname }}</option>
+                                            <option value="{{ $teamChoose->id }}">
+                                                {{ $teamChoose->teamname }}
+                                                @if($teamChoose->beschreibung)
+                                                    (Info)
+                                                @endif
+                                            </option>
                                         @endforeach
                                     </select>
                                     <button type="submit" class="btn btn-secondary me-2 ml-2">auswahl</button>
@@ -68,34 +73,13 @@
                                            Ergebnis wird auf der Siegerehrung bekannt gegeben.
                                         </p>
                                     @endif
-                                    @foreach($lanes as $lane)
-                                        @php
-                                            $bahn++;
-                                        @endphp
-                                        <label for="name">Bahn:</label>
-                                        {{ $bahn}}
-                                        @if($lane->mannschaft_id!=Null)
-                                            {{ $lane->regattaTeam->teamname }}
-                                            @if($lane->regattaTeam->beschreibung != Null)
-                                                <a href="/Sprecher/Mannschaft/{{ $lane->mannschaft_id }}/{{ $race->id }}" class="me-2">
-                                                    <button type="button" class="btn btn-secondary ml-2">Info</button>
-                                                </a>
-                                            @endif
-                                        @endif
-                                        <br>
-                                    @endforeach
-                                @endif
-                                @if($race->status == 4)
-                                    @if($victoCremony==0)
-                                        @php
-                                          $platz=0 ;
-                                        @endphp
+                                    <p>
                                         @foreach($lanes as $lane)
                                             @php
-                                                $platz++;
+                                                $bahn++;
                                             @endphp
-                                            <label for="name">Platz:</label>
-                                            {{ $platz }}
+                                            <label for="name">Bahn:</label>
+                                            {{ $bahn}}
                                             @if($lane->mannschaft_id!=Null)
                                                 {{ $lane->regattaTeam->teamname }}
                                                 @if($lane->regattaTeam->beschreibung != Null)
@@ -106,6 +90,45 @@
                                             @endif
                                             <br>
                                         @endforeach
+                                    </p>
+                                    @if($race->beschreibung)
+                                        <hr></hr>
+                                        <h3>Beschreibung zum Rennen</h3>
+                                        <p>
+                                            {!! $race->beschreibung !!}
+                                        </p>
+                                    @endif
+                                @endif
+                                @if($race->status == 4)
+                                    @if($victoCremony==0)
+                                        @php
+                                          $platz=0 ;
+                                        @endphp
+                                        <p>
+                                            @foreach($lanes as $lane)
+                                                @php
+                                                    $platz++;
+                                                @endphp
+                                                <label for="name">Platz:</label>
+                                                {{ $platz }}
+                                                @if($lane->mannschaft_id!=Null)
+                                                    {{ $lane->regattaTeam->teamname }}
+                                                    @if($lane->regattaTeam->beschreibung != Null)
+                                                        <a href="/Sprecher/Mannschaft/{{ $lane->mannschaft_id }}/{{ $race->id }}" class="me-2">
+                                                            <button type="button" class="btn btn-secondary ml-2">Info</button>
+                                                        </a>
+                                                    @endif
+                                                @endif
+                                                <br>
+                                            @endforeach
+                                        </p>
+                                        @if($race->ergebnisBeschreibung)
+                                            <hr></hr>
+                                            <h3>Beschreibung zum Ergebnis</h3>
+                                            <p>
+                                                {!! $race->ergebnisBeschreibung !!}
+                                            </p>
+                                        @endif
                                     @endif
                                 @endif
                             @endif

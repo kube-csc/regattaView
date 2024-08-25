@@ -103,10 +103,17 @@
                                         $diff_in_minutes=$timfrom-$timto;
                                     @endphp
                                     Startzeit: {{ date("H:i", strtotime($raceNext1->rennUhrzeit)) }} Uhr
-                                    @if($diff_in_minutes>5 && ($raceNext1->programmDatei != Null && $race->ergebnisDatei == Null) || ($raceNext1->status <= 2))
+                                    @if($diff_in_minutes>5 && ($raceNext1->programmDatei != Null && $raceNext1->ergebnisDatei == Null) || ($raceNext1->status <= 2))
                                         <br>Voraussichtlich: {{ date("H:i", strtotime($raceNext1->verspaetungUhrzeit)) }} Uhr
                                     @endif
                                 </p>
+                                @if($raceNext1->beschreibung)
+                                    <hr></hr>
+                                    <h3>Beschreibung zum Rennen</h3>
+                                    <p>
+                                        {!! $raceNext1->beschreibung !!}
+                                    </p>
+                                @endif
                             @endif
                             @if($raceResoult1 != Null && $victoCremony1 == 0)
                                 <h2>{{ $raceResoult1->rennBezeichnung }}</h2>
@@ -133,7 +140,7 @@
                                 </p>
                                 @if($raceResoult1->raceTabele->ueberschrift != Null)
                                     <hr class="my-4">
-                                    <h2>Tabelle</h2>
+                                    <h3>Tabelle</h3>
                                     <p>
                                         {{ $raceResoult1->raceTabele->ueberschrift }}<br>
                                         @if($raceResoult1->raceTabele->fileTabelleDatei != Null)
@@ -144,6 +151,13 @@
                                         @endif
                                         Akuallisiert:
                                         {{ date("d.m.y", strtotime($raceResoult1->raceTabele->updated_at)) }} {{ date("H:i", strtotime($raceResoult1->raceTabele->updated_at)) }} Uhr
+                                    </p>
+                                @endif
+                                @if($raceResoult1->ergebnisBeschreibung)
+                                    <hr></hr>
+                                    <h3>Beschreibung zum Ergebnis</h3>
+                                    <p>
+                                        {!! $raceResoult1->ergebnisBeschreibung !!}
                                     </p>
                                 @endif
                             @endif
@@ -179,6 +193,13 @@
                                             <br>
                                         @endforeach
                                     </p>
+                                    @if($raceNext1->beschreibung)
+                                        <hr></hr>
+                                        <h3>Beschreibung zum Rennen</h3>
+                                        <p>
+                                            {!! $raceNext1->beschreibung !!}
+                                        </p>
+                                    @endif
                                 @endif
                             @endif
                         </div>
@@ -229,6 +250,13 @@
                                         <br>Voraussichtlich: {{ date("H:i", strtotime($raceNext2->verspaetungUhrzeit)) }} Uhr
                                     @endif
                                 </p>
+                                @if($raceNext2->beschreibung)
+                                    <hr></hr>
+                                    <h3>Beschreibung zum Rennen</h3>
+                                    <p>
+                                        {!! $raceNext2->beschreibung !!}
+                                    </p>
+                                @endif
                             @endif
                             @if($raceResoult2 != Null && $raceNext2     == Null &&$victoCremony2 == 0)
                                 <h2>{{ $raceResoult2->rennBezeichnung }}</h2>
@@ -256,7 +284,7 @@
                                     </p>
                                     @if($raceResoult2->raceTabele->ueberschrift != Null)
                                         <hr class="my-4">
-                                        <h2>Tabelle</h2>
+                                        <h3>Tabelle</h3>
                                         <p>
                                             {{ $raceResoult2->raceTabele->ueberschrift }}<br>
                                             @if($raceResoult2->raceTabele->fileTabelleDatei != Null)
@@ -267,6 +295,13 @@
                                             @endif
                                             Akuallisiert:
                                             {{ date("d.m.y", strtotime($raceResoult2->raceTabele->updated_at)) }} {{ date("H:i", strtotime($raceResoult2->raceTabele->updated_at)) }} Uhr
+                                        </p>
+                                    @endif
+                                    @if($raceResoult2->ergebnisBeschreibung)
+                                        <hr></hr>
+                                        <h3>Beschreibung zum Ergebnis</h3>
+                                        <p>
+                                            {!! $raceResoult2->ergebnisBeschreibung !!}
                                         </p>
                                     @endif
                                 @endif
@@ -303,6 +338,13 @@
                                             <br>
                                         @endforeach
                                     </p>
+                                    @if($raceNext2->beschreibung)
+                                        <hr></hr>
+                                        <h3>Beschreibung zum Rennen</h3>
+                                        <p>
+                                            {!! $raceNext2->beschreibung !!}
+                                        </p>
+                                    @endif
                                 @endif
                             @endif
                         </div>

@@ -40,3 +40,8 @@ body {
 {
     border: 1px solid #dee2e6;
 }
+
+.box h3
+{
+    font-size: 22px;
+}
