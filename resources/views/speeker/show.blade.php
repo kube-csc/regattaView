@@ -1,5 +1,7 @@
 @extends('layouts.speeker')
 
+@section('title' ,'Sprecher Rennplan')
+
 @section('content')
 
     <main id="main">
@@ -7,7 +9,7 @@
         <section id="search" class="search">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6 ">
+                    <div class="col-md-6">
                         <div class="box">
                             <form action="/Sprecher/Auswahl" method="post" enctype="multipart/form-data">
                                 @csrf
@@ -22,7 +24,7 @@
                             </form>
                         </div>
                     </div>
-                    <div class="col-md-6 ">
+                    <div class="col-md-6">
                         <div class="box">
                             @if($raceNext1!= Null)
                                 <a href="/Sprecher/{{ $raceNext1->id  }}" class="me-2">
@@ -58,10 +60,10 @@
                     <div class="col-md-6 ">
                         <div class="box">
                             <!-- Content for the first box -->
-                            @if($raceNext1==Null  && $raceResoult1==Null)
-                                <h2>Es sind keine Rennen vorhanden</h2>
+                            @if($raceNext1 == Null && $raceResoult1 == Null)
+                                <p>Es sind keine Rennen vorhanden.</p>
                             @endif
-                            @if($raceNext1!=Null && $raceResoult1==Null)
+                            @if($raceNext1 != Null && $raceResoult1 == Null && $victoCremony1 == 0)
                                 @php
                                     $bahn=0;
                                 @endphp
@@ -127,7 +129,7 @@
                                         @endforeach
                                     </p>
                                     @if($raceResoult1->raceTabele->ueberschrift != Null)
-                                        ---------------------------------------------------------------------------
+                                        <hr class="my-4">
                                         <h2>Tabelle</h2>
                                         <p>
                                             {{ $raceResoult1->raceTabele->ueberschrift }}<br>
@@ -145,6 +147,34 @@
                                     <p>
                                         Ergebnis wird auf der Siegerehrung bekannt gegeben.
                                     </p>
+                                    <hr></hr>
+                                    <p>
+                                        @if($raceNext1->status < 2)
+                                            <br>Rennen noch nicht gesetzt<br><br>
+                                        @else
+                                            @php
+                                                 $bahn=0;
+                                            @endphp
+                                            @foreach($lanesNext1 as $lane)
+                                                @php
+                                                    $bahn++;
+                                                @endphp
+                                                <label for="name">Bahn:</label>
+                                                {{ $bahn}}
+                                                @if($lane->mannschaft_id!=Null)
+                                                    {{ $lane->regattaTeam->teamname }}
+                                                    @if($lane->regattaTeam->beschreibung != Null)
+                                                        <a href="/Sprecher/Mannschaft/{{ $lane->mannschaft_id }}/{{ $raceNext1->id }}" class="me-2">
+                                                            <button type="button" class="btn btn-secondary ml-2">Info</button>
+                                                        </a>
+                                                    @endif
+                                                @else
+                                                    frei
+                                                @endif
+                                                <br>
+                                            @endforeach
+                                        @endif
+                                    </p>
                                 @endif
                             @endif
                         </div>
@@ -153,9 +183,9 @@
                         <div class="box">
                             <!-- Content for the second box -->
                             @if($raceNext2==Null && $raceResoult2==Null)
-                                <h2>Es sind keine Rennen vorhanden</h2>
+                                <p>Es sind keine Rennen vorhanden.</p>
                             @endif
-                            @if($raceNext2!=Null)
+                            @if($raceNext2!=Null && $victoCremony2 == 0)
                                 @php
                                     $bahn=0;
                                 @endphp
@@ -196,7 +226,7 @@
                                     @endif
                                 </p>
                             @endif
-                            @if($raceResoult2!=Null && $raceNext2==Null)
+                            @if($raceResoult2!=Null && $raceNext2==Null && $victoCremony2 == 0)
                                 <h2>{{ $raceResoult2->rennBezeichnung }}</h2>
                                 @if($victoCremony2==0)
                                     <p>
@@ -211,12 +241,17 @@
                                             {{ $platz }}
                                             @if($lane->mannschaft_id!=Null)
                                                 {{ $lane->regattaTeam->teamname }}
+                                                @if($lane->regattaTeam->beschreibung != Null)
+                                                    <a href="/Sprecher/Mannschaft/{{ $lane->mannschaft_id }}/{{ $raceResoult2->id }}" class="me-2">
+                                                        <button type="button" class="btn btn-secondary ml-2">Info</button>
+                                                    </a>
+                                                @endif
                                             @endif
                                             <br>
                                         @endforeach
                                     </p>
                                     @if($raceResoult2->raceTabele->ueberschrift != Null)
-                                        ---------------------------------------------------------------------------
+                                        <hr class="my-4">
                                         <h2>Tabelle</h2>
                                         <p>
                                             {{ $raceResoult2->raceTabele->ueberschrift }}<br>
@@ -230,9 +265,39 @@
                                             {{ date("d.m.y", strtotime($raceResoult2->raceTabele->updated_at)) }} {{ date("H:i", strtotime($raceResoult2->raceTabele->updated_at)) }} Uhr
                                         </p>
                                     @endif
+                                @endif
+                            @endif
+                            @if($raceNext2!=Null && $victoCremony2 == 1)
+                                @php
+                                    $bahn=0;
+                                @endphp
+                                <h2>{{ $raceNext2->rennBezeichnung }}</h2>
+                                @if($raceNext2->status < 2)
+                                        <p>Rennen noch nicht gesetzt</p>
                                 @else
                                     <p>
                                         Ergebnis wird auf der Siegerehrung bekannt gegeben.
+                                    </p>
+                                    <hr></hr>
+                                    <p>
+                                        @foreach($lanesNext2 as $lane)
+                                            @php
+                                                $bahn++;
+                                            @endphp
+                                            <label for="name">Bahn:</label>
+                                            {{ $bahn}}
+                                            @if($lane->mannschaft_id!=Null)
+                                                {{ $lane->regattaTeam->teamname }}
+                                                @if($lane->regattaTeam->beschreibung != Null)
+                                                    <a href="/Sprecher/Mannschaft/{{ $lane->mannschaft_id }}/{{ $raceNext2->id }}" class="me-2">
+                                                        <button type="button" class="btn btn-secondary ml-2">Info</button>
+                                                    </a>
+                                                @endif
+                                            @else
+                                                frei
+                                            @endif
+                                            <br>
+                                        @endforeach
                                     </p>
                                 @endif
                             @endif

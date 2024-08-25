@@ -7,15 +7,6 @@ body {
 /*--------------------------------------------------------------
 # Sections General
 --------------------------------------------------------------*/
-.box {
-    padding: 20px;
-    background-color: #333333; /* Dark gray background */
-    color: #ffffff; /* White text */
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
-
 .search-box {
     margin-bottom: 20px;
     background-color: #333333; /* Dark gray background */
@@ -31,7 +22,21 @@ body {
     color: #ffffff; /* White text */
 }
 
+.box {
+    padding: 20px;
+    background-color: #333333; /* Dark gray background */
+    color: #ffffff; /* White text */
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
 .box p
 {
- font-size: 25px;
+    font-size: 18px;
+}
+
+.box hr
+{
+    border: 1px solid #dee2e6;
 }

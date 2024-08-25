@@ -288,11 +288,18 @@ class SpeekerController extends Controller
                 ->orderBy('platz')
                 ->get();
             if($raceResoult1->veroeffentlichungUhrzeit < Carbon::now()->toTimeString() || $raceResoult1->rennDatum < Carbon::now()->toDateString()) {
-                $victoCremony1 = 0;
+                $victoCremony1 = 0; // 0 - nicht anzeigen, 1 - anzeigen
+            }
+            else {
+                    $raceNext1   = $raceResoult1;
+                    $raceNextId1 = $raceResoult1->id;
+                    $lanesNext1  = Lane::where('rennen_id', $raceNextId1)
+                        ->orderBy('bahn')
+                        ->get();
             }
         }
         else {
-            $raceResoult1 = Null;
+            $raceResoult1  = Null;
             $lanesResoult1 = Null;
         }
 
@@ -301,11 +308,21 @@ class SpeekerController extends Controller
                 ->orderBy('platz')
                 ->get();
             if($raceResoult2->veroeffentlichungUhrzeit < Carbon::now()->toTimeString() || $raceResoult2->rennDatum < Carbon::now()->toDateString()) {
-                $victoCremony2 = 0;
+                $victoCremony2 = 0; // 0 - nicht anzeigen, 1 - anzeigen
+                $lanesNext2= Lane::where('rennen_id', $raceNextId2)
+                    ->orderBy('bahn')
+                    ->get();
+            }
+            else{
+                $raceNext2   = $raceResoult2;
+                $raceNextId2 = $raceResoult2->id;
+                $lanesNext2  = Lane::where('rennen_id', $raceNextId2)
+                    ->orderBy('bahn')
+                    ->get();
             }
         }
         else {
-            $raceResoult2 = Null;
+            $raceResoult2  = Null;
             $lanesResoult2 = Null;
         }
 
@@ -353,6 +370,7 @@ class SpeekerController extends Controller
             ->get();
 
         $lanes=Null;
+        $victoCremony = 1;
         if($race->status == 2) {
             $lanes = Lane::where('rennen_id', $raceId)
                 ->orderBy('bahn')
@@ -365,16 +383,21 @@ class SpeekerController extends Controller
                 ->get();
         }
 
+        if($race->veroeffentlichungUhrzeit < Carbon::now()->toTimeString() || $race->rennDatum < Carbon::now()->toDateString()) {
+            $victoCremony = 0;
+        }
+
         return view('speeker.showTeam')->with(
           [
-              'teamId' => $teamId,
-              'raceId' => $raceId,
-              'team'   => $team,
-              'teamsChoose' => $teamsChoose,
-              'lanes'  => $lanes,
-              'race' => $race,
-              'vorId'  => 0,
-              'nachId' => 0
+              'teamId'       => $teamId,
+              'raceId'       => $raceId,
+              'team'         => $team,
+              'teamsChoose'  => $teamsChoose,
+              'lanes'        => $lanes,
+              'race'         => $race,
+              'vorId'        => 0,
+              'nachId'       => 0,
+              'victoCremony' => $victoCremony
           ]);
     }
 
