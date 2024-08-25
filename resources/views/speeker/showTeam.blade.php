@@ -63,7 +63,11 @@
                                 @php
                                     $bahn=0;
                                 @endphp
-                                <h2>{{ $race->rennBezeichnung }}</h2>
+                                @if(is_numeric($race->nummer))
+                                    <h2>{{ $race->nummer }}. {{ $race->rennBezeichnung }}</h2>
+                                @else
+                                    <h2>{{ $race->nummer }} / {{ $race->rennBezeichnung }}</h2>
+                                @endif
                                 @if($race->status < 2)
                                 <p>Rennen noch nicht gesetzt</p>
                                 @endif

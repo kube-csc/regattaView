@@ -16,7 +16,13 @@
                                 <div class="search-box d-flex">
                                     <select name="speekerId" id="speekerId" class="form-control me-2">
                                         @foreach($racesChoose as $race)
-                                            <option value="{{ $race->id }}">{{ $race->rennBezeichnung }}</option>
+                                            <option value="{{ $race->id }}">
+                                                @if(is_numeric($race->nummer))
+                                                    <h2>{{ $race->nummer }}. {{ $race->rennBezeichnung }}</h2>
+                                                @else
+                                                    <h2>{{ $race->nummer }} / {{ $race->rennBezeichnung }}</h2>
+                                                @endif
+                                            </option>
                                         @endforeach
                                     </select>
                                     <button type="submit" class="btn btn-secondary me-2 ml-2">auswahl</button>
@@ -71,7 +77,11 @@
                                 @php
                                     $bahn=0;
                                 @endphp
-                                <h2>{{ $raceNext1->rennBezeichnung }}</h2>
+                                @if(is_numeric($raceNext1->nummer))
+                                    <h2>{{ $raceNext1->nummer }}. {{ $raceNext1->rennBezeichnung }}</h2>
+                                @else
+                                    <h2>{{ $raceNext1->nummer }} / {{ $raceNext1->rennBezeichnung }}</h2>
+                                @endif
                                 <p>
                                     @if($raceNext1->status < 2)
                                         <br>Rennen noch nicht gesetzt<br><br>
@@ -116,7 +126,11 @@
                                 @endif
                             @endif
                             @if($raceResoult1 != Null && $victoCremony1 == 0)
-                                <h2>{{ $raceResoult1->rennBezeichnung }}</h2>
+                                @if(is_numeric($raceResoult1->nummer))
+                                    <h2>{{ $raceResoult1->nummer }}. {{ $raceResoult1->rennBezeichnung }}</h2>
+                                @else
+                                    <h2>{{ $raceResoult1->nummer }} / {{ $raceResoult1->rennBezeichnung }}</h2>
+                                @endif
                                 <p>
                                 @php
                                     $platz=0
@@ -165,7 +179,11 @@
                                 @php
                                     $bahn=0;
                                 @endphp
-                                <h2>{{ $raceNext1->rennBezeichnung }}</h2>
+                                @if(is_numeric($raceNext1->nummer))
+                                    <h2>{{ $raceNext1->nummer }}. {{ $raceNext1->rennBezeichnung }}</h2>
+                                @else
+                                    <h2>{{ $raceNext1->nummer }} / {{ $raceNext1->rennBezeichnung }}</h2>
+                                @endif
                                 @if($raceNext1->status < 2)
                                     <p>Rennen noch nicht gesetzt</p>
                                 @else
@@ -214,7 +232,11 @@
                                 @php
                                     $bahn=0;
                                 @endphp
-                                <h2>{{ $raceNext2->rennBezeichnung }}</h2>
+                                @if(is_numeric($raceNext2->nummer))
+                                    <h2>{{ $raceNext2->nummer }}. {{ $raceNext2->rennBezeichnung }}</h2>
+                                @else
+                                    <h2>{{ $raceNext2->nummer }} / {{ $raceNext2->rennBezeichnung }}</h2>
+                                @endif
                                 <p>
                                     @if($raceNext2->status < 2)
                                         <br>Rennen noch nicht gesetzt<br><br>
@@ -259,7 +281,11 @@
                                 @endif
                             @endif
                             @if($raceResoult2 != Null && $raceNext2     == Null &&$victoCremony2 == 0)
-                                <h2>{{ $raceResoult2->rennBezeichnung }}</h2>
+                                @if(is_numeric($raceResoult2->nummer))
+                                    <h2>{{ $raceResoult2->nummer }}. {{ $raceResoult2->rennBezeichnung }}</h2>
+                                @else
+                                    <h2>{{ $raceResoult2->nummer }} / {{ $raceResoult2->rennBezeichnung }}</h2>
+                                @endif
                                 @if($victoCremony2==0)
                                     <p>
                                         @php
@@ -306,11 +332,15 @@
                                     @endif
                                 @endif
                             @endif
-                            @if($raceNext2    != Null && $raceResoult2 != Null && $victoCremony2 == 1)
+                            @if($raceNext2 != Null && $raceResoult2 != Null && $victoCremony2 == 1)
                                 @php
                                     $bahn=0;
                                 @endphp
-                                <h2>{{ $raceNext2->rennBezeichnung }}</h2>
+                                @if(is_numeric($raceNext2->nummer))
+                                    <h2>{{ $raceNext2->nummer }}. {{ $raceNext2->rennBezeichnung }}</h2>
+                                @else
+                                    <h2>{{ $raceNext2->nummer }} / {{ $raceNext2->rennBezeichnung }}</h2>
+                                @endif
                                 @if($raceNext2->status < 2)
                                         <p>Rennen noch nicht gesetzt</p>
                                 @else
