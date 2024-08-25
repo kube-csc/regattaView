@@ -23,11 +23,15 @@ class SpeekerController extends Controller
                 ->first();
 
             $eventId=$event->event_id;
+            $now=Carbon::now()->toDateString();
+            if($now < $event->datumvon) {
+                $now = $event->datumvon;
+            }
 
             $races = Race::where('event_id', $eventId)
                 ->where('visible' , 1)
                 ->where('status', '<=', 3)
-                ->whereDate('rennDatum', Carbon::today())
+                ->whereDate('rennDatum', $now)
                 ->orderby('rennUhrzeit')
                 ->limit(2)
                 ->get();
@@ -35,33 +39,18 @@ class SpeekerController extends Controller
             $racesResoult = Race::where('event_id', $eventId)
                 ->where('visible' , 1)
                 ->where('status', 4)
-                ->whereDate('rennDatum', Carbon::today())
+                ->whereDate('rennDatum', $now)
                 ->orderby('rennUhrzeit' , 'desc')
                 ->limit(2)
                 ->get();
 
             if($races->count()==0 && $racesResoult->count()==0) {
-                return view('speeker.show')->with(
-                    [
-                        'raceNext1'     => Null,
-                        'raceNext2'     => Null,
-                        'raceResoult1'  => Null,
-                        'raceResoult2'  => Null,
-                        'lanesNext1'    => Null,
-                        'lanesNext2'    => Null,
-                        'lanesResoult1' => Null,
-                        'lanesResoult2' => Null,
-                        'victoCremony1' => 0,
-                        'victoCremony2' => 0,
-                        'raceChoose'    => Null,
-                        'vorId'         => 0,
-                        'nachId'        => 0
-                    ]);
+                return view('speeker.empty');
             }
 
             $raceChooses = Race::where('event_id', $eventId)
                 ->where('visible' , 1)
-                ->whereDate('rennDatum', Carbon::today())
+                ->whereDate('rennDatum', $now)
                 ->orderby('rennUhrzeit')
                 ->get();
 
@@ -178,7 +167,7 @@ class SpeekerController extends Controller
 
             $raceChooses = Race::where('event_id', $race1->event_id)
                 ->where('visible' , 1)
-                ->whereDate('rennDatum', Carbon::today())
+                ->whereDate('rennDatum', $race1->rennDatum)
                 ->orderby('rennUhrzeit')
                 ->get();
 

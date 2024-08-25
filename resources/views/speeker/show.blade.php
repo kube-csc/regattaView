@@ -127,6 +127,21 @@
                                             <br>
                                         @endforeach
                                     </p>
+                                    @if($raceResoult1->raceTabele->ueberschrift != Null)
+                                        ---------------------------------------------------------------------------
+                                        <h2>Tabelle</h2>
+                                        <p>
+                                            {{ $raceResoult1->raceTabele->ueberschrift }}<br>
+                                            @if($raceResoult1->raceTabele->fileTabelleDatei != Null)
+                                                <a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $raceResoult1->raceTabele->fileTabelleDatei }}" target="_blank">
+                                                        <i class="bx bxs-file-doc"></i>Tabellen Dokument
+                                                </a>
+                                                <br>
+                                            @endif
+                                            Akuallisiert:
+                                            {{ date("d.m.y", strtotime($raceResoult1->raceTabele->updated_at)) }} {{ date("H:i", strtotime($raceResoult1->raceTabele->updated_at)) }} Uhr
+                                        </p>
+                                    @endif
                                 @else
                                     <p>
                                         Ergebnis wird auf der Siegerehrung bekannt gegeben.
@@ -201,6 +216,21 @@
                                             <br>
                                         @endforeach
                                     </p>
+                                    @if($raceResoult2->raceTabele->ueberschrift != Null)
+                                        ---------------------------------------------------------------------------
+                                        <h2>Tabelle</h2>
+                                        <p>
+                                            {{ $raceResoult2->raceTabele->ueberschrift }}<br>
+                                            @if($raceResoult2->raceTabele->fileTabelleDatei != Null)
+                                                <a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $raceResoult2->raceTabele->fileTabelleDatei }}" target="_blank">
+                                                    Tabellen Dokument
+                                                </a>
+                                                <br>
+                                            @endif
+                                            Akuallisiert:
+                                            {{ date("d.m.y", strtotime($raceResoult2->raceTabele->updated_at)) }} {{ date("H:i", strtotime($raceResoult2->raceTabele->updated_at)) }} Uhr
+                                        </p>
+                                    @endif
                                 @else
                                     <p>
                                         Ergebnis wird auf der Siegerehrung bekannt gegeben.
