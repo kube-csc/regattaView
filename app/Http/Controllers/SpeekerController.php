@@ -31,6 +31,7 @@ class SpeekerController extends Controller
             $races = Race::where('event_id', $eventId)
                 ->where('visible' , 1)
                 ->where('status', '<=', 3)
+                ->where('status', '!=', 4)
                 ->whereDate('rennDatum', $now)
                 ->orderby('rennUhrzeit')
                 ->limit(2)
@@ -48,7 +49,7 @@ class SpeekerController extends Controller
                 return view('speeker.empty');
             }
 
-            $raceChooses = Race::where('event_id', $eventId)
+            $racesChoose = Race::where('event_id', $eventId)
                 ->where('visible' , 1)
                 ->whereDate('rennDatum', $now)
                 ->orderby('rennUhrzeit')
@@ -92,6 +93,8 @@ class SpeekerController extends Controller
                         // This is the first iteration
                         $raceNextId2 = $race->id;
                         $raceNext2 = $race;
+                        $raceResoultId2 = Null;
+                        $raceResoult2   = Null;
                         $raceNextId1 = Null;
                         $raceNext1 = Null;
                     }
@@ -111,11 +114,15 @@ class SpeekerController extends Controller
                         // This is the first iteration
                         $raceNextId1 = $race->id;
                         $raceNext1 = $race;
+                        $raceResoultId1 = Null;
+                        $raceResoult1   = Null;
                     }
                     if ($counter == count($races)) {
                         // This is the last iteration
                         $raceNextId2 = $race->id;
                         $raceNext2 = $race;
+                        $raceResoultId2 = Null;
+                        $raceResoult2   = Null;
                         if ($counter > 1) {
                             $vorId = $raceNextId2;
                         }
@@ -134,7 +141,7 @@ class SpeekerController extends Controller
             $nach=0;
             if($raceResoultId1!=Null) {
                 $raceResoultId1 = $raceResoult1->id;
-                foreach ($raceChooses as $raceChoose) {
+                foreach ($racesChoose as $raceChoose) {
                     if ($raceChoose->id == $raceResoultId1) {
                         if ($nach > 0) {
                             $nachId = $nach;
@@ -148,7 +155,7 @@ class SpeekerController extends Controller
             if($nachId==Null){
                if($raceNextId1!=Null) {
                    $raceNextId1 = $raceNext1->id;
-                    foreach ($raceChooses as $raceChoose) {
+                    foreach ($racesChoose as $raceChoose) {
                         if ($raceChoose->id == $raceNextId1) {
                             if ($nach > 0) {
                                 $nachId = $nach;
@@ -171,7 +178,7 @@ class SpeekerController extends Controller
                 ->orderby('rennUhrzeit')
                 ->first();
 
-            $raceChooses = Race::where('event_id', $race1->event_id)
+            $racesChoose = Race::where('event_id', $race1->event_id)
                 ->where('visible' , 1)
                 ->whereDate('rennDatum', $race1->rennDatum)
                 ->orderby('rennUhrzeit')
@@ -238,7 +245,7 @@ class SpeekerController extends Controller
             $nach=0;
             if($raceResoultId1!=Null) {
                 $raceResoultId1 = $raceResoult1->id;
-                foreach ($raceChooses as $raceChoose) {
+                foreach ($racesChoose as $raceChoose) {
                     if ($raceChoose->id == $raceResoultId1) {
                         if ($nach > 0) {
                             $nachId = $nach;
@@ -250,7 +257,7 @@ class SpeekerController extends Controller
             }
 
             if($nach==0 && $raceNextId1!=Null) {
-                foreach ($raceChooses as $raceChoose) {
+                foreach ($racesChoose as $raceChoose) {
                     if($raceChoose->id==$raceNextId1){
                         if($nach>0) {
                             $nachId = $nach;
@@ -261,6 +268,7 @@ class SpeekerController extends Controller
                 }
             }
         }
+
 
         if(isset($raceNextId1)) {
             $lanesNext1= Lane::where('rennen_id', $raceNextId1)
@@ -291,11 +299,11 @@ class SpeekerController extends Controller
                 $victoCremony1 = 0; // 0 - nicht anzeigen, 1 - anzeigen
             }
             else {
-                    $raceNext1   = $raceResoult1;
-                    $raceNextId1 = $raceResoult1->id;
-                    $lanesNext1  = Lane::where('rennen_id', $raceNextId1)
-                        ->orderBy('bahn')
-                        ->get();
+                  $raceNext1   = $raceResoult1;
+                  $raceNextId1 = $raceResoult1->id;
+                  $lanesNext1  = Lane::where('rennen_id', $raceNextId1)
+                      ->orderBy('bahn')
+                      ->get();
             }
         }
         else {
@@ -338,7 +346,7 @@ class SpeekerController extends Controller
                     'lanesResoult2' => $lanesResoult2,
                     'victoCremony1' => $victoCremony1,
                     'victoCremony2' => $victoCremony2,
-                    'raceChooses'   => $raceChooses,
+                    'racesChoose'   => $racesChoose,
                     'vorId'         => $vorId,
                     'nachId'        => $nachId,
                 ]);

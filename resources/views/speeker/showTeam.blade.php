@@ -20,7 +20,7 @@
                                             <option value="{{ $teamChoose->id }}">{{ $teamChoose->teamname }}</option>
                                         @endforeach
                                     </select>
-                                    <button type="submit" class="btn btn-secondary me-2 ml-2 ">auswahl</button>
+                                    <button type="submit" class="btn btn-secondary me-2 ml-2">auswahl</button>
                                 </div>
                             </form>
                         </div>
@@ -28,10 +28,10 @@
                     <div class="col-md-6">
                         <div class="box">
                             <a href="/Sprecher/Mannschaft/{{ $teamId }}/{{ $raceId }}" class="me-2">
-                                    <button type="button" class="btn btn-secondary ml-2">akuallisieren</button>
+                                    <button type="button" class="btn btn-secondary ml-2 px-4">aktualisieren</button>
                             </a>
                             <a href="/Sprecher/{{ $raceId }}">
-                                <button type="button" class="btn btn-secondary ml-2">Programm</button>
+                                <button type="button" class="btn btn-secondary ml-2 px-4">Programm</button>
                             </a>
                         </div>
                     </div>
@@ -63,9 +63,11 @@
                                 <p>Rennen noch nicht gesetzt</p>
                                 @endif
                                 @if($race->status == 2 or ($victoCremony == 1 and $race->status == 4))
-                                    <p>
-                                       Ergebnis wird auf der Siegerehrung bekannt gegeben.
-                                    </p>
+                                    @if($race->status >= 3)
+                                        <p>
+                                           Ergebnis wird auf der Siegerehrung bekannt gegeben.
+                                        </p>
+                                    @endif
                                     @foreach($lanes as $lane)
                                         @php
                                             $bahn++;
@@ -102,6 +104,7 @@
                                                     </a>
                                                 @endif
                                             @endif
+                                            <br>
                                         @endforeach
                                     @endif
                                 @endif
