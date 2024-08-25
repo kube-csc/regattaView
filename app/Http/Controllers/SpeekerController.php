@@ -68,6 +68,12 @@ class SpeekerController extends Controller
                     }
                 }
             }
+            else{
+                $raceResoultId1 = Null;
+                $raceResoult1   = Null;
+                $raceResoultId2 = Null;
+                $raceResoult2   = Null;
+            }
 
             if($races->count()==0){
                 $raceResoultId3 = $raceResoultId2;

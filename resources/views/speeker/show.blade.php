@@ -100,7 +100,6 @@
                                     @if($diff_in_minutes>5 && ($raceNext1->programmDatei != Null && $race->ergebnisDatei == Null) || ($raceNext1->status <= 2))
                                         <br>Voraussichtlich: {{ date("H:i", strtotime($raceNext1->verspaetungUhrzeit)) }} Uhr
                                     @endif
-
                                 </p>
                             @endif
                             @if($raceResoult1!=Null)
