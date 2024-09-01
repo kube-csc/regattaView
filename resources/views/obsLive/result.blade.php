@@ -8,7 +8,11 @@
         <section id="about" class="about">
             <div class="container">
                 <div class="section-title">
-                    <h2>{{ $race->rennBezeichnung }}</h2>
+                    @if(is_numeric($race->nummer))
+                        {{ $race->nummer }}. {{ $race->rennBezeichnung }}
+                    @else
+                        {{ $race->nummer }} / {{ $race->rennBezeichnung }}
+                    @endif
                     @if($victoCremony==0)
                         <p>
                             @php

@@ -47,7 +47,7 @@ class ProgramController extends Controller
     public function indexNotResult()
     {
         $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-            ->where('ra.visible' , 1)   // ToDo: Events koennen noch nicht mit visible abgefragt werden
+            ->where('ra.visible' , 1)   // ToDo: Events können noch nicht mit visible abgefragt werden
             ->where('events.regatta' , '1')
             ->where('events.verwendung' , 0)
             ->orderby('events.datumvon' , 'desc')
@@ -237,6 +237,7 @@ class ProgramController extends Controller
             ->first();
 
         $lanes = Lane::where('rennen_id', $raceId)
+            ->where ('platz' , '!=' , 0)
             ->orderBy('platz')
             ->get();
 

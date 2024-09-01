@@ -1,6 +1,10 @@
 @extends('layouts.headFrontend')
 
-@section('title' ,'Starteite')
+@php
+    $titel="Event - ".env('VEREIN_NAME');
+@endphp
+
+@section('title' , $titel)
 
 @section('content')
 

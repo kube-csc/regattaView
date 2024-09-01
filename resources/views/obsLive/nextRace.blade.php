@@ -15,7 +15,6 @@
                        @endif
                     </p>
                 </div>
-
             </div>
         </section>
     </main>
