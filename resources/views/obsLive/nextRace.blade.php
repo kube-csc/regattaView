@@ -6,7 +6,7 @@
         <!-- ======= Services Section ======= -->
         <section id="about" class="about">
             <div class="container">
-               <div class="section-race">
+                <div class="section-race">
                     <p>
                        @if(is_numeric($race->nummer))
                             {{ $race->nummer }}. {{ $race->rennBezeichnung }}

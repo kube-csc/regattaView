@@ -7,12 +7,14 @@
         <!-- ======= Services Section ======= -->
         <section id="about" class="about">
             <div class="container">
-                <div class="section-title">
-                    @if(is_numeric($race->nummer))
-                        {{ $race->nummer }}. {{ $race->rennBezeichnung }}
-                    @else
-                        {{ $race->nummer }} / {{ $race->rennBezeichnung }}
-                    @endif
+                <div class="section-box">
+                    <h2>
+                        @if(is_numeric($race->nummer))
+                            {{ $race->nummer }}. {{ $race->rennBezeichnung }}
+                        @else
+                            {{ $race->nummer }} / {{ $race->rennBezeichnung }}
+                        @endif
+                    </h2>
                     @if($victoCremony==0)
                         <p>
                             @php

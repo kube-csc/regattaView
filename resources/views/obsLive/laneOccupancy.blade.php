@@ -6,7 +6,7 @@
         <!-- ======= Services Section ======= -->
         <section id="about" class="about">
             <div class="container">
-               <div class="section-title">
+               <div class="section-box">
                     <h2>
                        @if(is_numeric($race->nummer))
                            {{ $race->nummer }}. {{ $race->rennBezeichnung }}
@@ -37,7 +37,7 @@
                             $diff_in_minutes=$timfrom-$timto;
                         @endphp
                         Startzeit: {{ date("H:i", strtotime($race->rennUhrzeit)) }} Uhr
-                        @if($diff_in_minutes>5 && ($race->programmDatei != Null && $race->ergebnisDatei == Null) || ($race->status == 2))
+                        @if($race->rennDatum == date("Y-m-d", strtotime(now())) && $diff_in_minutes > 5 && ($race->programmDatei != Null && $race->ergebnisDatei == Null) )
                             <br>Voraussichtlich: {{ date("H:i", strtotime($race->verspaetungUhrzeit)) }} Uhr
                         @endif
                     </p>
