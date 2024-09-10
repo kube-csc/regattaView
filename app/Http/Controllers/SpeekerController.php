@@ -62,8 +62,10 @@ class SpeekerController extends Controller
                     if($counter == 1) {
                         $raceResoultId1 = $raceResoult->id;
                         $raceResoult1 = $raceResoult;
+                        $raceResoultId2 = Null;
+                        $raceResoult2   = Null;
                     }
-                    if($counter == count($racesResoult)) {
+                    if($counter == count($racesResoult) && $counter > 1) {
                         $raceResoultId2 = $raceResoult->id;
                         $raceResoult2 = $raceResoult;
                     }
@@ -194,6 +196,8 @@ class SpeekerController extends Controller
                         $raceResoult1 = $race2;
                         $raceResoultId2 = Null;
                         $raceResoult2 = Null;
+                        $raceNextId2 = $race1->id;;
+                        $raceNext2 = $race1;
                     }
                     if ($race2->status <= 3) {
                         $raceNextId2 = $race2->id;
@@ -252,7 +256,9 @@ class SpeekerController extends Controller
                             break;
                         }
                       }
-                    $nach = $raceChoose->id;
+                    if($raceChoose->id!=$raceNextId2){
+                        $nach = $raceChoose->id;
+                    }
                 }
             }
 
