@@ -10,7 +10,7 @@ Eingesetzt z.B. für die Rennsport- und Drachenbootregatta eines Kanuvereins
   <li><a href="https://jetstream.laravel.com/2.x/introduction.html" target="_blank">Laravel 9.*</a>
   <li><a href="https://bootstrapmade.com/squadfree-free-bootstrap-template-creative/" target="_blank">BootstrapMade.com </a></li>
   <li><a href="https://boxicons.com/" target="_blank">boxicons</a></li>
-<li>.htaccess für ionos.de (1und1.de) Server</li>
+<li>.htaccess für ionos.de Server</li>
 </ul>
 
 <h2>Benötigte Lizenzen</h2>
@@ -50,6 +50,34 @@ benötigt.
         <li>Datenschutzerklärung</li>
       </ul>
     </li>
+</ul>
+
+<h2>Live Einblendung z.B. OBS</h2>
+<p>
+Es gibt URL's für sie Einblendung für aktuelle Renninformationen. Diesen können z.B. in OBS eingebunden werden.
+Es wird immer die aktuellen Daten eingetragen, wenn die Ergebnisse zeitgleichen mit den aktullen Rennen erfolgt.
+Alternativ kann kann ein Rennen auch als aktuell in der Rgattaverwaltung angepint werden.
+</p>
+<ul>
+    <li>[Domain]/OBSLive/Ergebniss</li>
+    <li>[Domain]/OBSLive/Bahnbelegung</li>
+    <li>[Domain]/OBSLive/Naechstesrennen</li>
+</ul>
+
+<h2>Backend</h2>
+<p>
+Die die Verwaltung der Regatta muss die APP Vereinsverwaltung installiert werden.
+<a href="https://github.com/kube-csc/vereinsverwaltung" target="_blank"></a>
+zum GitHub Projekt Vereinsverwaltung ab V00.05.xx
+</p>
+
+<h2>Live Sprecherinformation</h2>
+<p>
+Es gibt die möglichkeit, dass der Sprecher die Informationen über die Rennen auf einem Tablet oder Smartphone einsehen kann.
+Die Url hierfür ist:
+</p>
+<ul>
+    <li>[Domain]/Sprecher</li>
 </ul>
 
 <h2>Backend</h2>
