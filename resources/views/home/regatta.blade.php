@@ -36,13 +36,11 @@
                 @if($loop->first)
                 @else
                                 <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="{{ $delay }}">
-                                    <i class="bx bx-file"></i>
                                     <h4>{{ $regattaInformation->informationTittel }}</h4>
-                                        <p>
-                                            {!! $regattaInformation->informationBeschreibung !!}
-                                        </p>
+                                    <p>
+                                        {!! $regattaInformation->informationBeschreibung !!}
+                                    </p>
                                 </div>
-
                     @php
                         $delay=$delay+50;
                     @endphp
