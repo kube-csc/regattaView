@@ -61,7 +61,12 @@ class OBSLiveController extends Controller
 
         $races = Race::where('event_id', $eventId)
             ->where('visible', 1)
-            ->where('status', 2)
+            ->where(function($query) {
+                $query->where('status', 2)
+                    ->orWhere(function($query) {
+                        $query->where('aktuellLiveVideo', 1);
+                    });
+            })
             ->orderBy('aktuellLiveVideo' , 'desc')
             ->orderBy('rennDatum')
             ->orderBy('rennUhrzeit')
@@ -94,7 +99,12 @@ class OBSLiveController extends Controller
 
         $races = Race::where('event_id', $eventId)
             ->where('visible', 1)
-            ->where('status', 2)
+            ->where(function($query) {
+                $query->where('status', 2)
+                    ->orWhere(function($query) {
+                        $query->where('aktuellLiveVideo', 1);
+                    });
+            })
             ->orderBy('aktuellLiveVideo' , 'desc')
             ->orderBy('rennDatum')
             ->orderBy('rennUhrzeit')
