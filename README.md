@@ -1,13 +1,13 @@
 <h1>Präsentation von Regatten</h1>
 <p>
-Eingesetzt z.B. für die Rennsport- und Drachenbootregatta eines Kanuvereins
+Eingesetzt z.B. für die Rennsport- und Drachenbootregatta eines Kanu-Vereins
 </p>
 
 <a href="https://live.kel-datteln.de">Beispiel einer Regatta</a>
 
 <h2>Installierte Programme</h2>
 <ul>
-  <li><a href="https://jetstream.laravel.com/2.x/introduction.html" target="_blank">Laravel 9.*</a>
+  <li><a href="https://laravel.com/docs/11.x" target="_blank">Laravel 11.*</a>
   <li><a href="https://bootstrapmade.com/squadfree-free-bootstrap-template-creative/" target="_blank">BootstrapMade.com </a></li>
   <li><a href="https://boxicons.com/" target="_blank">boxicons</a></li>
 <li>.htaccess für ionos.de Server</li>
@@ -64,13 +64,6 @@ Alternativ kann kann ein Rennen auch als aktuell in der Rgattaverwaltung angepin
     <li>[Domain]/OBSLive/Naechstesrennen</li>
 </ul>
 
-<h2>Backend</h2>
-<p>
-Die die Verwaltung der Regatta muss die APP Vereinsverwaltung installiert werden.
-<a href="https://github.com/kube-csc/vereinsverwaltung" target="_blank"></a>
-zum GitHub Projekt Vereinsverwaltung ab V00.05.xx
-</p>
-
 <h2>Live Sprecherinformation</h2>
 <p>
 Es gibt die möglichkeit, dass der Sprecher die Informationen über die Rennen auf einem Tablet oder Smartphone einsehen kann.
@@ -93,7 +86,7 @@ zum GitHub Projekt Vereinsverwaltung ab V00.05.xx
    <li>https://github.com/kube-csc/regattaView.git</li>
    <li>.env Datei ausfüllen (Es werden auch Informationen über den Verein abgefragt.)</li>
    <li>Composer herunterladen curl -sS https://getcomposer.org/installer</li>
-   <li>Installation des Composer </li>
+   <li>Installation des Composer</li>
    <li>composer.phar install</li>
    <li>in Ordner "public sind die folgenden Dateien anzulegen:
    <ul>
