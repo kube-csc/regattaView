@@ -19,10 +19,17 @@
                         @endif
                         <br>
                         @if($race->raceTabele->ueberschrift)
-                            <label for="name">Tabelle:</label>
+                            @if($race->tabele_id && $race->tabele_id >1)
+                                <a href="{{ url('/Tabelle/'.$race->tabele_id) }}" class="btn btn-primary">
+                                    Tabelle {{ $race->raceTabele->ueberschrift }}
+                                </a>
+                                <br>
+                            @endif
+                            <label for="name">Download zur Tabelle:</label>
                             @if($race->raceTabele->tabelleDatei != Null)
-                                <p><a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $race->raceTabele->tabelleDatei  }}" target="_blank">
-                                        <i class="bx bxs-file-doc"></i>{{ $race->raceTabele->ueberschrift }}
+                                <p><a href="{{ env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $race->raceTabele->tabelleDatei }}" target="_blank">
+                                        <i class="bx bxs-file-doc"></i>
+                                        {{ $race->raceTabele->ueberschrift }}
                                     </a>
                                 </p>
                             @else
@@ -39,26 +46,36 @@
                         <label for="name">Startzeit:</label>
                         {{ $rennUhrzeitAlt }} Uhr {{ \Carbon\Carbon::parse($race->rennDatum)->format('d.m.Y') }}
                     </p>
-                    <p>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Platz</th>
+                            <th>Bahn</th>
+                            <th>Team</th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         @php
-                            $platz=0
+                            $platz = 0
                         @endphp
                         @foreach($lanes as $lane)
                             @php
                                 $platz++
                             @endphp
-                              <label for="name">Platz:</label>
-                              {{ $platz }}<br>
-                              <label for="name">Bahn:</label>
-                              {{ $lane->bahn }}
-                              @if($lane->mannschaft_id!=Null)
-                                {{ $lane->regattaTeam->teamname }}
-                              @else
-                                <br>Frei
-                              @endif
-                              <br><br>
+                            <tr>
+                                <td>{{ $platz }}</td>
+                                <td>{{ $lane->bahn }}</td>
+                                <td>
+                                    @if($lane->mannschaft_id)
+                                        {{ $lane->regattaTeam->teamname }}
+                                    @else
+                                        Frei
+                                    @endif
+                                </td>
+                            </tr>
                         @endforeach
-                    </p>
+                        </tbody>
+                    </table>
                     <p>
                         @if($previousRace)
                             <a href="{{ url('/Ergebnis/'.$previousRace->id) }}" class="btn btn-primary">&larr; Zurück</a>

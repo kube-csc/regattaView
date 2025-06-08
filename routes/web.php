@@ -39,6 +39,7 @@ Route::get('/Bahnbelegung/{raceId}',                               [ProgramContr
 Route::get('/Ergebnis/{raceId}',                                   [ProgramController::class, 'result'])               ->name('program.result');
 
 Route::get('/Tabellen',                                            [TabeleController::class, 'index'])                 ->name('program.index');
+Route::get('Tabelle/{tableId}',                                    [TabeleController::class, 'show'])                  ->name('program.show');
 
 Route::get('/Dokumente',                                           [DokumenteController::class, 'index'])              ->name('dokumente.index');
 

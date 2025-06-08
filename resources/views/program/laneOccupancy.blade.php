@@ -43,18 +43,28 @@
                         @endif
                     </p>
                     <br>
-                    <p>
-                        @foreach($lanes as $lane)
-                            <label for="name">Bahn:</label>
-                            {{ $lane->bahn }}
-                            @if($lane->mannschaft_id!=Null)
-                                {{ $lane->regattaTeam->teamname }}
-                            @else
-                                <br>Frei
-                            @endif
-                            <br><br>
-                        @endforeach
-                    </p>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Bahn</th>
+                            <th>Team</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($lanes as $lane)
+                                <tr>
+                                    <td>{{ $lane->bahn }}</td>
+                                    <td>
+                                        @if($lane->mannschaft_id)
+                                            {{ $lane->regattaTeam->teamname }}
+                                        @else
+                                            Frei
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                     <p>
                         @if($previousRace)
                            <a href="{{ url('/Bahnbelegung/'.$previousRace->id) }}" class="btn btn-primary">&larr; Zurück</a>
