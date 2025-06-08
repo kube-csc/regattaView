@@ -59,12 +59,8 @@ class HomeController extends Controller
         $raceNewCount = Race::where('event_id', $eventId)
             ->where('visible' , 1)
             ->whereNot(function($query) {
-                $query->where('programmDatei', Null)
-                      ->Where('status',2);
-            })
-            ->whereNot(function($query) {
-                $query->where('ergebnisDatei', Null)
-                      ->Where('status', 4);
+                $query->where('programmDatei', '!=', Null)
+                      ->orWhere('status',2);
             })
             ->count();
 
@@ -74,7 +70,6 @@ class HomeController extends Controller
                 $query->where('programmDatei', '!=', Null)
                     ->orWhere('status', '2');
             })
-            ->where('ergebnisDatei' , Null)
             ->count();
 
         $raceResoultCount = Race::where('event_id', $eventId)

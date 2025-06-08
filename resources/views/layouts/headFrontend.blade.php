@@ -140,26 +140,12 @@
                 <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
                 */ ?>
                         </div>
-
                     </div>
                 </div>
 
-                <!--<div class="col-lg-2 col-md-6 footer-links" data-aos="fade-up" data-aos-delay="150"> -->
-                <div class="col-lg-4 col-md-6 footer-newsletter" data-aos="fade-up" data-aos-delay="100">
-                    <h4>Sozial Media</h4>
-                    <ul>
-                        <li><a href="https://www.facebook.com/KELDatteln" class="facebook" target="_blank"><i class="bx bxl-facebook"></i>KEL-Datteln</a></li>
-                        <li><a href="https://de-de.facebook.com/pages/Emscher-Lippe-Dragons/125457887633531" class="facebook" target="_blank"><i class="bx bxl-facebook"></i>Emscher-Lippe-Dragons</a></li>
-                        <li><a href="https://www.facebook.com/Ohana-Dragons-229310284689451" class="facebook" target="_blank"><i class="bx bxl-facebook"></i>Ohana Dragons</a></li>
-                        <li><a href="https://www.facebook.com/PinkDragons45711" class="facebook" target="_blank"><i class="bx bxl-facebook"></i>Pink Dragons</a></li>
-                    </ul>
-                    <br>
-                    <h4>Weitere Webseiten</h4>
-                    <ul>
-                        <li><a href="http://www.day-of-dragons.de" target="_blank" class="bx bx-link-external">Day of Dragons</a></li>
-                        <li><a href="https://sup.kel-datteln.de"    target="_blank" class="bx bx-link-external">SUP Kurse</a></li>
-                        <li><a href="https://oc.kel-datteln.de"     target="_blank" class="bx bx-link-external">Outrigger für Vereinsmitglieder Buchen</a></li>
-                    </ul>
+                <div class="col-lg-2 col-md-6 footer-links" data-aos="fade-up" data-aos-delay="150">
+                <!--div class="col-lg-4 col-md-6 footer-newsletter" data-aos="fade-up" data-aos-delay="100">-->
+                    @include('textimport.footer')
                 </div>
 
                 <?php /*
@@ -210,7 +196,7 @@
                             <h4>Webseiten {{env('Menue_Abteilung')}}</h4>
                             <ul>
                                 @foreach($abteilungDomains as $abteilungDomain)
-                                    <li><a href="https://{{$abteilungDomain->domain}}" target="_blank" class="bx bx-link-external">{{$abteilungDomain->abteilung}}</a></li>
+                                    <li><a href="https://{{$abteilungDomain->domain}}" target="_blank" class="bx bx-link-external"> {{$abteilungDomain->abteilung}}</a></li>
                                 @endforeach
                             </ul>
                         @endif
