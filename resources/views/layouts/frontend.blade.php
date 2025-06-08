@@ -121,23 +121,23 @@
                     </div>
                 </div>
 
-                <div class="col-lg-2 col-md-6 footer-links" data-aos="fade-up" data-aos-delay="150">
-                    <!--div class="col-lg-4 col-md-6 footer-newsletter" data-aos="fade-up" data-aos-delay="100">-->
+                <!--<div class="col-lg-2 col-md-6 footer-links" data-aos="fade-up" data-aos-delay="150">-->
+                <div class="col-lg-4 col-md-6 footer-newsletter" data-aos="fade-up" data-aos-delay="100">
                     @include('textimport.footer')
                 </div>
 
                 <?php /*
-        <div class="col-lg-2 col-md-6 footer-links" data-aos="fade-up" data-aos-delay="150">
-          <h4>Useful Links</h4>
-          <ul>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-          </ul>
-        </div>
-*/ ?>
+                        <div class="col-lg-2 col-md-6 footer-links" data-aos="fade-up" data-aos-delay="150">
+                          <h4>Useful Links</h4>
+                          <ul>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+                          </ul>
+                        </div>
+                */ ?>
                 <?php /*
         <div class="col-lg-2 col-md-6 footer-links" data-aos="fade-up" data-aos-delay="250">
           <h4>Our Services</h4>
@@ -170,11 +170,10 @@
                             $count=$abteilungDomains->count();
                         @endphp
                         @if($count>0)
-                            <br>
                             <h4>Webseiten {{env('Menue_Abteilung')}}</h4>
                             <ul>
                                 @foreach($abteilungDomains as $abteilungDomain)
-                                    <li><a href="http://{{$abteilungDomain->domain}}" target="_blank" class="bx bx-link-external">{{$abteilungDomain->abteilung}}</a></li>
+                                    <li><a href="http://{{$abteilungDomain->domain}}" target="_blank" class="bx bx-link-external"> {{$abteilungDomain->abteilung}}</a></li>
                                 @endforeach
                             </ul>
                         @endif

@@ -134,19 +134,19 @@
                         <div class="social-links mt-3">
                             <a href="https://www.facebook.com/KELDatteln" class="facebook" target="_blank"><i class="bx bxl-facebook"></i></a>
                             <?php /*
-                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-                */ ?>
+                            <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+                            <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+                            <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+                            <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+                            */ ?>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-2 col-md-6 footer-links" data-aos="fade-up" data-aos-delay="150">
-                <!--div class="col-lg-4 col-md-6 footer-newsletter" data-aos="fade-up" data-aos-delay="100">-->
+                <!--<div class="col-lg-2 col-md-6 footer-links" data-aos="fade-up" data-aos-delay="150">-->
+               <div class="col-lg-4 col-md-6 footer-newsletter" data-aos="fade-up" data-aos-delay="100">
                     @include('textimport.footer')
-                </div>
+               </div>
 
                 <?php /*
         <div class="col-lg-2 col-md-6 footer-links" data-aos="fade-up" data-aos-delay="150">
@@ -172,7 +172,7 @@
           </ul>
         </div>
 */ ?>
-                <div class="col-lg-4 col-md-6 footer-newsletter" data-aos="fade-up" data-aos-delay="150">
+               <div class="col-lg-4 col-md-6 footer-newsletter" data-aos="fade-up" data-aos-delay="150">
                     @php
                         /* ToD@o: Netsletter
                         <h4>Dein Newsletter</h4>
@@ -183,24 +183,23 @@
                         <br>
                         */
                     @endphp
-                        @php
-                            $abteilungDomains  = DB::table('sport_sections')
-                            ->where('status' , '>' , '1')
-                            ->where('domain' , '!=' , '')
-                            ->orderby('abteilung')
-                            ->get();
-                            $count=$abteilungDomains->count();
-                        @endphp
-                        @if($count>0)
-                            <br>
-                            <h4>Webseiten {{env('Menue_Abteilung')}}</h4>
-                            <ul>
-                                @foreach($abteilungDomains as $abteilungDomain)
-                                    <li><a href="https://{{$abteilungDomain->domain}}" target="_blank" class="bx bx-link-external"> {{$abteilungDomain->abteilung}}</a></li>
-                                @endforeach
-                            </ul>
-                        @endif
-                </div>
+                    @php
+                        $abteilungDomains  = DB::table('sport_sections')
+                        ->where('status' , '>' , '1')
+                        ->where('domain' , '!=' , '')
+                        ->orderby('abteilung')
+                        ->get();
+                        $count=$abteilungDomains->count();
+                    @endphp
+                    @if($count>0)
+                        <h4>Webseiten {{env('Menue_Abteilung')}}</h4>
+                        <ul>
+                            @foreach($abteilungDomains as $abteilungDomain)
+                                <li><a href="https://{{$abteilungDomain->domain}}" target="_blank" class="bx bx-link-external"> {{$abteilungDomain->abteilung}}</a></li>
+                            @endforeach
+                        </ul>
+                    @endif
+               </div>
             </div>
         </div>
     </div>
