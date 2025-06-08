@@ -49,4 +49,6 @@ Route::get('/OBSLive/Naechstesrennen',                             [OBSLiveContr
 Route::get('/Sprecher/{speekerId?}',                               [SpeekerController::class, 'show'])                 ->name('speeker.show');
 Route::post('/Sprecher/Auswahl',                                   [SpeekerController::class, 'choose'])               ->name('speeker.choose');
 Route::get('/Sprecher/Mannschaft/{teamId}/{raceId}',               [SpeekerController::class, 'teamShow'])             ->name('speeker.teamShow');
-Route::post('/Sprecher/Mannschaft/Auswahl',                            [SpeekerController::class, 'teamChoose'])           ->name('speeker.teamChoose');
+Route::get('/Sprecher/Tabelle/{tableId}/{raceId}',                 [SpeekerController::class, 'tabeleShow'])           ->name('speeker.tabeleShow');
+Route::post('/Sprecher/Mannschaft/Auswahl',                        [SpeekerController::class, 'teamChoose'])           ->name('speeker.teamChoose');
+Route::post('/Sprecher/Tabellen/Auswahl',                          [SpeekerController::class, 'tableChoose'])          ->name('speeker.tableChoose');
