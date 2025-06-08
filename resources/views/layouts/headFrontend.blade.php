@@ -192,7 +192,7 @@
                         $count=$abteilungDomains->count();
                     @endphp
                     @if($count>0)
-                        <h4>Webseiten {{env('Menue_Abteilung')}}</h4>
+                       <h4>Webseiten {{env('MENUE_ABTEILUNG')}}</h4>
                         <ul>
                             @foreach($abteilungDomains as $abteilungDomain)
                                 <li><a href="https://{{$abteilungDomain->domain}}" target="_blank" class="bx bx-link-external"> {{$abteilungDomain->abteilung}}</a></li>
@@ -206,7 +206,7 @@
 
     <div class="container">
         <div class="copyright">
-            &copy; Copyright <strong><span>{{ str_replace('_', ' ', env('Verein_Name')) }}</span></strong><br>
+            &copy; Copyright <strong><span>{{ env('VEREIN_NAME') }}</span></strong><br>
             All Rights Reserved
         </div>
         <div class="credits">
@@ -218,8 +218,7 @@
       Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
       <br><br>
       */?>
-            <a href="/Information/Datenschutzerklärung">Datenschutzerklärung</a> |
-            <a href="/Impressum">Impressum</a>
+            <a href="/Information/Datenschutzerklärung">Datenschutzerklärung</a> | <a href="/Impressum">Impressum</a>
         </div>
     </div>
 </footer><!-- End Footer -->
