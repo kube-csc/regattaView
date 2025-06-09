@@ -86,20 +86,7 @@
                                     @endif
                                     <p>
                                         @foreach($lanes as $lane)
-                                            @php
-                                                $bahn++;
-                                            @endphp
-                                            <label for="name">Bahn:</label>
-                                            {{ $bahn }}
-                                            @if($lane->mannschaft_id != null)
-                                                @include('components.teamButton', [
-                                                    'beschreibung' => $lane->regattaTeam->beschreibung,
-                                                    'id' => $lane->mannschaft_id,
-                                                    'raceId' => $race->id,
-                                                    'teamname' => $lane->regattaTeam->teamname
-                                                ])
-                                            @endif
-                                            <br>
+                                            @include('components.raceProgram', ['raceNext' => $race])
                                         @endforeach
                                     </p>
                                     @if($race->beschreibung)
@@ -117,23 +104,7 @@
                                         @endphp
                                         <p>
                                             @foreach($lanes as $lane)
-                                                @php
-                                                    $platz++;
-                                                @endphp
-                                                <label for="name">Platz:</label>
-                                                {{ $platz }}
-                                                <label for="name">Bahn:</label>
-                                                {{ $lane->bahn }}
-                                                @if($lane->mannschaft_id!=Null)
-                                                    @if($lane->regattaTeam->beschreibung != Null)
-                                                        <a href="/Sprecher/Mannschaft/{{ $lane->mannschaft_id }}/{{ $race->id }}" class="me-2">
-                                                            <button type="button" class="btn btn-secondary ml-2">{{ $lane->regattaTeam->teamname }}</button>
-                                                        </a>
-                                                    @else
-                                                        {{ $lane->regattaTeam->teamname }}
-                                                    @endif
-                                                @endif
-                                                <br>
+                                                @include('components.raceRecoult', ['raceResoult' => $race])
                                             @endforeach
                                         </p>
                                         @if($race->raceTabele->ueberschrift != Null && $race->raceTabele->tabelleVisible == 1)

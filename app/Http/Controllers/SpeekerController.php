@@ -18,8 +18,8 @@ class SpeekerController extends Controller
         $this->currentDate = Carbon::now()->toDateString();
         $this->currentTime = Carbon::now()->toTimeString();
         //Temp: Testdaten
-        $this->currentDate = "2023-08-26"; // For testing purposes, set a fixed date Datum Format beachten
-        $this->currentTime = "06:00:00"; // For testing purposes, set a fixed time Zeitformat beachten
+        //$this->currentDate = "2023-08-26"; // Zu Testzwecken ein festes Datum Datum Format beachten
+        //$this->currentTime = "06:00:00"; // Zu Testzwecken eine feste Uhrzeit Zeitformat beachten
     }
 
     public function show($speekerId = Null)
