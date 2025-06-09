@@ -6,10 +6,20 @@ use App\Models\Event;
 use App\Models\Tabele;
 use App\Http\Requests\StoreTabeleRequest;
 use App\Http\Requests\UpdateTabeleRequest;
+use App\Models\Tabledata;
 use Illuminate\Support\Carbon;
 
 class TabeleController extends Controller
 {
+    public function __construct()
+    {
+        $this->currentDate = Carbon::now()->toDateString();
+        $this->currentTime = Carbon::now()->toTimeString();
+        //Temp: Testdaten
+        $this->currentDate = "2023-08-26"; // For testing purposes, set a fixed date
+        $this->currentTime = "20:30:00"; // For testing purposes, set a fixed time
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -32,23 +42,30 @@ class TabeleController extends Controller
 
         $tabeles = Tabele::where('event_id', $eventId)
             ->where('tabelleVisible' , 1)
+//            ->where(function($query) {
+//                $query->where('finaleAnzeigen', '<', Carbon::now()->toTimeString())
+//                    ->orWhere('tabelleDatumVon', '<', Carbon::now()->toDateString());
+//            })
             ->where(function($query) {
-                $query->where('finaleAnzeigen', '<', Carbon::now()->toTimeString())
-                    ->orWhere('tabelleDatumVon', '<', Carbon::now()->toDateString());
+                $query->where([
+                    ['finaleAnzeigen', '<', $this->currentTime],
+                    ['tabelleDatumVon', '=', $this->currentDate]
+                ])
+                    ->orWhere('tabelledatumVon', '<', $this->currentDate);
             })
-            ->where(function ($query) use ($eventId) {
-                $query->where('tabelleDatei' , '!=' , Null)
-                      ->orwhere('beschreibung' , '!=' , NULL);
-            })
+//            ->where(function ($query) use ($eventId) {
+//                $query->where('tabelleDatei' , '!=' , Null)
+//                      ->orwhere('beschreibung' , '!=' , NULL);
+//            })
             ->orderby('tabelleDatumVon')
             ->orderby('tabelleLevelBis')
             ->orderby('tabelleLevelVon')
             ->get();
 
-        return view('tabele.index')->with(
+        return view('table.index')->with(
             [
-                'tabeles'        => $tabeles,
-                'ueberschrift' => 'Tabellen'
+                'tabeles'         => $tabeles,
+                'ueberschrift'    => 'Tabellen'
             ]);
     }
 
@@ -76,21 +93,50 @@ class TabeleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Tabele  $tabele
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Tabele  $table
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\View\View
      */
-    public function show(Tabele $tabele)
+    public function show($tableId)
     {
-        //
+        $victoCremonyTableShow=1;
+        $tableShow = Tabele::find($tableId);
+        if($tableShow && $tableShow->tabelleVisible == 1) {
+            $tabeledataShows = Tabledata::where('tabele_id', $tableId)
+                ->orderBy('punkte', 'desc')
+                ->orderBy('buchholzzahl', 'desc')
+                ->orderBy('zeit')
+                ->orderBy('hundert')
+                ->get()
+                ->values()
+                ->map(function ($item, $key) {
+                    $item->platz = $key + 1;
+                    return $item;
+                });
+        }
+        else {
+            $tabeledataShows = Null;
+        }
+
+        if(($tableShow->finaleAnzeigen > $this->currentTime && $tableShow->tabelleDatumVon == $this->currentDate ) || $tableShow->tabelleDatumVon > $this->currentDate){
+            $victoCremonyTableShow = 0;
+        }
+
+        return view('table.show')->with(
+            [
+                'tableShow'             => $tableShow,
+                'tableId'               => $tableId,
+                'victoCremonyTableShow' => $victoCremonyTableShow,
+                'tabeledataShows'       => $tabeledataShows,
+            ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Tabele  $tabele
+     * @param  \App\Models\Tabele  $table
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tabele $tabele)
+    public function edit(Tabele $table)
     {
         //
     }
@@ -99,10 +145,10 @@ class TabeleController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateTabeleRequest  $request
-     * @param  \App\Models\Tabele  $tabele
+     * @param  \App\Models\Tabele  $table
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTabeleRequest $request, Tabele $tabele)
+    public function update(UpdateTabeleRequest $request, Tabele $table)
     {
         //
     }
@@ -110,10 +156,10 @@ class TabeleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Tabele  $tabele
+     * @param  \App\Models\Tabele  $table
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tabele $tabele)
+    public function destroy(Tabele $table)
     {
         //
     }

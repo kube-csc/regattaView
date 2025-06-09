@@ -72,7 +72,8 @@
                                         </a>
                                     </p>
                             @endif
-                            @if($race->veroeffentlichungUhrzeit < Illuminate\Support\Carbon::now()->toTimeString() || $race->rennDatum < Illuminate\Support\Carbon::now()->toDateString())
+                            @if($race->veroeffentlichungUhrzeit < Illuminate\Support\Carbon::now()->toTimeString() && $race->rennDatum == Illuminate\Support\Carbon::now()->toDateString()
+                                   || $race->rennDatum < Illuminate\Support\Carbon::now()->toDateString())
                                 @if($race->status == 4)
                                     <p><a href="/Ergebnis/{{$race->id}}">
                                             <i class="bx bxs-info-circle"></i>Ergebnis
@@ -85,20 +86,20 @@
                                         </a>
                                     </p>
                                 @endif
+                                @if($race->ergebnisBeschreibung != '')
+                                    <b>Notiz zum Ergebnis:</b><br>
+                                    <p>{!! $race->ergebnisBeschreibung !!}</p>
+                                @endif
+                                <p>aktualisiert:<br>
+                                    {{ date("d.m.y", strtotime($race->updated_at)) }} {{ date("H:i", strtotime($race->updated_at)) }} Uhr
+                                </p>
                             @else
-                                    @if($race->status >= 3 && $race->status <= 4)
-                                        <p>
-                                            Ergebnisse bei der Siegerehrung
-                                        </p>
-                                    @endif
+                                @if($race->status >= 3 && $race->status <= 4)
+                                    <p>
+                                        Ergebnisse bei der Siegerehrung
+                                    </p>
+                                @endif
                             @endif
-                            @if($race->ergebnisBeschreibung != '')
-                              <b>Notiz zum Ergebnis:</b><br>
-                              <p>{!! $race->ergebnisBeschreibung !!}</p>
-                            @endif
-                            <p>aktualisiert:<br>
-                               {{ date("d.m.y", strtotime($race->updated_at)) }} {{ date("H:i", strtotime($race->updated_at)) }} Uhr
-                            </p>
                         </div>
                     </div>
                     @if ($loop->last)

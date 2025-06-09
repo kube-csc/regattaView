@@ -29,7 +29,7 @@
                     $i=0;
                     $delay=75;
                 @endphp
-                @foreach($tabeles as $tabele)
+                @foreach($tabeles as $table)
                 @if($i==0)
                 <div class="row">
                 @endif
@@ -41,25 +41,24 @@
                         <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
                             <div class="icon-box" data-aos="fade-up" data-aos-delay="{{ $delay }}">
                     @endif
-                            <h4 class="title">{{ $tabele->ueberschrift }}</h4>
-                            @if($tabele->tabelleDatei != Null)
-                                <p><a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $tabele->tabelleDatei }}" target="_blank">
+                            <h4 class="title">{{ $table->ueberschrift }}</h4>
+                            <p><a href="/Tabelle/{{$table->id}}">
+                                    <i class="bx bxs-info-circle"></i>Tabellenausgabe
+                               </a>
+                            </p>
+                            @if($table->tabelleDatei != Null)
+                                <p><a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $table->tabelleDatei }}" target="_blank">
                                         <i class="bx bxs-file-doc"></i>Tabelle
                                     </a>
                                 </p>
                             @endif
-                            @if($tabele->beschreibung != '')
+                            @if($table->beschreibung != '')
                               <b>Notiz zur Tabelle:</b><br>
-                              <p>{!!  $tabele->beschreibung !!}</p>
+                              <p>{!! $table->beschreibung !!}</p>
                             @endif
-                            @php /*
-                             ToDo: Ausgeblendet weil die Vereinsverwaltung noch die Serverzeit und nicht die Locale Zeit speichert
-                            <!-- <p>{ $tabele->updated_at->diffForHumans() }}</p> -->
                             <p>geändert am<br>
-                               {{ date("d.m.y", strtotime($tabele->updated_at)) }} um {{ date("H:i", strtotime($tabele->updated_at)) }} Uhr
+                               {{ date("d.m.y", strtotime($table->updated_at)) }} um {{ date("H:i", strtotime($table->updated_at)) }} Uhr
                             </p>
-                            */
-                            @endphp
                         </div>
                     </div>
                     @if ($loop->last)
