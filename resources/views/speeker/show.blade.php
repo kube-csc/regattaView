@@ -97,7 +97,7 @@
                                     <h2>{{ $raceNext1->nummer }} / {{ $raceNext1->rennBezeichnung }}</h2>
                                 @endif
                                 @if($raceNext1->mix == 1)
-                                    <p class="text-danger">Dieses Rennen wird in mehreren Klassen gewertet!</p>
+                                    <p class="text-primary">Dieses Rennen wird in mehreren Klassen gewertet!</p>
                                 @endif
                                 <p>
                                     @if($raceNext1->status < 2)
@@ -117,8 +117,10 @@
                                             @else
                                                 {{ $lane->regattaTeam->teamname }}
                                             @endif
-                                            @if($raceNext1->mix == 1)
-                                                <span class="text-danger"> ({{ $lane->getTableLane->ueberschrift }})</span>
+                                            @if($raceNext1->mix == 1 && $lane->tabele_id <> $raceNext1->tabele_id)
+                                                <a href="/Sprecher/Tabelle/{{ $lane->tabele_id }}/{{ $raceNext1->id }}" class="me-2">
+                                                    <button type="button" class="btn btn-primary ml-2">{{ $lane->getTableLane->ueberschrift }}</button>
+                                                </a>
                                             @endif
                                         @else
                                             frei
@@ -191,7 +193,7 @@
                                        @if($victoCremonyTable1 == 1)
                                            <h2>
                                              <a href="/Sprecher/Tabelle/{{ $raceResoult1->raceTabele->id }}/{{ $raceResoult1->id }}" class="me-2">
-                                                <button type="button" class="btn btn-secondary ml-2">Tabelle</button>
+                                                <button type="button" class="btn btn-primary ml-2">Tabelle</button>
                                              </a>
                                              {{ $raceResoult1->raceTabele->ueberschrift }}
                                            </h2>
@@ -403,7 +405,7 @@
                                             @if($victoCremonyTable2 == 1)
                                                <h2>
                                                  <a href="/Sprecher/Tabelle/{{ $raceResoult2->raceTabele->id }}/{{ $raceResoult2->id }}" class="me-2">
-                                                    <button type="button" class="btn btn-secondary ml-2">Tabelle</button>
+                                                    <button type="button" class="btn btn-primary ml-2">Tabelle</button>
                                                  </a>
                                                  {{ $raceResoult2->raceTabele->ueberschrift }}
                                                </h2>

@@ -20,6 +20,7 @@
                                 @if($tableShow->buchholzwertungaktiv)
                                     <th>Buchholzzahl</th>
                                 @endif
+                                <th>Rennanzahl</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -29,8 +30,9 @@
                                     <td>{{ $platzierung->getMannschaft->teamname }}</td>
                                     <td>{{ $platzierung->punkte }}</td>
                                     @if($tableShow->buchholzwertungaktiv)
-                                    <td>{{ $platzierung->buchholzzahl }}</td
+                                    <td>{{ $platzierung->buchholzzahl }}</td>
                                     @endif
+                                    <td>{{ $platzierung->rennanzahl }} von {{ $tableShow->maxrennen }}</td>
                                 </tr>
                             @endforeach
                             </tbody>

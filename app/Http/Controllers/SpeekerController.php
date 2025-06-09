@@ -18,8 +18,8 @@ class SpeekerController extends Controller
         $this->currentDate = Carbon::now()->toDateString();
         $this->currentTime = Carbon::now()->toTimeString();
         //Temp: Testdaten
-        //$this->currentDate = "2023-08-27"; // For testing purposes, set a fixed date
-        //$this->currentTime = "08:00:00"; // For testing purposes, set a fixed time
+        $this->currentDate = "2023-08-26"; // For testing purposes, set a fixed date Datum Format beachten
+        $this->currentTime = "06:00:00"; // For testing purposes, set a fixed time Zeitformat beachten
     }
 
     public function show($speekerId = Null)
@@ -78,6 +78,8 @@ class SpeekerController extends Controller
                     if($counter == 1) {
                         $raceResoultId1 = $raceResoult->id;
                         $raceResoult1   = $raceResoult;
+                        $raceNextId1    = $raceResoult->id;
+                        $raceNext1      = $raceResoult;
                         $raceResoultId2 = Null;
                         $raceResoult2   = Null;
                     }
@@ -113,8 +115,6 @@ class SpeekerController extends Controller
                         $raceNext2 = $race;
                         $raceResoultId2 = Null;
                         $raceResoult2   = Null;
-                        $raceNextId1 = Null;
-                        $raceNext1 = Null;
                     }
                     if ($counter == count($races)) {
                         // This is the last iteration
@@ -184,6 +184,7 @@ class SpeekerController extends Controller
                     }
                }
             }
+
         }
         else {
             $race1 = Race::find($speekerId);
@@ -210,6 +211,7 @@ class SpeekerController extends Controller
                 if($race2!=Null){
                     $vorId = $race2->id;
                     if ($race2->status == 4) {
+                        dd('a1');
                         $raceResoultId1 = $race2->id;
                         $raceResoult1 = $race2;
                         $raceResoultId2 = Null;
@@ -246,8 +248,8 @@ class SpeekerController extends Controller
                     if ($race2->status == 4) {
                         $raceResoultId2 = $race2->id;
                         $raceResoult2 = $race2;
-                        $raceNextId2 = Null;
-                        $raceNext2 = Null;
+                        $raceNextId2 = $race2->id;
+                        $raceNext2 = $race2;
                     }
                     if ($race2->status <= 3) {
                         $raceNextId2 = $race2->id;
@@ -366,7 +368,8 @@ class SpeekerController extends Controller
         if ($raceResoult1 && Tabele::find($raceResoult1->tabele_id)?->tabelleVisible == 1) {
 
             $tableResoult1 = Tabele::find($raceResoult1->tabele_id);
-            if(($tableResoult1->finaleAnzeigen > Carbon::now()->toTimeString() && $tableResoult1->tabelleDatumVon == Carbon::now()->toDateString() ) || $tableResoult1->tabelleDatumVon > Carbon::now()->toDateString()){
+
+            if (($tableResoult1->finaleAnzeigen > $this->currentTime && $tableResoult1->tabelleDatumVon == $this->currentDate) || $tableResoult1->tabelleDatumVon > $this->currentDate) {
                 $victoCremonyTable1 = 0; // 0 - nicht anzeigen, 1 - anzeigen
             }
 
@@ -399,9 +402,8 @@ class SpeekerController extends Controller
         if ($raceResoult2 && Tabele::find($raceResoult2->tabele_id)?->tabelleVisible == 1) {
 
             $tableResoult2 = Tabele::find($raceResoult2->tabele_id);
-            if(($tableResoult2->finaleAnzeigen > Carbon::now()->toTimeString() && $tableResoult2->tabelleDatumVon == Carbon::now()->toDateString() ) || $tableResoult2->tabelleDatumVon > Carbon::now()->toDateString()){
-                $victoCremonyTable2 = 0; // 0 - nicht anzeigen, 1 - anzeigen
-                dump('hh2');
+            if (($tableResoult2->finaleAnzeigen > $this->currentTime && $tableResoult2->tabelleDatumVon == $this->currentDate) || $tableResoult2->tabelleDatumVon > $this->currentDate) {
+                $victoCremonyTable2 = 0;
             }
 
             // Alle Tabledata-Einträge holen und Platz berechnen
@@ -520,12 +522,13 @@ class SpeekerController extends Controller
             }
         }
 
-        if($race->veroeffentlichungUhrzeit < Carbon::now()->toTimeString() && $race->rennDatum < Carbon::now()->toDateString()) {
-            $victoCremony = 0; // 0 - nicht anzeigen, 1 - anzeigen
+        if (($race->veroeffentlichungUhrzeit > $this->currentTime && $race->rennDatum == $this->currentDate) || $race->rennDatum > $this->currentDate) {
+            $victoCremony = 0;
         }
 
+
         $table = Tabele::find($race->tabele_id);
-        if($table && $table->finaleAnzeigen < Carbon::now()->toTimeString() && $table->tabelleDatumVon < Carbon::now()->toDateString()) {
+        if (($table && $table->finaleAnzeigen > $this->currentTime && $table->tabelleDatumVon == $this->currentDate) || $table->tabelleDatumVon > $this->currentDate) {
             $victoCremonyTable = 0; // 0 - nicht anzeigen, 1 - anzeigen
         }
 

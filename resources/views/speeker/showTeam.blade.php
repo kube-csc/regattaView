@@ -37,6 +37,11 @@
                                     <i class="bx bx-refresh"></i>
                                 </button>
                             </a>
+                            <a href="/Sprecher" class="me-2">
+                                <button type="button" class="btn btn-secondary ml-2 px-4">
+                                    <i class="bx bx-time"></i>
+                                </button>
+                            </a>
                             <a href="/Sprecher/{{ $raceId }}">
                                 <button type="button" class="btn btn-secondary ml-2 px-4">Programm</button>
                             </a>
@@ -137,7 +142,7 @@
                                                 @if($victoCremonyTable == 1)
                                                     <h2>
                                                         <a href="/Sprecher/Tabelle/{{ $race->raceTabele->id }}/{{ $race->id }}" class="me-2">
-                                                            <button type="button" class="btn btn-secondary ml-2">Tabelle</button>
+                                                            <button type="button" class="btn btn-primary ml-2">Tabelle</button>
                                                         </a>
                                                         {{ $race->raceTabele->ueberschrift }}
                                                     </h2>
