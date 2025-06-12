@@ -16,8 +16,8 @@ class TabeleController extends Controller
         $this->currentDate = Carbon::now()->toDateString();
         $this->currentTime = Carbon::now()->toTimeString();
         //Temp: Testdaten
-        $this->currentDate = "2023-08-26"; // For testing purposes, set a fixed date
-        $this->currentTime = "20:30:00"; // For testing purposes, set a fixed time
+        //$this->currentDate = "2023-08-26"; // For testing purposes, set a fixed date
+        //$this->currentTime = "20:30:00"; // For testing purposes, set a fixed time
     }
 
     /**

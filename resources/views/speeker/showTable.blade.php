@@ -22,7 +22,7 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    <button type="submit" class="btn btn-secondary me-2 ml-2">auswahl</button>
+                                    <button type="submit" class="btn btn-secondary me-2 ml-2">Auswahl</button>
                                 </div>
                             </form>
                         </div>
@@ -145,25 +145,7 @@
                                                 @php
                                                     $platz++;
                                                 @endphp
-                                                <label for="name">Platz:</label>
-                                                {{ $platz }}
-                                                <label for="name">Bahn:</label>
-                                                {{ $lane->bahn }}
-                                                @if($lane->mannschaft_id!=Null)
-                                                    @if($lane->regattaTeam->beschreibung != Null)
-                                                        <a href="/Sprecher/Mannschaft/{{ $lane->mannschaft_id }}/{{ $race->id }}" class="me-2">
-                                                            <button type="button" class="btn btn-secondary ml-2">{{ $lane->regattaTeam->teamname }}</button>
-                                                        </a>
-                                                    @else
-                                                        {{ $lane->regattaTeam->teamname }}
-                                                    @endif
-                                                    @if($race->mix == 1 && $lane->tabele_id <> $race->tabele_id)
-                                                        <a href="/Sprecher/Tabelle/{{ $lane->tabele_id }}/{{ $race->id }}" class="me-2">
-                                                            <button type="button" class="btn btn-primary ml-2">{{ $lane->getTableLane->ueberschrift }}</button>
-                                                        </a>
-                                                    @endif
-                                                @endif
-                                                <br>
+                                                @include('components.raceRecoult', ['raceResoult' => $race])
                                             @endforeach
                                         </p>
                                         @if($table->ueberschrift != Null && $table->tabelleVisible == 1)

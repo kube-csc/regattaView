@@ -29,7 +29,7 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    <button type="submit" class="btn btn-secondary me-2 ml-2">auswahl</button>
+                                    <button type="submit" class="btn btn-secondary me-2 ml-2">Auswahl</button>
                                 </div>
                             </form>
                         </div>
@@ -141,6 +141,9 @@
                                       $platz=0
                                     @endphp
                                     @foreach($lanesResoult1 as $lane)
+                                        @php
+                                            $platz++
+                                        @endphp
                                         @include('components.raceRecoult', ['raceResoult' => $raceResoult1])
                                     @endforeach
                                 </p>
@@ -311,6 +314,9 @@
                                             $platz=0
                                         @endphp
                                         @foreach($lanesResoult2 as $lane)
+                                            @php
+                                                $platz++
+                                            @endphp
                                             @include('components.raceRecoult', ['raceResoult' => $raceResoult2])
                                         @endforeach
                                     </p>

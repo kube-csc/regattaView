@@ -1,6 +1,3 @@
-@php
-    $platz++
-@endphp
 <label for="name">Platz:</label>
 {{ $platz }}
 <label for="name">Bahn:</label>
