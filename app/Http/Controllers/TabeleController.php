@@ -13,8 +13,9 @@ class TabeleController extends Controller
 {
     public function __construct()
     {
-        $this->currentDate = Carbon::now()->toDateString();
-        $this->currentTime = Carbon::now()->toTimeString();
+        $currentDateTime = Carbon::now();
+        $this->currentDate = $currentDateTime->toDateString();
+        $this->currentTime = $currentDateTime->toTimeString();
         //Temp: Testdaten
         //$this->currentDate = "2023-08-26"; // For testing purposes, set a fixed date
         //$this->currentTime = "20:30:00"; // For testing purposes, set a fixed time
@@ -41,7 +42,8 @@ class TabeleController extends Controller
         }
 
         $tabeles = Tabele::where('event_id', $eventId)
-            ->where('tabelleVisible' , 1)
+            ->where('tabelleVisible', 1)
+            ->where('wertungsart', '!=', 3) // Wertungsart 3 = Lauf
 //            ->where(function($query) {
 //                $query->where('finaleAnzeigen', '<', Carbon::now()->toTimeString())
 //                    ->orWhere('tabelleDatumVon', '<', Carbon::now()->toDateString());
@@ -64,8 +66,9 @@ class TabeleController extends Controller
 
         return view('table.index')->with(
             [
-                'tabeles'         => $tabeles,
-                'ueberschrift'    => 'Tabellen'
+                'tabeles'      => $tabeles,
+                'ueberschrift' => 'Tabellen',
+                'eventname'    => $events->first()->ueberschrift,
             ]);
     }
 
@@ -100,7 +103,8 @@ class TabeleController extends Controller
     {
         $victoCremonyTableShow=1;
         $tableShow = Tabele::find($tableId);
-        if($tableShow && $tableShow->tabelleVisible == 1) {
+        $event = Event::find($tableShow->event_id);
+        if($tableShow && $tableShow->tabelleVisible == 1 && $tableShow->wertung != 3) {
             $tabeledataShows = Tabledata::where('tabele_id', $tableId)
                 ->orderBy('punkte', 'desc')
                 ->orderBy('buchholzzahl', 'desc')
@@ -108,8 +112,16 @@ class TabeleController extends Controller
                 ->orderBy('hundert')
                 ->get()
                 ->values()
-                ->map(function ($item, $key) {
-                    $item->platz = $key + 1;
+                ->map(function ($item, $key) use (&$lastPoints, &$lastBuchholz, &$lastPlatz, &$platz) {
+                    if (!isset($lastPoints)) {
+                        $platz = 1;
+                    } elseif ($item->punkte < $lastPoints || $item->buchholzzahl < $lastBuchholz) {
+                        $platz = $key + 1;
+                    }
+                    $item->platz = $platz;
+                    $lastPoints = $item->punkte;
+                    $lastBuchholz = $item->buchholzzahl;
+                    $lastPlatz = $platz;
                     return $item;
                 });
         }
@@ -127,6 +139,7 @@ class TabeleController extends Controller
                 'tableId'               => $tableId,
                 'victoCremonyTableShow' => $victoCremonyTableShow,
                 'tabeledataShows'       => $tabeledataShows,
+                'eventname'             => $event->ueberschrift,
             ]);
     }
 

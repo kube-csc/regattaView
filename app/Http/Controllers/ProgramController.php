@@ -40,7 +40,8 @@ class ProgramController extends Controller
 
         return view('program.index')->with([
                 'races'        => $races,
-                'ueberschrift' => 'Programm von allen Rennen'
+                'ueberschrift' => 'Programm von allen Rennen',
+                'event'        => $events->first()->ueberschrift
             ]);
     }
 
@@ -75,7 +76,8 @@ class ProgramController extends Controller
         return view('program.index')->with(
             [
                 'races'        => $races,
-                'ueberschrift' => 'Programm von verlosten Rennen die noch nicht gestartet sind.'
+                'ueberschrift' => 'Programm von verlosten Rennen die noch nicht gestartet sind.',
+                'event'        => $events->first()->ueberschrift
             ]);
     }
 
@@ -112,7 +114,8 @@ class ProgramController extends Controller
         return view('program.index')->with(
             [
                 'races'        => $races,
-                'ueberschrift' => 'Ergebnisse der Rennen'
+                'ueberschrift' => 'Ergebnisse der Rennen',
+                'event'        => $events->first()->ueberschrift
             ]);
     }
 
@@ -196,7 +199,8 @@ class ProgramController extends Controller
                 'lanes'        => $lanes,
                 'previousRace' => $previousRace,
                 'nextRace'     => $nextRace,
-                'ueberschrift' => 'Bahnbelegung'
+                'ueberschrift' => 'Bahnbelegung',
+                'eventname'    => $events->first()->ueberschrift
             ]);
     }
 
@@ -247,7 +251,8 @@ class ProgramController extends Controller
                 'previousRace' => $previousRace,
                 'nextRace'     => $nextRace,
                 'lanes'        => $lanes,
-                'ueberschrift' => 'Bahnbelegung'
+                'ueberschrift' => 'Bahnbelegung',
+                'eventname'    => $events->first()->ueberschrift
             ]);
     }
 

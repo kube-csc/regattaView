@@ -1,6 +1,6 @@
 @extends('layouts.frontend')
 
-@section('title' ,'Programm')
+@section('title' ,'Programm '.$event)
 
 @section('content')
 
@@ -61,27 +61,31 @@
                                 <p>{!! $race->beschreibung !!}</p>
                             @endif
                             @if($race->programmDatei != Null)
-                                <p><a href="{{env('VEREIN_URL')}}/storage/raceDokumente/{{ $race->programmDatei }}" target="_blank">
+                                <p>
+                                   <a href="{{env('VEREIN_URL')}}/storage/raceDokumente/{{ $race->programmDatei }}" target="_blank">
                                         <i class="bx bxs-file-doc"></i>Programm Dokument
-                                    </a>
+                                   </a>
                                 </p>
                             @endif
                             @if($race->status >= 2 && $race->status <= 4)
-                                    <p><a href="/Bahnbelegung/{{$race->id}}">
-                                            <i class="bx bxs-info-circle"></i>Bahnbelegung
-                                        </a>
+                                    <p>
+                                       <a href="/Bahnbelegung/{{$race->id}}">
+                                            <i class="bx bxs-label"></i>Bahnbelegung
+                                       </a>
                                     </p>
                             @endif
                             @if($race->veroeffentlichungUhrzeit < Illuminate\Support\Carbon::now()->toTimeString() && $race->rennDatum == Illuminate\Support\Carbon::now()->toDateString()
                                    || $race->rennDatum < Illuminate\Support\Carbon::now()->toDateString())
                                 @if($race->status == 4)
-                                    <p><a href="/Ergebnis/{{$race->id}}">
-                                            <i class="bx bxs-info-circle"></i>Ergebnis
-                                        </a>
+                                    <p>
+                                       <a href="/Ergebnis/{{$race->id}}">
+                                            <i class="bx bxs-label"></i>Ergebnis
+                                       </a>
                                     </p>
                                 @endif
                                 @if($race->ergebnisDatei != Null)
-                                    <p><a href="{{env('VEREIN_URL')}}/storage/raceDokumente/{{ $race->ergebnisDatei }}" target="_blank">
+                                    <p>
+                                        <a href="{{env('VEREIN_URL')}}/storage/raceDokumente/{{ $race->ergebnisDatei }}" target="_blank">
                                             <i class="bx bxs-file-doc"></i>Ergebnisse Dokument
                                         </a>
                                     </p>

@@ -1,6 +1,6 @@
 @extends('layouts.frontend')
 
-@section('title' ,'Tabellen')
+@section('title' ,'Tabellen '.$eventname)
 
 @section('content')
     <main id="main">
@@ -43,13 +43,13 @@
                     @endif
                             <h4 class="title">{{ $table->ueberschrift }}</h4>
                             <p><a href="/Tabelle/{{$table->id}}">
-                                    <i class="bx bxs-info-circle"></i>Tabellenausgabe
+                                    <i class="bx bxs-label"></i>Tabellenausgabe
                                </a>
                             </p>
                             @if($table->tabelleDatei != Null)
                                 <p><a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $table->tabelleDatei }}" target="_blank">
                                         <i class="bx bxs-file-doc"></i>Tabelle
-                                    </a>
+                                   </a>
                                 </p>
                             @endif
                             @if($table->beschreibung != '')

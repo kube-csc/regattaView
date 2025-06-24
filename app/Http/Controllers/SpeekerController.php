@@ -15,8 +15,9 @@ class SpeekerController extends Controller
 {
     public function __construct()
     {
-        $this->currentDate = Carbon::now()->toDateString();
-        $this->currentTime = Carbon::now()->toTimeString();
+        $currentDateTime = Carbon::now();
+        $this->currentDate = $currentDateTime->toDateString();
+        $this->currentTime = $currentDateTime->toTimeString();
         //Temp: Testdaten
         //$this->currentDate = "2023-08-26"; // Zu Testzwecken ein festes Datum Datum Format beachten
         //$this->currentTime = "06:00:00"; // Zu Testzwecken eine feste Uhrzeit Zeitformat beachten
@@ -211,7 +212,6 @@ class SpeekerController extends Controller
                 if($race2!=Null){
                     $vorId = $race2->id;
                     if ($race2->status == 4) {
-                        dd('a1');
                         $raceResoultId1 = $race2->id;
                         $raceResoult1 = $race2;
                         $raceResoultId2 = Null;
@@ -365,7 +365,7 @@ class SpeekerController extends Controller
         $victoCremonyTable1 = 1;
         $victoCremonyTable2 = 1;
 
-        if ($raceResoult1 && Tabele::find($raceResoult1->tabele_id)?->tabelleVisible == 1) {
+        if ($raceResoult1 && ($table = Tabele::find($raceResoult1->tabele_id)) && $table->tabelleVisible == 1 && $table->wertung != 3) {
 
             $tableResoult1 = Tabele::find($raceResoult1->tabele_id);
 
@@ -381,8 +381,16 @@ class SpeekerController extends Controller
                 ->orderBy('hundert')
                 ->get()
                 ->values()
-                ->map(function ($item, $key) {
-                    $item->platz = $key + 1;
+                ->map(function ($item, $key) use (&$lastPoints, &$lastBuchholz, &$lastPlatz, &$platz) {
+                    if (!isset($lastPoints)) {
+                        $platz = 1;
+                    } elseif ($item->punkte < $lastPoints || $item->buchholzzahl < $lastBuchholz) {
+                        $platz = $key + 1;
+                    }
+                    $item->platz = $platz;
+                    $lastPoints = $item->punkte;
+                    $lastBuchholz = $item->buchholzzahl;
+                    $lastPlatz = $platz;
                     return $item;
                 });
 
@@ -398,8 +406,7 @@ class SpeekerController extends Controller
             $tabeledatas1 = Null;
         }
 
-
-        if ($raceResoult2 && Tabele::find($raceResoult2->tabele_id)?->tabelleVisible == 1) {
+        if ($raceResoult2 && ($table = Tabele::find($raceResoult2->tabele_id)) && $table->tabelleVisible == 1 && $table->wertung != 3) {
 
             $tableResoult2 = Tabele::find($raceResoult2->tabele_id);
             if (($tableResoult2->finaleAnzeigen > $this->currentTime && $tableResoult2->tabelleDatumVon == $this->currentDate) || $tableResoult2->tabelleDatumVon > $this->currentDate) {
@@ -414,8 +421,16 @@ class SpeekerController extends Controller
                 ->orderBy('hundert')
                 ->get()
                 ->values()
-                ->map(function ($item, $key) {
-                    $item->platz = $key + 1;
+                ->map(function ($item, $key) use (&$lastPoints, &$lastBuchholz, &$lastPlatz, &$platz) {
+                    if (!isset($lastPoints)) {
+                        $platz = 1;
+                    } elseif ($item->punkte < $lastPoints || $item->buchholzzahl < $lastBuchholz) {
+                        $platz = $key + 1;
+                    }
+                    $item->platz = $platz;
+                    $lastPoints = $item->punkte;
+                    $lastBuchholz = $item->buchholzzahl;
+                    $lastPlatz = $platz;
                     return $item;
                 });
 
@@ -433,19 +448,19 @@ class SpeekerController extends Controller
 
         return view('speeker.show')->with(
                 [
-                    'event'         => $event,
-                    'raceNext1'     => $raceNext1,
-                    'raceNext2'     => $raceNext2,
-                    'raceResoult1'  => $raceResoult1,
-                    'raceResoult2'  => $raceResoult2,
-                    'tabeledatas1'  => $tabeledatas1,
-                    'tabeledatas2'  => $tabeledatas2,
-                    'lanesNext1'    => $lanesNext1,
-                    'lanesNext2'    => $lanesNext2,
-                    'lanesResoult1' => $lanesResoult1,
-                    'lanesResoult2' => $lanesResoult2,
-                    'victoCremony1' => $victoCremony1,
-                    'victoCremony2' => $victoCremony2,
+                    'event'              => $event,
+                    'raceNext1'          => $raceNext1,
+                    'raceNext2'          => $raceNext2,
+                    'raceResoult1'       => $raceResoult1,
+                    'raceResoult2'       => $raceResoult2,
+                    'tabeledatas1'       => $tabeledatas1,
+                    'tabeledatas2'       => $tabeledatas2,
+                    'lanesNext1'         => $lanesNext1,
+                    'lanesNext2'         => $lanesNext2,
+                    'lanesResoult1'      => $lanesResoult1,
+                    'lanesResoult2'      => $lanesResoult2,
+                    'victoCremony1'      => $victoCremony1,
+                    'victoCremony2'      => $victoCremony2,
                     'victoCremonyTable1' => $victoCremonyTable1,
                     'victoCremonyTable2' => $victoCremonyTable2,
                     'racesChoose'        => $racesChoose,
@@ -504,8 +519,16 @@ class SpeekerController extends Controller
                     ->orderBy('hundert')
                     ->get()
                     ->values()
-                    ->map(function ($item, $key) {
-                        $item->platz = $key + 1;
+                    ->map(function ($item, $key) use (&$lastPoints, &$lastBuchholz, &$lastPlatz, &$platz) {
+                        if (!isset($lastPoints)) {
+                            $platz = 1;
+                        } elseif ($item->punkte < $lastPoints || $item->buchholzzahl < $lastBuchholz) {
+                            $platz = $key + 1;
+                        }
+                        $item->platz = $platz;
+                        $lastPoints = $item->punkte;
+                        $lastBuchholz = $item->buchholzzahl;
+                        $lastPlatz = $platz;
                         return $item;
                     });
 
@@ -591,6 +614,9 @@ class SpeekerController extends Controller
 
             if ($race && $table->tabelleVisible == 1) {
                 // Alle Tabledata-Einträge holen und Platz berechnen
+                $lastPoints = null;
+                $lastPlatz = 0;
+                $platz = 0;
                 $tabeledatas = Tabledata::where('tabele_id', $race->tabele_id)
                     ->orderBy('punkte', 'desc')
                     ->orderBy('buchholzzahl', 'desc')
@@ -598,8 +624,16 @@ class SpeekerController extends Controller
                     ->orderBy('hundert')
                     ->get()
                     ->values()
-                    ->map(function ($item, $key) {
-                        $item->platz = $key + 1;
+                    ->map(function ($item, $key) use (&$lastPoints, &$lastBuchholz, &$lastPlatz, &$platz) {
+                        if (!isset($lastPoints)) {
+                            $platz = 1;
+                        } elseif ($item->punkte < $lastPoints || $item->buchholzzahl < $lastBuchholz) {
+                            $platz = $key + 1;
+                        }
+                        $item->platz = $platz;
+                        $lastPoints = $item->punkte;
+                        $lastBuchholz = $item->buchholzzahl;
+                        $lastPlatz = $platz;
                         return $item;
                     });
 
@@ -626,6 +660,7 @@ class SpeekerController extends Controller
 
         $tabelChooses = Tabele::where('event_id', $eventId)
             ->where('tabelleVisible', 1)
+            ->where('wertungsart', '!=', 3)
             ->where(function($query) {
                 $query->where([
                     ['finaleAnzeigen', '<', Carbon::now()->toTimeString()],
@@ -640,7 +675,7 @@ class SpeekerController extends Controller
 
         $tableShow = Tabele::find($tableId);
 
-        if($tableShow->tabelleVisible == 1) {
+        if($tableShow->tabelleVisible == 1 && $tableShow->wertung != 3) {
 
             $tabeledataShows = Tabledata::where('tabele_id', $tableId)
                 ->orderBy('punkte', 'desc')
@@ -649,8 +684,16 @@ class SpeekerController extends Controller
                 ->orderBy('hundert')
                 ->get()
                 ->values()
-                ->map(function ($item, $key) {
-                    $item->platz = $key + 1;
+                ->map(function ($item, $key) use (&$lastPoints, &$lastBuchholz, &$lastPlatz, &$platz) {
+                    if (!isset($lastPoints)) {
+                        $platz = 1;
+                    } elseif ($item->punkte < $lastPoints || $item->buchholzzahl < $lastBuchholz) {
+                        $platz = $key + 1;
+                    }
+                    $item->platz = $platz;
+                    $lastPoints = $item->punkte;
+                    $lastBuchholz = $item->buchholzzahl;
+                    $lastPlatz = $platz;
                     return $item;
                 });
         }

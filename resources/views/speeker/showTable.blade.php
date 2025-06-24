@@ -1,6 +1,6 @@
 @extends('layouts.speeker')
 
-@section('title' ,'Sprecher Table'.$event->ueberschrift)
+@section('title' ,'Sprecher Table '.$event->ueberschrift)
 
 @section('content')
 
@@ -59,28 +59,24 @@
                                 @if($victoCremonyTableShow == 0)
                                    Ergebnis wird auf der Siegerehrung bekannt gegeben.
                                 @else
-                                  @if($tabeledataShows)
-                                    @foreach($tabeledataShows as $tabeledata)
-                                        Platz:
-                                        {{ $tabeledata->platz }} {{ $tabeledata->getMannschaft->teamname }}
+                                   @if($tabeledataShows)
+                                      @foreach($tabeledataShows as $tabeledata)
+                                        <b>Platz:
+                                        {{ $tabeledata->platz }}</b> {{ $tabeledata->getMannschaft->teamname }}
                                         <br>
                                         {{ $tabeledata->punkte }} Punkt(e) / {{ $tabeledata->rennanzahl }} von {{ $race->raceTabele->maxrennen }} Rennen
                                         @if($race->raceTabele->buchholzwertungaktiv)
                                             / {{ $tabeledata->buchholzzahl }} Buchholzzahl
                                         @endif
                                         <br>
-                                    @endforeach
-                                    @if($race->raceTabele->fileTabelleDatei != Null)
+                                      @endforeach
+                                      @if($race->raceTabele->fileTabelleDatei != Null)
                                         <hr />
                                         <a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $race->raceTabele->tabelleDatei }}" target="_blank">
                                             <i class="bx bxs-file-doc"></i>Tabellen Dokument
                                         </a>
-                                        <br>
-                                        Die Datei wurde am
-                                        {{ date("d.m.y", strtotime($race->raceTabele->updated_at)) }} {{ date("H:i", strtotime($race->raceTabele->updated_at)) }} Uhr
-                                        aktualisiert.
-                                    @endif
-                                @endif
+                                      @endif
+                                   @endif
                                 @endif
                             </p>
                         </div>
@@ -111,11 +107,8 @@
                                     @endif
                                     <p>
                                         @foreach($lanes as $lane)
-                                            @php
-                                                $bahn++;
-                                            @endphp
                                             <label for="name">Bahn:</label>
-                                            {{ $bahn}}
+                                            {{ $lane->bahn }}
                                             @if($lane->mannschaft_id!=Null)
                                                 {{ $lane->regattaTeam->teamname }}
                                                 @if($lane->regattaTeam->beschreibung != Null)
@@ -160,32 +153,27 @@
                                                    </h2>
                                                @else
                                                    <h2>Tabelle - {{ $race->raceTabele->ueberschrift }}</h2>
-
                                                    Das Ergebnis wird auf der Siegerehrung bekannt gegeben.
                                                @endif
                                                <p>
-                                                 @if($tabeledatas && $victoCremonyTable == 1)
-                                                    @foreach($tabeledatas as $tabeledata)
-                                                        Platz:
-                                                        {{ $tabeledata->platz }} {{ $tabeledata->getMannschaft->teamname }}
+                                                  @if($tabeledatas && $victoCremonyTable == 1)
+                                                     @foreach($tabeledatas as $tabeledata)
+                                                        <b>Platz:
+                                                            {{ $tabeledata->platz }}</b> {{ $tabeledata->getMannschaft->teamname }}
                                                         <br>
                                                         {{ $tabeledata->punkte }} Punkt(e) / {{ $tabeledata->rennanzahl }} von {{ $race->raceTabele->maxrennen }} Rennen
                                                         @if($race->raceTabele->buchholzwertungaktiv)
                                                             / {{ $tabeledata->buchholzzahl }} Buchholzzahl
                                                         @endif
                                                         <br>
-                                                    @endforeach
-                                                    @if($race->raceTabele->fileTabelleDatei != Null)
+                                                     @endforeach
+                                                     @if($race->raceTabele->fileTabelleDatei != Null)
                                                         <hr />
                                                         <a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $race->raceTabele->tabelleDatei }}" target="_blank">
                                                             <i class="bx bxs-file-doc"></i>Tabellen Dokument
                                                         </a>
-                                                        <br>
-                                                        Die Datei wurde am
-                                                        {{ date("d.m.y", strtotime($race->raceTabele->updated_at)) }} {{ date("H:i", strtotime($race->raceTabele->updated_at)) }} Uhr
-                                                        aktualisiert.
-                                                    @endif
-                                                 @endif
+                                                     @endif
+                                                  @endif
                                               </p>
                                            </div>
                                         @endif

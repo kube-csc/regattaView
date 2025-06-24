@@ -1,6 +1,6 @@
 @extends('layouts.frontend')
 
-@section('title' ,'Banbelegung')
+@section('title' ,'Banbelegung '.$eventname)
 
 @section('content')
 

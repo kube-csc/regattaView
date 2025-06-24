@@ -1,6 +1,6 @@
 @extends('layouts.speeker')
 
-@section('title' ,'Sprecher Programm'.$event->ueberschrift)
+@section('title' ,'Sprecher Programm '.$event->ueberschrift)
 
 @section('content')
 
@@ -88,9 +88,6 @@
                                 <p>Es sind keine Rennen vorhanden.</p>
                             @endif
                             @if($raceNext1 != Null && $raceResoult1 == Null)
-                                @php
-                                    $bahn=0;
-                                @endphp
                                 @if(is_numeric($raceNext1->nummer))
                                     <h2>{{ $raceNext1->nummer }}. {{ $raceNext1->rennBezeichnung }}</h2>
                                 @else
@@ -181,10 +178,6 @@
                                               <a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $raceResoult1->raceTabele->tabelleDatei }}" target="_blank">
                                                   <i class="bx bxs-file-doc"></i>Tabellen Dokument
                                               </a>
-                                              <br>
-                                              Die Datei wurde am
-                                              {{ date("d.m.y", strtotime($raceResoult1->raceTabele->updated_at)) }} {{ date("H:i", strtotime($raceResoult1->raceTabele->updated_at)) }} Uhr
-                                              aktualisiert.
                                           @endif
                                           </p>
                                       @endif
@@ -215,14 +208,12 @@
                                     <p>
                                         Ergebnis wird auf der Siegerehrung bekannt gegeben.
                                     </p>
-                                    <hr/>
+                                    <hr />
                                     <p>
+                                        <!-- ToDo: Noch mit include einfügen -->
                                         @foreach($lanesNext1 as $lane)
-                                            @php
-                                                $bahn++;
-                                            @endphp
                                             <label for="name">Bahn:</label>
-                                            {{ $bahn}}
+                                            {{ $lane->bahn}}
                                             @if($lane->mannschaft_id!=Null)
                                                 @if($lane->regattaTeam->beschreibung != Null)
                                                     <a href="/Sprecher/Mannschaft/{{ $lane->mannschaft_id }}/{{ $raceNext1->id }}" class="me-2">
@@ -243,7 +234,7 @@
                                         @endforeach
                                     </p>
                                     @if($raceNext1->beschreibung)
-                                        <hr></hr>
+                                        <hr/>
                                         <h3>Beschreibung zum Rennen</h3>
                                         <p>
                                             {!! $raceNext1->beschreibung !!}
@@ -354,10 +345,6 @@
                                                       <a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $raceResoult2->raceTabele->tabelleDatei }}" target="_blank">
                                                           <i class="bx bxs-file-doc"></i>Tabellen Dokument
                                                       </a>
-                                                      <br>
-                                                      Die Datei wurde am
-                                                      {{ date("d.m.y", strtotime($raceResoult2->raceTabele->updated_at)) }} {{ date("H:i", strtotime($raceResoult2->raceTabele->updated_at)) }} Uhr
-                                                      aktualisiert.
                                                   @endif
                                                </p>
                                             @endif

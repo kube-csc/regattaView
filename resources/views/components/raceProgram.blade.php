@@ -1,8 +1,5 @@
-@php
-    $bahn++;
-@endphp
 <label for="name">Bahn:</label>
-{{ $bahn }}
+{{ $lane->bahn }}
 @if($lane->mannschaft_id != Null)
     @if($lane->regattaTeam->beschreibung != Null)
         <a href="/Sprecher/Mannschaft/{{ $lane->mannschaft_id }}/{{ $raceNext->id }}" class="me-2">

@@ -142,10 +142,6 @@
                                                             <a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $race->raceTabele->tabelleDatei }}" target="_blank">
                                                                 <i class="bx bxs-file-doc"></i>Tabellen Dokument
                                                             </a>
-                                                            <br>
-                                                            Die Datei wurde am
-                                                            {{ date("d.m.y", strtotime($race->raceTabele->updated_at)) }} {{ date("H:i", strtotime($race->raceTabele->updated_at)) }} Uhr
-                                                            aktualisiert.
                                                         @endif
                                                     @endif
                                                     </p>
