@@ -110,7 +110,7 @@
                                                 @include('components.raceRecoult', ['raceResoult' => $race])
                                             @endforeach
                                         </p>
-                                        @if($race->raceTabele->ueberschrift != Null && $race->raceTabele->tabelleVisible == 1)
+                                        @if($race->raceTabele->ueberschrift != Null && $race->raceTabele->tabelleVisible == 1 && $race->raceTabele->wertungsart != 3)
                                             <hr />
                                             <div class="my-4">
                                                 @if($victoCremonyTable == 1)
@@ -128,14 +128,10 @@
                                                 <p>
                                                     @if($tabeledatas && $victoCremonyTable == 1)
                                                         @foreach($tabeledatas as $tabeledata)
-                                                            Platz:
-                                                            {{ $tabeledata->platz }} {{ $tabeledata->getMannschaft->teamname }}
-                                                            <br>
-                                                            {{ $tabeledata->punkte }} Punkt(e) / {{ $tabeledata->rennanzahl }} von {{ $race->raceTabele->maxrennen }} Rennen
-                                                            @if($race->raceTabele->buchholzwertungaktiv)
-                                                                / {{ $tabeledata->buchholzzahl }} Buchholzzahl
-                                                            @endif
-                                                            <br>
+                                                            @include('components.table', [
+                                                                                           'tabeledata'  => $tabeledata,
+                                                                                           'raceResoult' => $race
+                                                                                         ])
                                                         @endforeach
                                                         @if($race->raceTabele->fileTabelleDatei != Null)
                                                             <hr />

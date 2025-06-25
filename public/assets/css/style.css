@@ -1457,3 +1457,15 @@ section {
     margin: -20px 0 30px 0;
   }
 }
+
+
+.table-points-small {
+    max-width: 350px;
+    margin: 0 auto;
+    font-size: 0.95em;
+}
+.table-points-small table td,
+.table-points-small table th {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}

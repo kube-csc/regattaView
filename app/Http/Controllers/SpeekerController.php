@@ -318,6 +318,7 @@ class SpeekerController extends Controller
 
         if(isset($raceResoultId1)) {
             $lanesResoult1 = Lane::where('rennen_id', $raceResoultId1)
+                ->where('platz' , '>', 0)
                 ->orderBy('platz')
                 ->get();
 
@@ -340,6 +341,7 @@ class SpeekerController extends Controller
 
         if(isset($raceResoultId2)) {
             $lanesResoult2 = Lane::where('rennen_id', $raceResoultId2)
+                ->where('platz' , '>', 0)
                 ->orderBy('platz')
                 ->get();
             if(($raceResoult2->veroeffentlichungUhrzeit > $this->currentTime && $raceResoult2->rennDatum == $this->currentDate)
@@ -365,7 +367,7 @@ class SpeekerController extends Controller
         $victoCremonyTable1 = 1;
         $victoCremonyTable2 = 1;
 
-        if ($raceResoult1 && ($table = Tabele::find($raceResoult1->tabele_id)) && $table->tabelleVisible == 1 && $table->wertung != 3) {
+        if ($raceResoult1 && ($table = Tabele::find($raceResoult1->tabele_id)) && $table->tabelleVisible == 1 && $table->wertungsart != 3) {
 
             $tableResoult1 = Tabele::find($raceResoult1->tabele_id);
 
@@ -375,10 +377,11 @@ class SpeekerController extends Controller
 
             // Alle Tabledata-Einträge holen und Platz berechnen
             $tabeledatas1 = Tabledata::where('tabele_id', $raceResoult1->tabele_id)
+                ->where('rennanzahl' , '>', 0)
                 ->orderBy('punkte', 'desc')
-                ->orderBy('buchholzzahl', 'desc')
                 ->orderBy('zeit')
                 ->orderBy('hundert')
+                ->orderBy('buchholzzahl', 'desc')
                 ->get()
                 ->values()
                 ->map(function ($item, $key) use (&$lastPoints, &$lastBuchholz, &$lastPlatz, &$platz) {
@@ -406,7 +409,7 @@ class SpeekerController extends Controller
             $tabeledatas1 = Null;
         }
 
-        if ($raceResoult2 && ($table = Tabele::find($raceResoult2->tabele_id)) && $table->tabelleVisible == 1 && $table->wertung != 3) {
+        if ($raceResoult2 && ($table = Tabele::find($raceResoult2->tabele_id)) && $table->tabelleVisible == 1 && $table->wertungsart != 3) {
 
             $tableResoult2 = Tabele::find($raceResoult2->tabele_id);
             if (($tableResoult2->finaleAnzeigen > $this->currentTime && $tableResoult2->tabelleDatumVon == $this->currentDate) || $tableResoult2->tabelleDatumVon > $this->currentDate) {
@@ -415,10 +418,11 @@ class SpeekerController extends Controller
 
             // Alle Tabledata-Einträge holen und Platz berechnen
             $tabeledatas2 = Tabledata::where('tabele_id', $raceResoult2->tabele_id)
+                ->where('rennanzahl' , '>', 0)
                 ->orderBy('punkte', 'desc')
-                ->orderBy('buchholzzahl', 'desc')
                 ->orderBy('zeit')
                 ->orderBy('hundert')
+                ->orderBy('buchholzzahl', 'desc')
                 ->get()
                 ->values()
                 ->map(function ($item, $key) use (&$lastPoints, &$lastBuchholz, &$lastPlatz, &$platz) {
@@ -513,10 +517,11 @@ class SpeekerController extends Controller
             if ($race && Tabele::find($race->tabele_id)?->tabelleVisible == 1) {
                 // Alle Tabledata-Einträge holen und Platz berechnen
                 $tabeledatas = Tabledata::where('tabele_id', $race->tabele_id)
+                    ->where('rennanzahl' , '>', 0)
                     ->orderBy('punkte', 'desc')
-                    ->orderBy('buchholzzahl', 'desc')
                     ->orderBy('zeit')
                     ->orderBy('hundert')
+                    ->orderBy('buchholzzahl', 'desc')
                     ->get()
                     ->values()
                     ->map(function ($item, $key) use (&$lastPoints, &$lastBuchholz, &$lastPlatz, &$platz) {
@@ -614,14 +619,12 @@ class SpeekerController extends Controller
 
             if ($race && $table->tabelleVisible == 1) {
                 // Alle Tabledata-Einträge holen und Platz berechnen
-                $lastPoints = null;
-                $lastPlatz = 0;
-                $platz = 0;
                 $tabeledatas = Tabledata::where('tabele_id', $race->tabele_id)
+                    ->where('rennanzahl' , '>', 0)
                     ->orderBy('punkte', 'desc')
-                    ->orderBy('buchholzzahl', 'desc')
                     ->orderBy('zeit')
                     ->orderBy('hundert')
+                    ->orderBy('buchholzzahl', 'desc')
                     ->get()
                     ->values()
                     ->map(function ($item, $key) use (&$lastPoints, &$lastBuchholz, &$lastPlatz, &$platz) {
@@ -672,16 +675,16 @@ class SpeekerController extends Controller
             ->orderBy('ueberschrift')
             ->get();
 
-
         $tableShow = Tabele::find($tableId);
 
         if($tableShow->tabelleVisible == 1 && $tableShow->wertung != 3) {
 
             $tabeledataShows = Tabledata::where('tabele_id', $tableId)
+                ->where('rennanzahl' , '>', 0)
                 ->orderBy('punkte', 'desc')
-                ->orderBy('buchholzzahl', 'desc')
                 ->orderBy('zeit')
                 ->orderBy('hundert')
+                ->orderBy('buchholzzahl', 'desc')
                 ->get()
                 ->values()
                 ->map(function ($item, $key) use (&$lastPoints, &$lastBuchholz, &$lastPlatz, &$platz) {
@@ -707,19 +710,19 @@ class SpeekerController extends Controller
 
         return view('speeker.showTable')->with(
             [
-                'event'             => $event,
-                'tableShow'         => $tableShow,
-                'tableId'           => $tableId,
-                'table'             => $table,
+                'event'                 => $event,
+                'tableShow'             => $tableShow,
+                'tableId'               => $tableId,
+                'table'                 => $table,
                 'victoCremonyTableShow' => $victoCremonyTableShow,
-                'raceId'            => $raceId,
-                'tabelChooses'      => $tabelChooses,
-                'lanes'             => $lanes,
-                'race'              => $race,
-                'victoCremony'      => $victoCremony,
-                'victoCremonyTable' => $victoCremonyTable,
-                'tabeledatas'       => $tabeledatas,
-                'tabeledataShows'   => $tabeledataShows,
+                'raceId'                => $raceId,
+                'tabelChooses'          => $tabelChooses,
+                'lanes'                 => $lanes,
+                'race'                  => $race,
+                'victoCremony'          => $victoCremony,
+                'victoCremonyTable'     => $victoCremonyTable,
+                'tabeledatas'           => $tabeledatas,
+                'tabeledataShows'       => $tabeledataShows,
             ]);
     }
 

@@ -16,7 +16,7 @@
                                 <div class="search-box d-flex">
                                     <select name="speekerId" id="speekerId" class="form-control me-2">
                                         {{ $event->ueberschrift }}
-                                       @foreach($racesChoose as $race)
+                                        @foreach($racesChoose as $race)
                                             <option value="{{ $race->id }}"
                                                 @if(isset($raceNext1) && $race->id == $raceNext1->id) selected @endif
                                                 @if(isset($raceResoult1) && $race->id == $raceResoult1->id) selected @endif
@@ -145,7 +145,7 @@
                                     @endforeach
                                 </p>
                                 {{-- Tabellenausgabe links Seite--}}
-                                @if($raceResoult1->raceTabele->ueberschrift != Null && $raceResoult1->raceTabele->tabelleVisible == 1)
+                                @if($raceResoult1->raceTabele->ueberschrift != Null && $raceResoult1->raceTabele->tabelleVisible == 1 && $raceResoult1->raceTabele->wertungsart != 3)
                                    <hr />
                                    <div class="my-4">
                                        @if($victoCremonyTable1 == 1)
@@ -164,14 +164,10 @@
                                        @if($tabeledatas1 && $victoCremonyTable1 == 1)
                                           <p>
                                           @foreach($tabeledatas1 as $tabeledata)
-                                              Platz:
-                                              {{ $tabeledata->platz }} {{ $tabeledata->getMannschaft->teamname }}
-                                              <br>
-                                              {{ $tabeledata->punkte }} Punkt(e) / {{ $tabeledata->rennanzahl }} von {{ $raceResoult1->raceTabele->maxrennen }} Rennen
-                                              @if($raceResoult1->raceTabele->buchholzwertungaktiv)
-                                                / {{ $tabeledata->buchholzzahl }} Buchholzzahl
-                                              @endif
-                                              <br>
+                                              @include('components.table', [
+                                                                             'tabeledata'  => $tabeledata,
+                                                                             'raceResoult' => $raceResoult1
+                                                                           ])
                                           @endforeach
                                           @if($raceResoult1->raceTabele->fileTabelleDatei != Null)
                                               <hr />
@@ -312,7 +308,7 @@
                                         @endforeach
                                     </p>
                                     {{-- Tabellenausgabe rechts Seite--}}
-                                    @if($raceResoult2->raceTabele->ueberschrift != Null && $raceResoult2->raceTabele->tabelleVisible == 1)
+                                    @if($raceResoult2->raceTabele->ueberschrift != Null && $raceResoult2->raceTabele->tabelleVisible == 1 && $raceResoult2->raceTabele->wertungsart != 3)
                                         <hr />
                                         <div class="my-4">
                                             @if($victoCremonyTable2 == 1)
@@ -331,14 +327,10 @@
                                             @if($tabeledatas2 && $victoCremonyTable2 == 1)
                                                <p>
                                                   @foreach($tabeledatas2 as $tabeledata)
-                                                      Platz:
-                                                      {{ $tabeledata->platz }} {{ $tabeledata->getMannschaft->teamname }}
-                                                      <br>
-                                                      {{ $tabeledata->punkte }} Punkt(e) / {{ $tabeledata->rennanzahl }} von {{ $raceResoult1->raceTabele->maxrennen }} Rennen
-                                                      @if($raceResoult1->raceTabele->buchholzwertungaktiv)
-                                                         / {{ $tabeledata->buchholzzahl }} Buchholzzahl
-                                                      @endif
-                                                      <br>
+                                                        @include('components.table', [
+                                                                                       'tabeledata'  => $tabeledata,
+                                                                                       'raceResoult' => $raceResoult2
+                                                                                     ])
                                                   @endforeach
                                                   @if($raceResoult2->raceTabele->fileTabelleDatei != Null)
                                                       <hr />

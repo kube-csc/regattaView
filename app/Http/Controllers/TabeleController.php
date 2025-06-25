@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Tabele;
+use App\Models\Pointsystem;
 use App\Http\Requests\StoreTabeleRequest;
 use App\Http\Requests\UpdateTabeleRequest;
 use App\Models\Tabledata;
@@ -106,10 +107,11 @@ class TabeleController extends Controller
         $event = Event::find($tableShow->event_id);
         if($tableShow && $tableShow->tabelleVisible == 1 && $tableShow->wertung != 3) {
             $tabeledataShows = Tabledata::where('tabele_id', $tableId)
+                ->where('rennanzahl' , '>', 0)
                 ->orderBy('punkte', 'desc')
-                ->orderBy('buchholzzahl', 'desc')
                 ->orderBy('zeit')
                 ->orderBy('hundert')
+                ->orderBy('buchholzzahl', 'desc')
                 ->get()
                 ->values()
                 ->map(function ($item, $key) use (&$lastPoints, &$lastBuchholz, &$lastPlatz, &$platz) {
@@ -133,6 +135,13 @@ class TabeleController extends Controller
             $victoCremonyTableShow = 0;
         }
 
+        $pointsystems = null;
+        if ($tableShow && $tableShow->system_id) {
+            $pointsystems = Pointsystem::where('system_id', $tableShow->system_id)
+                ->orderBy('platz')
+                ->get();
+        }
+
         return view('table.show')->with(
             [
                 'tableShow'             => $tableShow,
@@ -140,6 +149,7 @@ class TabeleController extends Controller
                 'victoCremonyTableShow' => $victoCremonyTableShow,
                 'tabeledataShows'       => $tabeledataShows,
                 'eventname'             => $event->ueberschrift,
+                'pointsystems'          => $pointsystems,
             ]);
     }
 
