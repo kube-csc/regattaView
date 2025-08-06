@@ -46,6 +46,8 @@ Route::get('/Dokumente',                                           [DokumenteCon
 Route::get('/OBSLive/Ergebniss',                                   [OBSLiveController::class, 'result'])               ->name('obsLive.result');
 Route::get('/OBSLive/Bahnbelegung',                                [OBSLiveController::class, 'laneOccupancy'])        ->name('obsLive.laneOccupancy');
 Route::get('/OBSLive/Naechstesrennen',                             [OBSLiveController::class, 'nextRace'])             ->name('obsLive.nextRace');
+Route::get('/OBSLive/Aktuellesrennen',                             [OBSLiveController::class, 'currentRace'])          ->name('obsLive.currentRace');
+Route::get('/OBSLive/Ergebnissall',                                [OBSLiveController::class, 'resultall'])            ->name('obsLive.resultall');
 
 Route::get('/Sprecher/{speekerId?}',                               [SpeekerController::class, 'show'])                 ->name('speeker.show');
 Route::post('/Sprecher/Auswahl',                                   [SpeekerController::class, 'choose'])               ->name('speeker.choose');

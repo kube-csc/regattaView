@@ -37,8 +37,11 @@
                             $diff_in_minutes=$timfrom-$timto;
                         @endphp
                         Startzeit: {{ date("H:i", strtotime($race->rennUhrzeit)) }} Uhr
-                        @if($race->rennDatum == date("Y-m-d", strtotime(now())) && $diff_in_minutes > 5 && ($race->programmDatei != Null && $race->ergebnisDatei == Null) )
+                        @if($race->rennDatum == date("Y-m-d", strtotime(now())) && $diff_in_minutes > 5  && ($race->rennzeit == 0 && ($race->ergebnisDatei == Null or $race->status == 4)) )
                             <br>Voraussichtlich: {{ date("H:i", strtotime($race->verspaetungUhrzeit)) }} Uhr
+                        @endif
+                        @if($race->rennzeit == 1)
+                            <br>gestartet: {{ date("H:i", strtotime($race->verspaetungUhrzeit)) }} Uhr
                         @endif
                     </p>
                 </div>

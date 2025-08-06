@@ -2,7 +2,6 @@
 
 @section('content')
 
-
     <main id="main">
         <!-- ======= Services Section ======= -->
         <section id="about" class="about">
@@ -17,16 +16,10 @@
                     </h2>
                     @if($victoCremony==0)
                         <p>
-                            @php
-                                $platz=0
-                            @endphp
                             @foreach($lanes as $lane)
-                                @php
-                                    $platz++
-                                @endphp
                                 <label for="name">Platz:</label>
-                                {{ $platz }}
-                                @if($lane->mannschaft_id!=Null)
+                                {{ $lane->platz }}
+                                @if($lane->mannschaft_id != Null)
                                     {{ $lane->regattaTeam->teamname }}
                                 @endif
                                 <br>
@@ -41,6 +34,5 @@
             </div>
         </section>
     </main>
-
 
 @endsection

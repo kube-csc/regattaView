@@ -31,8 +31,8 @@ benötigt.
                 <li>Flyer / Plakat</li>
               </ul>
             </li>
-            <li>Präsentation des Teams der Regatta</li>
-            <li>Kontakt des Vereins inc. Map</li>
+            <li>Präsentation der Teams der Regatta</li>
+            <li>Kontakt des veranstaltenden Vereins inc. Map</li>
         </ul> 
     </li>
     <li>Liste der Rennen nach Zeitplan incl. Verspätungen der Startzeit
@@ -56,10 +56,11 @@ benötigt.
 <p>
 Es gibt URL's für sie Einblendung für aktuelle Renninformationen. Diesen können z.B. in OBS eingebunden werden.
 Es wird immer die aktuellen Daten eingetragen, wenn die Ergebnisse zeitgleichen mit den aktullen Rennen erfolgt.
-Alternativ kann kann ein Rennen auch als aktuell in der Rgattaverwaltung angepint werden.
+Alternativ kann ein Rennen auch als aktuell in der Regattaverwaltung angepint werden.
 </p>
 <ul>
     <li>[Domain]/OBSLive/Ergebniss</li>
+    <li>[Domain]/OBSLive/Ergebnissall</li>
     <li>[Domain]/OBSLive/Bahnbelegung</li>
     <li>[Domain]/OBSLive/Naechstesrennen</li>
 </ul>
