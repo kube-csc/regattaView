@@ -38,8 +38,8 @@ Route::get('/Ergebnisse',                                          [ProgramContr
 Route::get('/Bahnbelegung/{raceId}',                               [ProgramController::class, 'laneOccupancy'])        ->name('program.laneOccupancy');
 Route::get('/Ergebnis/{raceId}',                                   [ProgramController::class, 'result'])               ->name('program.result');
 
-Route::get('/Tabellen',                                            [TabeleController::class, 'index'])                 ->name('program.index');
-Route::get('Tabelle/{tableId}',                                    [TabeleController::class, 'show'])                  ->name('program.show');
+Route::get('/Tabellen',                                            [TabeleController::class, 'index'])                 ->name('table.index');
+Route::get('Tabelle/{tableId}',                                    [TabeleController::class, 'show'])                  ->name('table.show');
 
 Route::get('/Dokumente',                                           [DokumenteController::class, 'index'])              ->name('dokumente.index');
 
@@ -55,3 +55,7 @@ Route::get('/Sprecher/Mannschaft/{teamId}/{raceId}',               [SpeekerContr
 Route::get('/Sprecher/Tabelle/{tableId}/{raceId}',                 [SpeekerController::class, 'tabeleShow'])           ->name('speeker.tabeleShow');
 Route::post('/Sprecher/Mannschaft/Auswahl',                        [SpeekerController::class, 'teamChoose'])           ->name('speeker.teamChoose');
 Route::post('/Sprecher/Tabellen/Auswahl',                          [SpeekerController::class, 'tableChoose'])          ->name('speeker.tableChoose');
+
+Route::get('/Programm/Mannschaftsfilter',                          [ProgramController::class, 'selectTeamFilter'])->name('program.selectTeamFilter');
+Route::post('/Programm/Mannschaftsfilter',                         [ProgramController::class, 'setTeamFilter'])->name('program.setTeamFilter');
+Route::get('/Programm/Mannschaftsfilter/entfernen',                [ProgramController::class, 'clearTeamFilter'])->name('program.clearTeamFilter');

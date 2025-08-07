@@ -10,12 +10,55 @@
             <div class="container">
                 <div class="section-title" data-aos="fade-in" data-aos-delay="50">
                     <h2>{{ $ueberschrift }}</h2>
+                    {{-- Mannschaftsfilter Anzeige und Toggle --}}
+                    <div class="d-flex align-items-center justify-content-center mb-3">
+                        @php
+                            $filterTeam = null;
+                            if(session('team_filter')) {
+                                $filterTeam = \App\Models\RegattaTeam::with('teamWertungsGruppe')->find(session('team_filter'));
+                            }
+                            $filterActive = isset($teamFilterActive) ? $teamFilterActive : session('team_filter_active', true);
+                        @endphp
+                        @if($filterTeam)
+                            <span class="badge m-2"
+                                  style="background-color: #ff9800; color: #fff; font-size: 1em; padding: 0.4em 0.8em;">
+                                Gefiltert nach: {{ $filterTeam->teamname }}
+                                @if($filterTeam->teamWertungsGruppe && $filterTeam->teamWertungsGruppe->typ)
+                                    ({{ $filterTeam->teamWertungsGruppe->typ }})
+                                @endif
+                                @if(!$filterActive)
+                                    [Filter aus]
+                                @endif
+                            </span>
+                            <form method="POST" action="{{ route('program.setTeamFilter') }}" class="ms-3">
+                                @csrf
+                                <input type="hidden" name="toggle" value="1">
+                                <button type="submit"
+                                        class="btn {{ $filterActive ? 'btn-warning' : 'btn-success' }} btn-sm"
+                                        style="font-size: 0.95em; padding: 0.3em 1em;">
+                                    Filter {{ $filterActive ? 'aus' : 'an' }}
+                                </button>
+                            </form>
+                        @else
+                            <a href="{{ route('program.selectTeamFilter') }}" class="ms-3">
+                                <button type="button" class="btn btn-success btn-sm" style="font-size: 0.95em; padding: 0.3em 1em;">
+                                    Filter an
+                                </button>
+                            </a>
+                        @endif
+                    </div>
                     <p>
                        <a href="/Programm">
                            <button type = "button" class = "btn btn-primary rounded-lg m-2">alle Rennen</button>
                        </a>
                        <a href="/Programm/geplante">
                            <button type = "button" class = "btn btn-primary rounded-lg m-2">geplante Rennen</button>
+                       </a>
+                       {{-- Mannschaftsfilter --}}
+                       <a href="{{ route('program.selectTeamFilter') }}">
+                           <button type="button" class="btn btn-secondary rounded-lg m-2">
+                               Mannschaft filtern
+                           </button>
                        </a>
                        <a href="/Ergebnisse">
                            <button type = "button" class = "btn btn-primary rounded-lg m-2">gewertete Rennen</button>

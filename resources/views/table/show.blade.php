@@ -20,7 +20,7 @@
                                 @if($tableShow->buchholzwertungaktiv)
                                     <th>Buchholzzahl <sup>*</sup></th>
                                 @endif
-                                <th>Rennanzahl</th>
+                                <th>Absolvierte Rennen</th>
                             </tr>
                             </thead>
                             <tbody>
