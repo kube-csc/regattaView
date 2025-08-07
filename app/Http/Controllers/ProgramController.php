@@ -392,7 +392,6 @@ class ProgramController extends Controller
             ]);
     }
 
-
     // Neue Seite zur Auswahl der Mannschaft als Filter
     public function selectTeamFilter()
     {
@@ -404,11 +403,9 @@ class ProgramController extends Controller
             ->get();
 
         $eventId = 0;
-        $sportSectionId = 0;
 
         foreach($events as $event) {
-            $sportSectionId = $event->sportSection_id;
-            $eventId        = $event->event_id;
+           $eventId        = $event->event_id;
         }
 
         // Nur Teams, die in Rennen des aktuellen Events gemeldet sind
@@ -417,7 +414,10 @@ class ProgramController extends Controller
             ->get();
 
         if ($teams->isEmpty()) {
-            return redirect()->back()->with('error', 'Es sind keine Mannschaften gemeldet.');
+            Session::put('team_filter_possible', false);
+            return redirect()->back()->with('error', 'Es sind keine Mannschaften gemeldet oder keine Rennen mit Mannschaften vorhanden.');
+        } else {
+            Session::put('team_filter_possible', true);
         }
         $currentFilter = session('team_filter');
         return view('program.selectTeamFilter', compact('teams', 'currentFilter'));
@@ -458,10 +458,10 @@ class ProgramController extends Controller
                 }
                 $teamFilter = session('team_filter');
                 if ($raceId && $teamFilter) {
-                    $race = \App\Models\Race::find($raceId);
+                    $race = Race::find($raceId);
                     if ($race) {
                         // Suche das nächste Ergebnisrennen mit diesem Team
-                        $nextRace = \App\Models\Race::where('event_id', $race->event_id)
+                        $nextRace = Race::where('event_id', $race->event_id)
                             ->where('visible', 1)
                             ->where('status', 4)
                             ->whereHas('lanes', function($q) use ($teamFilter) {
@@ -480,7 +480,7 @@ class ProgramController extends Controller
 
                         // Falls kein zukünftiges, dann das erste überhaupt
                         if (!$nextRace) {
-                            $nextRace = \App\Models\Race::where('event_id', $race->event_id)
+                            $nextRace = Race::where('event_id', $race->event_id)
                                 ->where('visible', 1)
                                 ->where('status', 4)
                                 ->whereHas('lanes', function($q) use ($teamFilter) {
@@ -505,10 +505,10 @@ class ProgramController extends Controller
                 }
                 $teamFilter = session('team_filter');
                 if ($raceId && $teamFilter) {
-                    $race = \App\Models\Race::find($raceId);
+                    $race = Race::find($raceId);
                     if ($race) {
                         // Suche das nächste Bahnbelegungsrennen mit diesem Team
-                        $nextRace = \App\Models\Race::where('event_id', $race->event_id)
+                        $nextRace = Race::where('event_id', $race->event_id)
                             ->where('visible', 1)
                             ->where('status', '>=', 2)
                             ->where('status', '<=', 4)
