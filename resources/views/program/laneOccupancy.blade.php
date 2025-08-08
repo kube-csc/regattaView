@@ -119,6 +119,20 @@
                            </a>
                         @endif
                     </p>
+                    <div class="mb-3 d-flex flex-wrap justify-content-center">
+                        <a href="/Programm">
+                            <button type="button" class="btn btn-primary rounded-lg m-2">alle Rennen</button>
+                        </a>
+                        <a href="/Programm/geplante">
+                            <button type="button" class="btn btn-primary rounded-lg m-2">geplante Rennen</button>
+                        </a>
+                        <a href="/Ergebnisse">
+                            <button type="button" class="btn btn-primary rounded-lg m-2">gewertete Rennen</button>
+                        </a>
+                        <a href="/Tabellen">
+                            <button type="button" class="btn btn-primary rounded-lg m-2">Tabellen</button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </section><!-- End Services Section -->
