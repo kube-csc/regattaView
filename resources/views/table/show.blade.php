@@ -66,12 +66,12 @@
                     </a>
                 </div>
                 @if($victoCremonyTableShow == 1)
-                    {{-- Mobile-optimierte Darstellung --}}
-                    <div class="d-block d-md-none">
+                    {{-- Mobile-optimierte Darstellung: Immer Karten auf XS und SM, Tabelle erst ab md --}}
+                    <div class="d-block d-sm-none">
                         @foreach($tabeledataShows as $platzierung)
                             <div class="card mb-3">
                                 <div class="card-body p-2">
-                                    <div class="d-flex justify-content-between">
+                                    <div class="d-flex justify-content-between" style="background-color: #e3f0ff;">
                                         <span class="fw-bold">Platz:</span>
                                         <span>{{ $platzierung->platz }}</span>
                                     </div>
@@ -97,8 +97,8 @@
                             </div>
                         @endforeach
                     </div>
-                    {{-- Desktop-Tabelle --}}
-                    <div class="table-responsive d-none d-md-block">
+                    {{-- Ab sm (>=576px) Tabelle --}}
+                    <div class="table-responsive d-none d-sm-block">
                         <div class="card mb-4">
                             <div class="card-body p-0">
                                 <table class="table table-striped mb-0">
