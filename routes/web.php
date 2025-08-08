@@ -9,6 +9,7 @@ use App\Http\Controllers\OBSLiveController;
 use App\Http\Controllers\SpeekerController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\InstructionController;
+use App\Http\Controllers\PresentationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -56,6 +57,14 @@ Route::get('/Sprecher/Tabelle/{tableId}/{raceId}',                 [SpeekerContr
 Route::post('/Sprecher/Mannschaft/Auswahl',                        [SpeekerController::class, 'teamChoose'])           ->name('speeker.teamChoose');
 Route::post('/Sprecher/Tabellen/Auswahl',                          [SpeekerController::class, 'tableChoose'])          ->name('speeker.tableChoose');
 
-Route::get('/Programm/Mannschaftsfilter',                          [ProgramController::class, 'selectTeamFilter'])->name('program.selectTeamFilter');
-Route::post('/Programm/Mannschaftsfilter',                         [ProgramController::class, 'setTeamFilter'])->name('program.setTeamFilter');
-Route::get('/Programm/Mannschaftsfilter/entfernen',                [ProgramController::class, 'clearTeamFilter'])->name('program.clearTeamFilter');
+Route::get('/Mannschaftsfilter',                                   [ProgramController::class, 'selectTeamFilter'])->name('program.selectTeamFilter');
+Route::post('/Mannschaftsfilter/aktiv',                            [ProgramController::class, 'setTeamFilter'])->name('program.setTeamFilter');
+
+Route::get('/Praesentation/Welcome',                               [PresentationController::class, 'welcome'])->name('presentation.welcome');
+Route::get('/Praesentation/Information',                           [PresentationController::class, 'information'])->name('presentation.information');
+Route::get('/Praesentation/Mannschaft',                            [PresentationController::class, 'teams'])->name('presentation.teams');
+Route::get('/Praesentation/Mannschaftssteckbrief',                 [PresentationController::class, 'teamProfile'])->name('presentation.teamProfile');
+Route::get('/Praesentation/Bahnaufstellung',                       [PresentationController::class, 'laneOccupancy'])->name('presentation.laneOccupancy');
+Route::get('/Praesentation/Ergebnis',                              [PresentationController::class, 'result'])->name('presentation.result');
+Route::get('/Praesentation/Tabelle',                               [PresentationController::class, 'table'])->name('presentation.table');
+Route::get('/Praesentation/Video',                                 [PresentationController::class, 'video'])->name('presentation.video');

@@ -1,0 +1,59 @@
+body {
+    background: #222;
+    color: #fff;
+}
+.slide-container {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.slide {
+    background: rgba(0,0,0,0.7);
+    border-radius: 1.5rem;
+    padding: 3rem 4rem;
+    box-shadow: 0 0 40px #000a;
+    text-align: center;
+    max-width: 98vw;
+    width: 98vw;
+    margin-top: 1.5rem;
+    min-height: 8rem;
+    font-size: 1rem;
+}
+.team-title {
+    font-size: 1.5rem;
+}
+.wertung-title {
+    color: #003399 !important;
+}
+.seitenzahl {
+    color: #003399;
+}
+.slide h1, .slide h2, .slide h3 {
+    color: #ffc107;
+}
+.slide-nav {
+    position: fixed;
+    bottom: 2rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+.slide-nav button {
+    margin: 0 1rem;
+    font-size: 1.5rem;
+}
+
+/* Bootstrap-Karten für Teams: grauer Hintergrund, königsblauer Rahmen, weiße Schrift */
+.card.team-blue {
+    border: 3px solid #003399 !important;
+    background: #444 !important;
+    color: #fff !important;
+}
+.card.team-blue .card-title,
+.card.team-blue .card-text {
+    color: #fff !important;
+}
+.card.team-blue .card-text.team-ort {
+    color: #90caf9 !important;
+}

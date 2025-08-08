@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Tabele extends Model
 {
     use HasFactory;
+
+    public function tabeledataShows()
+    {
+        return $this->hasMany(Tabledata::class, 'tabele_id');
+    }
 }

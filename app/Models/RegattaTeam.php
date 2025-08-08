@@ -19,4 +19,12 @@ class RegattaTeam extends Model
     {
         return $this->hasMany(Lane::class, 'mannschaft_id');
     }
+    // Bild-Accessor für Präsentation
+    public function getBildUrlAttribute()
+    {
+        if ($this->bild) {
+            return asset('storage/' . $this->bild);
+        }
+        return null;
+    }
 }
