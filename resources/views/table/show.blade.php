@@ -66,7 +66,39 @@
                     </a>
                 </div>
                 @if($victoCremonyTableShow == 1)
-                    <div class="table-responsive">
+                    {{-- Mobile-optimierte Darstellung --}}
+                    <div class="d-block d-md-none">
+                        @foreach($tabeledataShows as $platzierung)
+                            <div class="card mb-3">
+                                <div class="card-body p-2">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-bold">Platz:</span>
+                                        <span>{{ $platzierung->platz }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-bold">Mannschaft:</span>
+                                        <span>{{ $platzierung->getMannschaft->teamname }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-bold">Punkte:</span>
+                                        <span>{{ $platzierung->punkte }}</span>
+                                    </div>
+                                    @if($tableShow->buchholzwertungaktiv)
+                                        <div class="d-flex justify-content-between">
+                                            <span class="fw-bold">Buchholzzahl:</span>
+                                            <span>{{ $platzierung->buchholzzahl }}</span>
+                                        </div>
+                                    @endif
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-bold">Absolvierte Rennen:</span>
+                                        <span>{{ $platzierung->rennanzahl }} von {{ $tableShow->maxrennen }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    {{-- Desktop-Tabelle --}}
+                    <div class="table-responsive d-none d-md-block">
                         <div class="card mb-4">
                             <div class="card-body p-0">
                                 <table class="table table-striped mb-0">
