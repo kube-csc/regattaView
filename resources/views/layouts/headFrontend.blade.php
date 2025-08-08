@@ -70,7 +70,7 @@
                         <li><a href="/Ergebnisse">gewertete Rennen</a></li>
                         <li><a href="/Tabellen">Tabellen</a></li>
                         @if(session('team_filter_possible', true))
-                            <li><a href="{{ route('program.selectTeamFilter') }}">Mannschaft filtern</a></li>
+                            <li><a href="{{ route('program.selectTeamFilter') }}">Team filtern</a></li>
                         @endif
                     </ul>
                 </li>

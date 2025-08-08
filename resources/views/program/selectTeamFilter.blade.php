@@ -1,18 +1,18 @@
 @extends('layouts.frontend')
 
-@section('title', 'Mannschaftsfilter wählen')
+@section('title', 'Teamfilter wählen')
 
 @section('content')
 <main id="main">
     <section id="services" class="services">
         <div class="container">
             <div class="section-title" data-aos="fade-in" data-aos-delay="50">
-                <h2>Mannschaftsfilter wählen</h2>
+                <h2>Teamfilter wählen</h2>
                 <div class="d-flex flex-row align-items-end">
                     <form method="POST" action="{{ route('program.setTeamFilter') }}" class="me-2">
                         @csrf
                         <div class="mb-3">
-                            <label for="team_id" class="form-label">Mannschaft auswählen:</label>
+                            <label for="team_id" class="form-label">Team auswählen:</label>
                             <select name="team_id" id="team_id" class="form-select">
                                 <option value="" @if(empty($currentFilter)) selected @endif>-- Kein Filter --</option>
                                 @foreach($teams as $team)

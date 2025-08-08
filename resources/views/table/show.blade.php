@@ -34,7 +34,7 @@
                         @if($filterPossible)
                             <a href="{{ route('program.selectTeamFilter') }}" class="me-2 mb-1">
                                 <button type="button" class="btn btn-secondary rounded-lg m-1 btn-sm">
-                                    Mannschaft filtern
+                                    Team filtern
                                 </button>
                             </a>
                             @if($filterTeam)
@@ -76,7 +76,7 @@
                                         <span>{{ $platzierung->platz }}</span>
                                     </div>
                                     <div class="d-flex justify-content-between">
-                                        <span class="fw-bold">Mannschaft:</span>
+                                        <span class="fw-bold">Team:</span>
                                         <span>{{ $platzierung->getMannschaft->teamname }}</span>
                                     </div>
                                     <div class="d-flex justify-content-between">
@@ -105,7 +105,7 @@
                                     <thead class="table-primary">
                                     <tr>
                                         <th>Platz</th>
-                                        <th>Mannschaft</th>
+                                        <th>Team</th>
                                         <th>Punkte</th>
                                         @if($tableShow->buchholzwertungaktiv)
                                             <th>Buchholzzahl <sup>*</sup></th>
@@ -133,7 +133,7 @@
                     @if($tableShow->buchholzwertungaktiv)
                         <div class="alert alert-info py-2 px-3 mb-3">
                             <small class="text-muted">
-                                <sup>*</sup> Die Buchholzzahl ist eine Feinwertung, bei der die Punkte aller Gegner, gegen die eine Mannschaft gespielt hat, aufsummiert werden. Sie dient dazu, bei Punktgleichheit die Platzierung zu bestimmen.
+                                <sup>*</sup> Die Buchholzzahl ist eine Feinwertung, bei der die Punkte aller Gegner, gegen die ein Team gespielt hat, aufsummiert werden. Sie dient dazu, bei Punktgleichheit die Platzierung zu bestimmen.
                             </small>
                         </div>
                     @endif

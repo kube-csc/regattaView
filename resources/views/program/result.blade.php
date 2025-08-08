@@ -35,7 +35,7 @@
                             @if($filterPossible)
                                 <a href="{{ route('program.selectTeamFilter') }}" class="me-2 mb-1">
                                     <button type="button" class="btn btn-secondary rounded-lg m-1 btn-sm">
-                                        Mannschaft filtern
+                                        Team filtern
                                     </button>
                                 </a>
                                 @if($filterTeam)
@@ -91,7 +91,7 @@
                     </p>
                     <table class="table table-striped">
                         <thead>
-                        <tr>
+                        <tr style="background-color: #e3f0ff;">
                             <th>Platz</th>
                             <th>Bahn</th>
                             <th>Team</th>
