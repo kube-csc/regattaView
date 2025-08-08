@@ -14,36 +14,42 @@
                     @php
                         $filterTeam = session('team_filter') ? \App\Models\RegattaTeam::with('teamWertungsGruppe')->find(session('team_filter')) : null;
                         $filterActive = session('team_filter_active', true);
+                        $filterPossible = session('team_filter_possible', true);
                     @endphp
-                    @if($filterTeam)
-                        <span class="badge m-2"
-                              style="background-color: #ff9800; color: #fff; font-size: 1em; padding: 0.4em 0.8em;">
-                            Gefiltert nach: {{ $filterTeam->teamname }}
-                            @if($filterTeam->teamWertungsGruppe && $filterTeam->teamWertungsGruppe->typ)
-                                ({{ $filterTeam->teamWertungsGruppe->typ }})
+                    <div class="d-flex flex-column align-items-center mb-2">
+                        @if($filterTeam)
+                            <div class="mb-1" style="font-size:0.8em;">
+                                <span class="badge m-1"
+                                      style="background-color: #ff9800; color: #fff; font-size: 0.85em; padding: 0.2em 0.6em;">
+                                    Gefiltert nach: {{ $filterTeam->teamname }}
+                                    @if(!$filterActive)
+                                        [Filter aus]
+                                    @endif
+                                </span>
+                            </div>
+                        @endif
+                        <div class="d-flex justify-content-center align-items-center mb-2 flex-wrap">
+                            @if($filterPossible)
+                                <a href="{{ route('program.selectTeamFilter') }}" class="me-2 mb-1">
+                                    <button type="button" class="btn btn-secondary rounded-lg m-1 btn-sm">
+                                        Mannschaft filtern
+                                    </button>
+                                </a>
+                                @if($filterTeam)
+                                    <form method="POST" action="{{ route('program.setTeamFilter') }}" class="mb-1">
+                                        @csrf
+                                        <input type="hidden" name="toggle" value="1">
+                                        <input type="hidden" name="redirect" value="{{ url()->current() }}">
+                                        <button type="submit"
+                                                class="btn {{ $filterActive ? 'btn-warning' : 'btn-success' }} btn-sm btn-primary rounded-lg m-1"
+                                                style="font-size: 0.95em; padding: 0.3em 1em;">
+                                            Filter {{ $filterActive ? 'aus' : 'an' }}
+                                        </button>
+                                    </form>
+                                @endif
                             @endif
-                            @if(!$filterActive)
-                                [Filter aus]
-                            @endif
-                        </span>
-                        <form method="POST" action="{{ route('program.setTeamFilter') }}" class="ms-3 d-inline">
-                            @csrf
-                            <input type="hidden" name="toggle" value="1">
-                            <input type="hidden" name="redirect" value="{{ url()->current() }}">
-                            <button type="submit"
-                                    class="btn {{ $filterActive ? 'btn-warning' : 'btn-success' }} btn-sm btn-primary rounded-lg m-2"
-                                    style="font-size: 0.95em; padding: 0.3em 1em;">
-                                Filter {{ $filterActive ? 'aus' : 'an' }}
-                            </button>
-                        </form>
-                    @else
-                        <a href="{{ route('program.selectTeamFilter') }}" class="ms-3">
-                            <button type="button" class="btn btn-success btn-sm btn-primary rounded-lg m-2"
-                                    style="font-size: 0.95em; padding: 0.3em 1em;">
-                                Filter an
-                            </button>
-                        </a>
-                    @endif
+                        </div>
+                    </div>
                     <p>
                         <label for="name">Nummer:</label>
                         @if(is_numeric($race->nummer))

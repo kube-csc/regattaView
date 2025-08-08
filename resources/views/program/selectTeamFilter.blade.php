@@ -8,24 +8,32 @@
         <div class="container">
             <div class="section-title" data-aos="fade-in" data-aos-delay="50">
                 <h2>Mannschaftsfilter wählen</h2>
-                <form method="POST" action="{{ route('program.setTeamFilter') }}">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="team_id" class="form-label">Mannschaft auswählen:</label>
-                        <select name="team_id" id="team_id" class="form-select">
-                            <option value="" @if(empty($currentFilter)) selected @endif>-- Kein Filter --</option>
-                            @foreach($teams as $team)
-                                <option value="{{ $team->id }}" @if($currentFilter == $team->id) selected @endif>
-                                    {{ $team->teamname }}
-                                    @if($team->teamWertungsGruppe && $team->teamWertungsGruppe->typ)
-                                        ({{ $team->teamWertungsGruppe->typ }})
-                                    @endif
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Filter setzen</button>
-                </form>
+                <div class="d-flex flex-row align-items-end">
+                    <form method="POST" action="{{ route('program.setTeamFilter') }}" class="me-2">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="team_id" class="form-label">Mannschaft auswählen:</label>
+                            <select name="team_id" id="team_id" class="form-select">
+                                <option value="" @if(empty($currentFilter)) selected @endif>-- Kein Filter --</option>
+                                @foreach($teams as $team)
+                                    <option value="{{ $team->id }}" @if($currentFilter == $team->id) selected @endif>
+                                        {{ $team->teamname }}
+                                        @if($team->teamWertungsGruppe && $team->teamWertungsGruppe->typ)
+                                            ({{ $team->teamWertungsGruppe->typ }})
+                                        @endif
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Filter setzen</button>
+                    </form>
+                    <form method="POST" action="{{ route('program.setTeamFilter') }}">
+                        @csrf
+                        <input type="hidden" name="team_id" value="">
+                        <input type="hidden" name="clear" value="1">
+                        <button type="submit" class="btn btn-danger ms-2">Filter löschen</button>
+                    </form>
+                </div>
             </div>
         </div>
     </section>

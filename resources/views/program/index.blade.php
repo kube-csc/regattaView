@@ -10,8 +10,8 @@
             <div class="container">
                 <div class="section-title" data-aos="fade-in" data-aos-delay="50">
                     <h2>{{ $ueberschrift }}</h2>
-                    {{-- Mannschaftsfilter Anzeige und Toggle --}}
-                    <div class="d-flex align-items-center justify-content-center mb-3">
+                    {{-- Filteranzeige und Buttons --}}
+                    <div class="d-flex flex-column align-items-center mb-2">
                         @php
                             $filterTeam = null;
                             if(session('team_filter')) {
@@ -20,29 +20,37 @@
                             $filterActive = isset($teamFilterActive) ? $teamFilterActive : session('team_filter_active', true);
                             $filterPossible = session('team_filter_possible', true);
                         @endphp
-                        @if($filterPossible)
-                            @if($filterTeam)
-                                <span class="badge m-2"
-                                      style="background-color: #ff9800; color: #fff; font-size: 1em; padding: 0.4em 0.8em;">
+                        @if($filterPossible && $filterTeam)
+                            <div class="mb-1" style="font-size:0.8em;">
+                                <span class="badge m-1"
+                                      style="background-color: #ff9800; color: #fff; font-size: 0.85em; padding: 0.2em 0.6em;">
                                     Gefiltert nach: {{ $filterTeam->teamname }}
-                                    @if($filterTeam->teamWertungsGruppe && $filterTeam->teamWertungsGruppe->typ)
-                                        ({{ $filterTeam->teamWertungsGruppe->typ }})
-                                    @endif
                                     @if(!$filterActive)
                                         [Filter aus]
                                     @endif
                                 </span>
-                                <form method="POST" action="{{ route('program.setTeamFilter') }}" class="ms-3">
-                                    @csrf
-                                    <input type="hidden" name="toggle" value="1">
-                                    <button type="submit"
-                                            class="btn {{ $filterActive ? 'btn-warning' : 'btn-success' }} btn-sm"
-                                            style="font-size: 0.95em; padding: 0.3em 1em;">
-                                        Filter {{ $filterActive ? 'aus' : 'an' }}
-                                    </button>
-                                </form>
-                            @endif
+                            </div>
                         @endif
+                        <div class="d-flex justify-content-center align-items-center mb-2 flex-wrap">
+                            @if($filterPossible)
+                                <a href="{{ route('program.selectTeamFilter') }}" class="me-2 mb-1">
+                                    <button type="button" class="btn btn-secondary rounded-lg m-1 btn-sm">
+                                        Mannschaft filtern
+                                    </button>
+                                </a>
+                                @if($filterTeam)
+                                    <form method="POST" action="{{ route('program.setTeamFilter') }}" class="mb-1">
+                                        @csrf
+                                        <input type="hidden" name="toggle" value="1">
+                                        <button type="submit"
+                                                class="btn {{ $filterActive ? 'btn-warning' : 'btn-success' }} btn-sm rounded-lg m-1"
+                                                style="font-size: 0.95em; padding: 0.3em 1em;">
+                                            Filter {{ $filterActive ? 'aus' : 'an' }}
+                                        </button>
+                                    </form>
+                                @endif
+                            @endif
+                        </div>
                     </div>
                     <p>
                        <a href="/Programm">
@@ -51,14 +59,6 @@
                        <a href="/Programm/geplante">
                            <button type = "button" class = "btn btn-primary rounded-lg m-2">geplante Rennen</button>
                        </a>
-                       {{-- Mannschaftsfilter --}}
-                       @if($filterPossible)
-                       <a href="{{ route('program.selectTeamFilter') }}">
-                           <button type="button" class="btn btn-secondary rounded-lg m-2">
-                               Mannschaft filtern
-                           </button>
-                       </a>
-                       @endif
                        <a href="/Ergebnisse">
                            <button type = "button" class = "btn btn-primary rounded-lg m-2">gewertete Rennen</button>
                        </a>
