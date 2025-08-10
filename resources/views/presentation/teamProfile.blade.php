@@ -21,7 +21,7 @@
                     <div class="mb-3"><strong>Beschreibung:</strong><br>{!! $team->beschreibung !!}</div>
                 @endif
                 @if($team->bild)
-                    <img src="{{ asset('/storage/teamImage/' . $team->bild) }}" alt="Teamfoto" class="img-fluid mb-3 rounded shadow" style="max-height:250px;">
+                    <img src="{{ env('REGATTA_URL') . '/storage/teamImage/' . $team->bild }}" alt="Teamfoto" class="img-fluid mb-3 rounded shadow" style="max-height:250px;">
                 @endif
             </div>
         </div>
