@@ -20,7 +20,6 @@
 @endsection
 
 @section('content')
-    <h1>Bahnaufstellungen</h1>
     @if($race)
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">

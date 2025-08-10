@@ -54,7 +54,7 @@
     @if($table)
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <strong>Tabelle: {{ $table->ueberschrift }}</strong>
+                <strong class="fs-2">Tabelle: {{ $table->ueberschrift }}</strong>
             </div>
             <div class="card-body">
                 @if($table->beschreibung)
@@ -137,13 +137,13 @@
                 @endif
             </div>
         </div>
-        <div class="text-center mb-2 bg-dark text-white rounded py-1 px-2">
-            <small>
+        <div class="mt-3 w-100">
+            <div class="text-center bg-primary text-white rounded py-1 px-2 fw-semibold shadow-sm w-100">
                 Tabelle {{ $tableIndex+1 }} von {{ $tableCount }}
                 @if($gesamtSeiten > 1)
                     – Seite {{ $platzPage }} von {{ $gesamtSeiten }}
                 @endif
-            </small>
+            </div>
         </div>
     @else
         <div class="alert alert-warning">Keine Tabellen vorhanden.</div>

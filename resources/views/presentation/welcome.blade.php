@@ -7,6 +7,12 @@
 @endsection
 
 @section('content')
-    <h1>{{ $event?->ueberschrift ?? 'Willkommen zur Präsentation' }}</h1>
-    <p>{!!  $event?->beschreibung ?? $event?->nachtermin !!}</p>
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white text-center">
+            <strong class="fs-2">{{ $event?->ueberschrift ?? 'Willkommen zur Präsentation' }}</strong>
+        </div>
+        <div class="card-body text-center bg-light">
+            <p>{!!  $event?->beschreibung ?? $event?->nachtermin !!}</p>
+        </div>
+    </div>
 @endsection

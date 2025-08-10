@@ -20,11 +20,10 @@
 @endsection
 
 @section('content')
-    <h1>Ergebnisse</h1>
     @if($race)
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <strong>Rennen {{ $race->nummer }}: {{ $race->rennBezeichnung }}</strong>
+                <strong class="fs-2">Rennen {{ $race->nummer }}: {{ $race->rennBezeichnung }}</strong>
             </div>
             <div class="card-body p-0">
                 <div class="p-3">
@@ -62,8 +61,10 @@
                 </table>
             </div>
         </div>
-        <div class="text-center mb-2 bg-dark text-white rounded py-1 px-2">
-            <small>Rennen {{ $raceIndex+1 }} von {{ $raceCount }}</small>
+        <div class="mt-3 w-100">
+            <div class="text-center bg-primary text-white rounded py-1 px-2 fw-semibold shadow-sm w-100">
+                Rennen {{ $raceIndex+1 }} von {{ $raceCount }}
+            </div>
         </div>
     @else
         <div class="alert alert-warning">Keine Ergebnisse vorhanden.</div>

@@ -10,32 +10,25 @@
 
 @section('content')
     @if($team)
-        <div class="card mx-auto mb-4" style="max-width: 600px;">
+        <div class="card mb-4">
             <div class="card-header bg-primary text-white text-center">
-                <h2 class="mb-0">{{ $team->teamname }}</h2>
-                @if($team->teamWertungsGruppe)
-                    <div class="mt-1" style="font-size:1.1em;">
-                        <span class="badge bg-secondary">
-                            {{ $team->teamWertungsGruppe->typ }}
-                        </span>
-                    </div>
-                @endif
+                <strong class="fs-2">{{ $team->teamname }}</strong>
             </div>
-            <div class="card-body text-center">
-                <h4 class="mb-2">{{ $team->verein ?? '' }}</h4>
-                <div class="mb-2"><strong>Ort:</strong> {{ $team->ort ?? '-' }}</div>
+            <div class="card-body text-center bg-light">
+                <h4 class="mb-2 text-primary">{{ $team->verein ?? '' }}</h4>
+                <div class="mb-2"><strong>Ort:</strong> <span class="text-secondary">{{ $team->ort ?? '-' }}</span></div>
                 @if($team->beschreibung)
                     <div class="mb-3"><strong>Beschreibung:</strong><br>{!! $team->beschreibung !!}</div>
                 @endif
                 @if($team->bild)
-                    <img src="{{ $team->bild }}" alt="Teamfoto" class="img-fluid mb-3" style="max-height:250px;">
+                    <img src="{{ asset('/storage/teamImage/' . $team->bild) }}" alt="Teamfoto" class="img-fluid mb-3 rounded shadow" style="max-height:250px;">
                 @endif
             </div>
         </div>
-        <div class="text-center mb-2 bg-dark text-white rounded py-1 px-2">
-            <small>
+        <div class="mt-3 w-100">
+            <div class="text-center bg-primary text-white rounded py-1 px-2 fw-semibold shadow-sm w-100">
                 Mannschaft {{ $teamIndex+1 }} von {{ $teamCount }}
-            </small>
+            </div>
         </div>
     @else
         <div class="alert alert-warning">Keine Mannschaften vorhanden.</div>
