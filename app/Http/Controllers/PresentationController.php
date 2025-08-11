@@ -40,6 +40,7 @@ class PresentationController extends Controller
             ->where('status', '!=','Gelöscht')
             ->orderBy('gruppe_id')
             ->orderBy('teamname')
+            ->limit(10)  // Temp: Testweise nur 10 Teams laden
             ->get();
 
         $wertungsGruppen = $teams->groupBy(function ($team) {
@@ -146,6 +147,7 @@ class PresentationController extends Controller
         // Wenn keine Rennen vorhanden sind, direkt zur nächsten Präsentationsseite (Video)
         if ($races->isEmpty()) {
             return redirect()->route('presentation.video');
+            // return redirect()->route('presentation.welcome'); // Temp: Zurück zur Willkommensseite
         }
 
         return view('presentation.result', [
@@ -195,10 +197,21 @@ class PresentationController extends Controller
         $event = $this->getCurrentEvent();
         $eventId = $event->event_id;
 
+        // Prüfen, ob bereits ein Ergebnis existiert (status > 2)
+        $hasResults = \App\Models\Race::where('event_id', $eventId)
+            ->where('status', '>', 2)
+            ->exists();
+
+        if ($hasResults) {
+            // Wenn Ergebnisse existieren, Teamprofile überspringen
+            return redirect()->route('presentation.laneOccupancy');
+        }
+
         // Alle Teams des aktuellen Events
         $teams = RegattaTeam::where('regatta_id', $eventId)
             ->where('status', '!=', 'Gelöscht')
             ->orderBy('teamname')
+            ->limit(2)  // Temp: Testweise nur
             ->get();
 
         $teamIndex = (int) $request->query('team', 0);
