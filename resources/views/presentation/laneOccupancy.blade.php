@@ -3,6 +3,7 @@
 @section('title', 'Bahnaufstellungen')
 
 @php
+    // Es wird angenommen, dass $races bereits entsprechend gefiltert ist (nur level 1, falls keine Ergebnisse existieren)
     $raceIndex = request()->query('race', 0);
     $raceCount = count($races);
     $nextRaceIndex = $raceIndex + 1;
@@ -68,8 +69,10 @@
                 </table>
             </div>
         </div>
-        <div class="text-center mb-2 bg-dark text-white rounded py-1 px-2">
-            <small>Rennen {{ $raceIndex+1 }} von {{ $raceCount }}</small>
+        <div class="mt-3 w-100">
+            <div class="text-center bg-primary text-white rounded py-1 px-2 fw-semibold shadow-sm w-100">
+                Rennen {{ $raceIndex+1 }} von {{ $raceCount }}
+            </div>
         </div>
     @else
         <div class="alert alert-warning">Keine Rennen vorhanden.</div>

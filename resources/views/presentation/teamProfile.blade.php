@@ -16,6 +16,7 @@
             </div>
             <div class="card-body text-center bg-light">
                 <h4 class="mb-2 text-primary">{{ $team->verein ?? '' }}</h4>
+                <div class="mb-2"><strong>Wertung:</strong> <span class="text-secondary">{{ $team->teamWertungsGruppe->typ }}</span></div>
                 <div class="mb-2"><strong>Ort:</strong> <span class="text-secondary">{{ $team->ort ?? '-' }}</span></div>
                 @if($team->beschreibung)
                     <div class="mb-3"><strong>Beschreibung:</strong><br>{!! $team->beschreibung !!}</div>

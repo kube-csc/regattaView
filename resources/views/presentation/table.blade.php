@@ -10,7 +10,6 @@
     // Paginierung für Platzierungen
     $platzPage = (int) request()->query('platzPage', 1);
     $platzProSeite = 15;
-
     $tabeledataShows = $table ? ($table->tabeledataShows ?? []) : [];
     // Sortierung: Punkte absteigend, dann Buchholzzahl absteigend
     $sorted = collect($tabeledataShows)->sort(function($a, $b) {
@@ -54,7 +53,7 @@
     @if($table)
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <strong class="fs-2">Tabelle: {{ $table->ueberschrift }}</strong>
+                <strong>Tabelle: {{ $table->ueberschrift }}</strong>
             </div>
             <div class="card-body">
                 @if($table->beschreibung)
