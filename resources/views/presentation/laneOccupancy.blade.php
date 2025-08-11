@@ -17,6 +17,8 @@
 @section('head')
     @if($race)
         <meta http-equiv="refresh" content="10;url={{ $nextUrl }}">
+    @else
+        <meta http-equiv="refresh" content="0;url={{ $nextUrl }}">
     @endif
 @endsection
 
@@ -25,9 +27,11 @@
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
                 <strong>Rennen {{ $race->nummer }}: {{ $race->rennBezeichnung }}</strong>
-                <div class="mt-1">
-                    <span class="badge bg-secondary">Abschnitt: {{ $race->level }}</span>
-                </div>
+                @isset($activeLevel)
+                    <div class="mt-1">
+                        <span class="badge bg-secondary">Abschnitt: {{ $activeLevel }}</span>
+                    </div>
+                @endisset
             </div>
             <div class="card-body p-0">
                 <div class="p-3">
@@ -77,7 +81,5 @@
                 Rennen {{ $raceIndex+1 }} von {{ $raceCount }}
             </div>
         </div>
-    @else
-        <div class="alert alert-warning">Keine Rennen vorhanden.</div>
     @endif
 @endsection

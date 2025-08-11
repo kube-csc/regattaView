@@ -110,16 +110,35 @@ class PresentationController extends Controller
         $event = $this->getCurrentEvent();
         $eventId = $event->event_id;
 
-        // Nur verloste und sichtbare Rennen (status == 2, visible == 1)
+        // Aktives Level bestimmen: niedrigstes Level mit mind. einem Rennen status==2
+        $activeLevel = Race::where('event_id', $eventId)
+            ->where('status', 2)
+            ->where('visible', 1)
+            ->orderBy('level')
+            ->value('level');
+
+        if ($activeLevel === null) {
+            // Wenn kein aktives Level gefunden wurde, direkt zu den Ergebnissen
+            return redirect()->route('presentation.result');
+        }
+
+        // Prüfen, ob im aktiven Abschnitt (Level) schon ein Rennen gewertet wurde (status > 2)
+        $countGewertet = Race::where('event_id', $eventId)
+            ->where('level', $activeLevel)
+            ->where('status', '>', 2)
+            ->count();
+
+        // Immer nur Rennen des aktuellen Abschnitts anzeigen
         $races = Race::with(['lanes.regattaTeam'])
             ->where('event_id', $eventId)
             ->where('status', 2)
             ->where('visible', 1)
+            ->where('level', $activeLevel)
             ->orderBy('rennDatum')
             ->orderBy('rennZeit')
             ->get();
+        $anzeigeLevel = $activeLevel;
 
-        // Wenn keine Rennen vorhanden sind, direkt zur nächsten Präsentationsseite (Ergebnisse)
         if ($races->isEmpty()) {
             return redirect()->route('presentation.result');
         }
@@ -127,6 +146,7 @@ class PresentationController extends Controller
         return view('presentation.laneOccupancy', [
             'races' => $races,
             'event' => $event,
+            'activeLevel' => $anzeigeLevel, // für die Anzeige im View
         ]);
     }
 
