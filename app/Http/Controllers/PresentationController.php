@@ -64,6 +64,34 @@ class PresentationController extends Controller
         return $event;
     }
 
+    /**
+     * Prüft, ob ein neues Rennen-Ergebnis vorliegt, das noch nicht angezeigt wurde.
+     * Gibt das neue Rennen zurück oder null.
+     */
+    private function checkForNewRaceResult()
+    {
+        if (!$this->event) return null;
+        $eventId = $this->event->event_id;
+
+        // Hole die zuletzt angezeigte Ergebnis-Race-ID aus der Session
+        $lastShownResultId = session('lastShownResultRaceId', 0);
+
+        // Finde das älteste neue Ergebnis (status==4, visible==1, id > lastShownResultId)
+        $newRace = \App\Models\Race::where('event_id', $eventId)
+            ->where('status', 4)
+            ->where('visible', 1)
+            ->where('id', '>', $lastShownResultId)
+            ->orderBy('id')
+            ->first();
+
+        if ($newRace) {
+            // Speichere die ID als zuletzt angezeigt
+            session(['lastShownResultRaceId' => $newRace->id]);
+            return $newRace;
+        }
+        return null;
+    }
+
     public function welcome()
     {
         $this->initEventAndRegattaStarted();
@@ -248,6 +276,12 @@ class PresentationController extends Controller
         $event = $this->event;
         $eventId = $event->event_id;
 
+        // Prüfung auf neues Ergebnis und ggf. Redirect
+        $newResult = $this->checkForNewRaceResult();
+        if ($newResult) {
+            return redirect()->route('presentation.newResult', ['raceId' => $newResult->id]);
+        }
+
         // Nur Rennen mit Ergebnis und sichtbar (status == 4, visible == 1)
         $races = Race::with(['lanes.regattaTeam'])
             ->where('event_id', $eventId)
@@ -271,6 +305,8 @@ class PresentationController extends Controller
 
     public function video()
     {
+
+        session(['lastShownResultRaceId' => 0]); // Temp: Setze die zuletzt angezeigte Ergebnis-ID zurück
         $this->initEventAndRegattaStarted();
         $event = $this->event;
         return view('presentation.video', [
@@ -413,6 +449,79 @@ class PresentationController extends Controller
             'infoIndex' => $index,
             'infoCount' => $infoCount,
             'nextUrl' => $nextUrl
+        ]);
+    }
+
+    // Neue Methode zum Anzeigen eines neuen Ergebnisses
+    public function newResult($raceId)
+    {
+        $this->initEventAndRegattaStarted();
+        $event = $this->event;
+
+        $race = \App\Models\Race::with(['lanes.regattaTeam'])
+            ->where('id', $raceId)
+            ->where('status', 4)
+            ->where('visible', 1)
+            ->first();
+
+        // Prüfe, ob eine Tabelle vorhanden ist
+        $hasTable = \App\Models\Tabele::where('event_id', $event?->event_id)
+            ->where('tabelleVisible', 1)
+            ->exists();
+
+        if (!$race) {
+            // Falls das Rennen nicht gefunden wird, weiter zur normalen Ergebnisanzeige
+            return redirect()->route('presentation.result');
+        }
+
+        // Ziel-URL für Weiterleitung bestimmen
+        // Wenn das Rennen eine tabele_id hat, leite nach newTable weiter, sonst wie gehabt
+        if (!empty($race->tabele_id)) {
+            $redirectUrl = route('presentation.newTable', ['tableId' => $race->tabele_id]);
+        } else {
+            $redirectUrl = route('presentation.table');
+        }
+
+        return view('presentation.newResult', [
+            'race' => $race,
+            'event' => $event,
+            'redirectUrl' => $redirectUrl,
+        ]);
+    }
+
+    // Neue Präsentationsseite für eine neue Tabelle
+    public function newTable($tableId)
+    {
+        $this->initEventAndRegattaStarted();
+        $event = $this->event;
+
+        $table = \App\Models\Tabele::with(['tabeledataShows.getMannschaft'])
+            ->where('id', $tableId)
+            ->where('tabelleVisible', 1)
+            ->first();
+
+        $tables = Tabele::with(['tabeledataShows.getMannschaft'])
+            ->where('id', $tableId)
+            ->where('tabelleVisible', 1)
+            ->orderBy('id')
+            ->get()
+            // Filtere Tabellen ohne Platzierungen heraus
+            ->filter(function($table) {
+                return $table->tabeledataShows && $table->tabeledataShows->count() > 0;
+            })
+            ->values();
+
+        // Nach Anzeige der Tabelle weiter zur normalen Tabellenpräsentation oder Video
+        $redirectUrl = route('presentation.video');
+
+        if (!$tables) {
+            return redirect($redirectUrl);
+        }
+
+        return view('presentation.newTable', [
+            'tables' => $tables,
+            'event' => $event,
+            'redirectUrl' => $redirectUrl,
         ]);
     }
 }

@@ -9,7 +9,7 @@
 
     // Paginierung für Platzierungen
     $platzPage = (int) request()->query('platzPage', 1);
-    $platzProSeite = 15;
+    $platzProSeite = 12;
     $tabeledataShows = $table ? ($table->tabeledataShows ?? []) : [];
     // Sortierung: Punkte absteigend, dann Buchholzzahl absteigend
     $sorted = collect($tabeledataShows)->sort(function($a, $b) {
@@ -117,7 +117,7 @@
                                         @endif
                                         <td>
                                             {{ $platzierung->rennanzahl }}
-                                            @if(property_exists($table, 'maxrennen') && $table->maxrennen)
+                                            @if($table->maxrennen)
                                                 von {{ $table->maxrennen }}
                                             @endif
                                         </td>
