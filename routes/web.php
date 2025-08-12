@@ -60,7 +60,7 @@ Route::post('/Sprecher/Tabellen/Auswahl',                          [SpeekerContr
 Route::get('/Mannschaftsfilter',                                   [ProgramController::class, 'selectTeamFilter'])->name('program.selectTeamFilter');
 Route::post('/Mannschaftsfilter/aktiv',                            [ProgramController::class, 'setTeamFilter'])->name('program.setTeamFilter');
 
-Route::get('/Praesentation/Welcome',                               [PresentationController::class, 'welcome'])->name('presentation.welcome');
+Route::get('/Praesentation',                                       [PresentationController::class, 'welcome'])->name('presentation.welcome');
 Route::get('/Praesentation/Information',                           [PresentationController::class, 'information'])->name('presentation.information');
 Route::get('/Praesentation/Mannschaft',                            [PresentationController::class, 'teams'])->name('presentation.teams');
 Route::get('/Praesentation/Mannschaftssteckbrief',                 [PresentationController::class, 'teamProfile'])->name('presentation.teamProfile');

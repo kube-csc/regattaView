@@ -16,6 +16,8 @@
 @section('head')
     @if($race)
         <meta http-equiv="refresh" content="10;url={{ $nextUrl }}">
+    @else
+        <meta http-equiv="refresh" content="1;url={{ route('presentation.table') }}">
     @endif
 @endsection
 

@@ -27,12 +27,11 @@
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
                 <strong>Rennen {{ $race->nummer }}: {{ $race->rennBezeichnung }}</strong>
-                @isset($activeLevel)
-                    <div class="mt-1">
-                        <span class="badge bg-secondary">Abschnitt: {{ $activeLevel }}</span>
-                    </div>
-                @endisset
+                <div class="mt-1">
+                    <span class="badge bg-secondary">Abschnitt: {{ $race->level  }}</span>
+                </div>
             </div>
+
             <div class="card-body p-0">
                 <div class="p-3">
                     <strong>Startzeit:</strong>

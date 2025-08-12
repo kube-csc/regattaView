@@ -8,9 +8,29 @@ use App\Models\Race;
 use App\Models\Tabele;
 use App\Models\RegattaInformation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class PresentationController extends Controller
 {
+    protected $regattaStarted = false;
+
+    public function __construct()
+    {
+        if (Session::has('regattaStarted')) {
+            $this->regattaStarted = Session::get('regattaStarted');
+            return;
+        }
+
+        $event = $this->getCurrentEvent();
+        if ($event) {
+            $eventId = $event->event_id;
+            $this->regattaStarted = Race::where('event_id', $eventId)
+                ->where('status', '>', 2)
+                ->exists();
+            Session::put('regattaStarted', $this->regattaStarted);
+        }
+    }
+
     // Gibt ein Array mit ['eventId' => ..., 'event' => ...] zurück
     private function getCurrentEvent()
     {
@@ -26,6 +46,11 @@ class PresentationController extends Controller
     public function welcome()
     {
         $event= $this->getCurrentEvent();
+
+        // Prüfe, ob die Regatta bereits gestartet ist (Session-Variable)
+        if ($this->regattaStarted) {
+            return redirect()->route('presentation.laneOccupancy');
+        }
 
         return view('presentation.welcome', compact('event'));
     }
@@ -110,6 +135,31 @@ class PresentationController extends Controller
         $event = $this->getCurrentEvent();
         $eventId = $event->event_id;
 
+        // Wenn die Regatta noch nicht gestartet wurde, zeige alle Rennen mit status == 2 (sichtbar)
+        if (!Session::get('regattaStarted_' . $eventId, false)) {
+            $races = Race::with(['lanes.regattaTeam'])
+                ->where('event_id', $eventId)
+                ->where('status', 2)
+                ->where('visible', 1)
+                ->orderBy('level')
+                ->orderBy('rennDatum')
+                ->orderBy('rennZeit')
+                ->get();
+
+            if ($races->isEmpty()) {
+                return redirect()->route('presentation.result');
+            }
+
+            // Ermittle das Level des ersten offenen Rennens für die Anzeige
+            $activeLevel = $races->first() ? $races->first()->level : null;
+
+            return view('presentation.laneOccupancy', [
+                'races' => $races,
+                'event' => $event,
+                'activeLevel' => $activeLevel,
+            ]);
+        }
+
         // Aktives Level bestimmen: niedrigstes Level mit mind. einem Rennen status==2
         $activeLevel = Race::where('event_id', $eventId)
             ->where('status', 2)
@@ -122,31 +172,51 @@ class PresentationController extends Controller
             return redirect()->route('presentation.result');
         }
 
-        // Prüfen, ob im aktiven Abschnitt (Level) schon ein Rennen gewertet wurde (status > 2)
-        $countGewertet = Race::where('event_id', $eventId)
+        // Anzahl der noch offenen Rennen im aktuellen Abschnitt (status==2)
+        $openRacesCount = Race::where('event_id', $eventId)
             ->where('level', $activeLevel)
-            ->where('status', '>', 2)
-            ->count();
-
-        // Immer nur Rennen des aktuellen Abschnitts anzeigen
-        $races = Race::with(['lanes.regattaTeam'])
-            ->where('event_id', $eventId)
             ->where('status', 2)
             ->where('visible', 1)
-            ->where('level', $activeLevel)
+            ->count();
+
+        // IDs der Levels, die angezeigt werden sollen
+        $levelsToShow = [$activeLevel];
+
+        // Wenn 2 oder weniger Rennen offen sind, ermittle das nächsthöhere Level mit offenen Rennen
+        if ($openRacesCount <= 1) {
+            $nextLevel = Race::where('event_id', $eventId)
+                ->where('level', '>', $activeLevel)
+                ->where('status', 2)
+                ->where('visible', 1)
+                ->orderBy('level')
+                ->value('level');
+            if ($nextLevel !== null) {
+                $levelsToShow[] = $nextLevel;
+            }
+        }
+
+        // Alle offenen Rennen (status==2) der relevanten Abschnitte laden
+        $races = Race::with(['lanes.regattaTeam'])
+            ->where('event_id', $eventId)
+            ->whereIn('level', $levelsToShow)
+            ->where('status', 2)
+            ->where('visible', 1)
+            ->orderBy('level')
             ->orderBy('rennDatum')
             ->orderBy('rennZeit')
             ->get();
-        $anzeigeLevel = $activeLevel;
 
         if ($races->isEmpty()) {
             return redirect()->route('presentation.result');
         }
 
+        // Ermittle das Level des ersten offenen Rennens für die Anzeige
+        $activeLevel = $races->first() ? $races->first()->level : null;
+
         return view('presentation.laneOccupancy', [
             'races' => $races,
             'event' => $event,
-            'activeLevel' => $anzeigeLevel, // für die Anzeige im View
+            'activeLevel' => $activeLevel,
         ]);
     }
 
