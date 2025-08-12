@@ -13,22 +13,43 @@ use Illuminate\Support\Facades\Session;
 class PresentationController extends Controller
 {
     protected $regattaStarted = false;
+    protected $event = null;
 
-    public function __construct()
+    private function initEventAndRegattaStarted()
     {
-        if (Session::has('regattaStarted')) {
-            $this->regattaStarted = Session::get('regattaStarted');
-            return;
+        // Event initialisieren
+        if (Session::has('event')) {
+            $this->event = Session::get('event');
+        } else {
+            $this->event = $this->getCurrentEvent();
+            if ($this->event) {
+                Session::put('event', $this->event);
+            }
         }
 
-        $event = $this->getCurrentEvent();
-        if ($event) {
-            $eventId = $event->event_id;
-            $this->regattaStarted = Race::where('event_id', $eventId)
+        // Regatta-Status initialisieren
+        // Nur solange er nicht true ist, immer wieder prüfen
+        if (Session::has('regattaStarted') && Session::get('regattaStarted') === true) {
+            $this->regattaStarted = true;
+        } else {
+            $this->regattaStarted = $this->ermittleRegattaStarted();
+            if ($this->regattaStarted) {
+                Session::put('regattaStarted', true);
+            } else {
+                Session::put('regattaStarted', false);
+            }
+        }
+    }
+
+    private function ermittleRegattaStarted()
+    {
+        if ($this->event) {
+            $eventId = $this->event->event_id;
+            return Race::where('event_id', $eventId)
                 ->where('status', '>', 2)
                 ->exists();
-            Session::put('regattaStarted', $this->regattaStarted);
         }
+        return false;
     }
 
     // Gibt ein Array mit ['eventId' => ..., 'event' => ...] zurück
@@ -45,7 +66,8 @@ class PresentationController extends Controller
 
     public function welcome()
     {
-        $event= $this->getCurrentEvent();
+        $this->initEventAndRegattaStarted();
+        $event = $this->event;
 
         // Prüfe, ob die Regatta bereits gestartet ist (Session-Variable)
         if ($this->regattaStarted) {
@@ -57,7 +79,8 @@ class PresentationController extends Controller
 
     public function teams(Request $request)
     {
-        $event = $this->getCurrentEvent();
+        $this->initEventAndRegattaStarted();
+        $event = $this->event;
         $eventId = $event->event_id;
 
         // Teams nach Wertungsgruppen sortieren
@@ -132,11 +155,12 @@ class PresentationController extends Controller
 
     public function laneOccupancy()
     {
-        $event = $this->getCurrentEvent();
+        $this->initEventAndRegattaStarted();
+        $event = $this->event;
         $eventId = $event->event_id;
 
         // Wenn die Regatta noch nicht gestartet wurde, zeige alle Rennen mit status == 2 (sichtbar)
-        if (!Session::get('regattaStarted_' . $eventId, false)) {
+        if (!$this->regattaStarted) {
             $races = Race::with(['lanes.regattaTeam'])
                 ->where('event_id', $eventId)
                 ->where('status', 2)
@@ -150,7 +174,6 @@ class PresentationController extends Controller
                 return redirect()->route('presentation.result');
             }
 
-            // Ermittle das Level des ersten offenen Rennens für die Anzeige
             $activeLevel = $races->first() ? $races->first()->level : null;
 
             return view('presentation.laneOccupancy', [
@@ -210,7 +233,6 @@ class PresentationController extends Controller
             return redirect()->route('presentation.result');
         }
 
-        // Ermittle das Level des ersten offenen Rennens für die Anzeige
         $activeLevel = $races->first() ? $races->first()->level : null;
 
         return view('presentation.laneOccupancy', [
@@ -222,7 +244,8 @@ class PresentationController extends Controller
 
     public function result()
     {
-        $event = $this->getCurrentEvent();
+        $this->initEventAndRegattaStarted();
+        $event = $this->event;
         $eventId = $event->event_id;
 
         // Nur Rennen mit Ergebnis und sichtbar (status == 4, visible == 1)
@@ -248,7 +271,8 @@ class PresentationController extends Controller
 
     public function video()
     {
-        $event = $this->getCurrentEvent();
+        $this->initEventAndRegattaStarted();
+        $event = $this->event;
         return view('presentation.video', [
             'event' => $event,
         ]);
@@ -256,7 +280,8 @@ class PresentationController extends Controller
 
     public function table()
     {
-        $event = $this->getCurrentEvent();
+        $this->initEventAndRegattaStarted();
+        $event = $this->event;
         $eventId = $event->event_id;
 
         // Lade Tabellen mit Tabellendaten und Team
@@ -284,7 +309,8 @@ class PresentationController extends Controller
 
     public function teamProfile(Request $request)
     {
-        $event = $this->getCurrentEvent();
+        $this->initEventAndRegattaStarted();
+        $event = $this->event;
         $eventId = $event->event_id;
 
         // Prüfen, ob bereits ein Ergebnis existiert (status > 2)
@@ -339,7 +365,8 @@ class PresentationController extends Controller
 
     public function information(\Illuminate\Http\Request $request)
     {
-        $event = $this->getCurrentEvent();
+        $this->initEventAndRegattaStarted();
+        $event = $this->event;
         $eventId = $event?->event_id;
 
         $now = now();
