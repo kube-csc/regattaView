@@ -13,8 +13,8 @@
 @section('content')
     @if($info)
         <div class="card mb-4">
-            <div class="card-header bg-primary text-white text-center">
-                <strong class="fs-2">Regatta Information</strong>
+            <div class="card-header bg-primary text-white text-center fs-2">
+                <strong>Regatta Information</strong>
             </div>
             <div class="card-body bg-light">
                 <h3 class="mb-3 text-primary text-center">{{ $info->informationTittel }}</h3>

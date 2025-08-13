@@ -67,26 +67,66 @@ class PresentationController extends Controller
     /**
      * Prüft, ob ein neues Rennen-Ergebnis vorliegt, das noch nicht angezeigt wurde.
      * Gibt das neue Rennen zurück oder null.
+     * Zusätzlich: Wenn sliteShowResult = 1, gilt das Rennen auch als $newRace.
+     * Wird ein Rennen über sliteShowResult gefunden, wird das Feld zurückgesetzt.
      */
     private function checkForNewRaceResult()
     {
         if (!$this->event) return null;
         $eventId = $this->event->event_id;
 
-        // Hole die zuletzt angezeigte Ergebnis-Race-ID aus der Session
-        $lastShownResultId = session('lastShownResultRaceId', 0);
+        // Hole das zuletzt angezeigte Ergebnis-Datum und -Uhrzeit aus der Session
+        $lastDatum = session('lastShownResultRennDatum', null);
+        $lastUhrzeit = session('lastShownResultRennUhrzeit', null);
 
-        // Finde das älteste neue Ergebnis (status==4, visible==1, id > lastShownResultId)
-        $newRace = \App\Models\Race::where('event_id', $eventId)
+        // Finde das älteste neue Ergebnis (status==4, visible==1, nach Datum/Uhrzeit sortiert)
+        $query = \App\Models\Race::where('event_id', $eventId)
+            ->where('status', 4)
+            ->where('visible', 1);
+
+        if ($lastDatum !== null && $lastUhrzeit !== null) {
+            $query->where(function($q) use ($lastDatum, $lastUhrzeit) {
+                $q->where('rennDatum', '>', $lastDatum)
+                  ->orWhere(function($q2) use ($lastDatum, $lastUhrzeit) {
+                      $q2->where('rennDatum', $lastDatum)
+                         ->where('rennUhrzeit', '>', $lastUhrzeit);
+                  });
+            });
+        }
+
+        // Prüfe zuerst auf sliteShowResult = 1
+        $sliteShowRace = \App\Models\Race::where('event_id', $eventId)
             ->where('status', 4)
             ->where('visible', 1)
-            ->where('id', '>', $lastShownResultId)
-            ->orderBy('id')
+            ->where('sliteShowResult', 1)
+            ->orderBy('rennDatum')
+            ->orderBy('rennUhrzeit')
+            ->first();
+
+        if ($sliteShowRace) {
+            // sliteShowResult zurücksetzen
+            $sliteShowRace->sliteShowResult = 0;
+            $sliteShowRace->save();
+
+            // Speichere das Datum und die Uhrzeit als zuletzt angezeigt
+            session([
+                'lastShownResultRennDatum' => $sliteShowRace->rennDatum,
+                'lastShownResultRennUhrzeit' => $sliteShowRace->rennUhrzeit,
+            ]);
+            return $sliteShowRace;
+        }
+
+        $newRace = $query
+            ->orderBy('rennDatum')
+            ->orderBy('rennUhrzeit')
             ->first();
 
         if ($newRace) {
-            // Speichere die ID als zuletzt angezeigt
-            session(['lastShownResultRaceId' => $newRace->id]);
+            // Speichere das Datum und die Uhrzeit als zuletzt angezeigt
+            session([
+                'lastShownResultRennDatum' => $newRace->rennDatum,
+                'lastShownResultRennUhrzeit' => $newRace->rennUhrzeit,
+            ]);
             return $newRace;
         }
         return null;
@@ -186,6 +226,11 @@ class PresentationController extends Controller
         $this->initEventAndRegattaStarted();
         $event = $this->event;
         $eventId = $event->event_id;
+
+        $newResult = $this->checkForNewRaceResult();
+        if ($newResult) {
+            return redirect()->route('presentation.newResult', ['raceId' => $newResult->id]);
+        }
 
         // Wenn die Regatta noch nicht gestartet wurde, zeige alle Rennen mit status == 2 (sichtbar)
         if (!$this->regattaStarted) {
@@ -305,8 +350,7 @@ class PresentationController extends Controller
 
     public function video()
     {
-
-        session(['lastShownResultRaceId' => 0]); // Temp: Setze die zuletzt angezeigte Ergebnis-ID zurück
+        //session(['lastShownResultRaceId' => 0]); // Temp: Setze die zuletzt angezeigte Ergebnis-ID zurück
         $this->initEventAndRegattaStarted();
         $event = $this->event;
         return view('presentation.video', [

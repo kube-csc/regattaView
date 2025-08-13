@@ -26,9 +26,9 @@
     @if($race)
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <strong>Rennen {{ $race->nummer }}: {{ $race->rennBezeichnung }}</strong>
+                <strong class="fs-2">Rennen {{ $race->nummer }}: {{ $race->rennBezeichnung }}</strong>
                 <div class="mt-1">
-                    <span class="badge bg-secondary">Abschnitt: {{ $race->level  }}</span>
+                     <span class="badge bg-secondary">Abschnitt: {{ $race->level  }}</span>
                 </div>
             </div>
 

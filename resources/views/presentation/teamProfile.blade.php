@@ -11,8 +11,8 @@
 @section('content')
     @if($team)
         <div class="card mb-4">
-            <div class="card-header bg-primary text-white text-center">
-                <strong class="fs-2">{{ $team->teamname }}</strong>
+            <div class="card-header bg-primary text-white text-center fs-2">
+                <strong>{{ $team->teamname }}</strong>
             </div>
             <div class="card-body text-center bg-light">
                 <h4 class="mb-2 text-primary">{{ $team->verein ?? '' }}</h4>

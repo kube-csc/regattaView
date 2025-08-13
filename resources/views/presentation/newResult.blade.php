@@ -10,7 +10,7 @@
             <div class="card-header bg-success text-white">
                 <strong class="fs-2">Neues Ergebnis – Rennen {{ $race->nummer }}: {{ $race->rennBezeichnung ?? $race->name }}</strong>
                 <div class="mt-1">
-                   <span class="badge bg-secondary">Abschnitt: {{ $race->level }}</span>
+                     <span class="badge bg-secondary">Abschnitt: {{ $race->level }}</span>
                 </div>
             </div>
             <div class="card-body p-0">

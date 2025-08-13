@@ -6,7 +6,7 @@
     <script>
         setTimeout(function() {
             window.location.href = "{{ route('presentation.welcome') }}";
-        }, 120000);
+        }, 12000); // Temp:: Redirect after 120000    ms (2 minutes)
     </script>
 @endsection
 

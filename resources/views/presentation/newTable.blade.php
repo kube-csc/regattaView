@@ -7,30 +7,42 @@
     $tableCount = count($tables);
     $table = $tables[$tableIndex] ?? null;
 
-    // Pagination-Logik: 12 Einträge pro Seite
-    $page = (int) request()->query('page', 1);
-    $entriesPerPage = 12;
-    $totalEntries = $table->tabeledataShows->count();
-    $totalPages = max(1, ceil($totalEntries / $entriesPerPage));
-    $page = max(1, min($page, $totalPages));
-    $start = ($page - 1) * $entriesPerPage;
-    $pagedRows = $table->tabeledataShows->sortBy('platz')->slice($start, $entriesPerPage);
+    // Paginierung für Platzierungen
+    $platzPage = (int) request()->query('platzPage', 1);
+    $platzProSeite = 12;
+    $tabeledataShows = $table ? ($table->tabeledataShows ?? []) : [];
+    // Sortierung: Punkte absteigend, dann Buchholzzahl absteigend
+    $sorted = collect($tabeledataShows)->sort(function($a, $b) {
+        if ($a->punkte != $b->punkte) {
+            return $b->punkte <=> $a->punkte;
+        }
+        return ($b->buchholzzahl ?? 0) <=> ($a->buchholzzahl ?? 0);
+    })->values();
 
-    // Ziel-URL für die nächste Seite oder die normale Tabellenanzeige
-    $nextPage = $page + 1;
-    $hasNextPage = $nextPage <= $totalPages;
-    $nextUrl = $hasNextPage
-        ? route('presentation.newTable', ['tableId' => $table->id, 'page' => $nextPage])
-        : $redirectUrl;
+    $gesamtPlatzierungen = $sorted->count();
+    $gesamtSeiten = max(1, ceil($gesamtPlatzierungen / $platzProSeite));
+    $platzPage = max(1, min($platzPage, $gesamtSeiten));
+    $start = ($platzPage - 1) * $platzProSeite;
+    $platzierungenSeite = $sorted->slice($start, $platzProSeite);
 
-    // Prüfe, ob Buchholzzahl vorhanden ist
-    $hasBuchholzzahl = $table->tabeledataShows->first(function($row) {
-        return isset($row->buchholzzahl);
-    }) !== null;
+    // Für Slideshow: nächste Seite oder nächste Tabelle
+    if ($platzPage < $gesamtSeiten) {
+        $nextUrl = route('presentation.newTable', ['tableId' => $table->id, 'platzPage' => $platzPage + 1]);
+    } else {
+        $nextUrl = $redirectUrl;
+    }
+
+    // Platzberechnung
+    $platz = $start + 1;
+    $platzCounter = $start + 1;
+    $lastPunkte = null;
+    $lastBuchholz = null;
 @endphp
 
 @section('head')
-    <meta http-equiv="refresh" content="10;url={{ $nextUrl }}">
+    @if($table)
+        <meta http-equiv="refresh" content="10;url={{ $nextUrl }}">
+    @endif
 @endsection
 
 @section('content')
@@ -43,54 +55,92 @@
                 @if($table->beschreibung)
                     <div class="mb-2">{{ $table->beschreibung }}</div>
                 @endif
-                <table class="table table-striped mb-0">
-                    <thead class="table-success">
-                        <tr>
-                            <th class="text-end" style="width:8%;">Platz</th>
-                            <th class="text-start" style="width:40%;">Team</th>
-                            <th class="text-end" style="width:12%;">Punkte</th>
-                            @if($hasBuchholzzahl)
-                                <th class="text-end" style="width:20%;">Buchholzzahl <sup>*</sup></th>
-                            @endif
-                            <th class="text-end" style="width:12%;">Absolvierte Rennen</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($pagedRows as $row)
-                            <tr>
-                                <td class="text-end">{{ $row->platz }}</td>
-                                <td class="text-start">
-                                    {{ $row->getMannschaft ? $row->getMannschaft->teamname : 'Unbekannt' }}
-                                </td>
-                                <td class="text-end">{{ $row->punkte }}</td>
-                                @if($hasBuchholzzahl)
-                                    <td class="text-end">
-                                        {{ isset($row->buchholzzahl) ? $row->buchholzzahl : '-' }}
-                                    </td>
-                                @endif
-                                <td class="text-end">
-                                    {{ $row->rennanzahl }}
-                                    @if($table->maxrennen)
-                                        von {{ $table->maxrennen }}
+                @if($platzierungenSeite->count())
+                    <div class="table-responsive">
+                        <table class="table table-striped mb-0">
+                            <thead class="table-success">
+                                <tr>
+                                    <th>Platz</th>
+                                    <th>Team</th>
+                                    <th>Punkte</th>
+                                    @if($table->buchholzwertungaktiv ?? false)
+                                        <th>Buchholzzahl <sup>*</sup></th>
                                     @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                                    <th>Absolvierte Rennen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($platzierungenSeite as $idx => $platzierung)
+                                    @php
+                                        $punkte = $platzierung->punkte;
+                                        $buchholz = $platzierung->buchholzzahl ?? 0;
+                                        if($idx === 0 && $platzPage === 1) {
+                                            $platz = 1;
+                                            $platzCounter = 1;
+                                            $lastPunkte = null;
+                                            $lastBuchholz = null;
+                                        }
+                                        if($idx === 0 && $platzPage > 1 && $start > 0) {
+                                            // Hole die Werte des letzten Eintrags der vorherigen Seite
+                                            $prev = $sorted[$start - 1];
+                                            $lastPunkte = $prev->punkte;
+                                            $lastBuchholz = $prev->buchholzzahl ?? 0;
+                                            // Prüfe, ob Gleichstand mit letztem der vorherigen Seite
+                                            if($punkte == $lastPunkte && $buchholz == $lastBuchholz) {
+                                                // Platz bleibt gleich wie vorherige Seite
+                                                $platz = $platzCounter = $start; // Platznummer wie letzter auf vorheriger Seite
+                                            } else {
+                                                $platz = $platzCounter = $start + 1;
+                                            }
+                                        }
+                                        if($idx > 0) {
+                                            if($punkte == $lastPunkte && $buchholz == $lastBuchholz) {
+                                                // gleicher Platz
+                                            } else {
+                                                $platz = $platzCounter;
+                                            }
+                                        }
+                                        $lastPunkte = $punkte;
+                                        $lastBuchholz = $buchholz;
+                                        $platzCounter++;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $platz }}</td>
+                                        <td>{{ $platzierung->getMannschaft->teamname ?? '' }}</td>
+                                        <td>{{ $platzierung->punkte }}</td>
+                                        @if($table->buchholzwertungaktiv ?? false)
+                                            <td>{{ $platzierung->buchholzzahl }}</td>
+                                        @endif
+                                        <td>
+                                            {{ $platzierung->rennanzahl }}
+                                            @if($table->maxrennen)
+                                                von {{ $table->maxrennen }}
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    @if($table->buchholzwertungaktiv ?? false)
+                        <div class="alert alert-info py-2 px-3 mb-3">
+                            <small class="text-muted">
+                                <sup>*</sup> Die Buchholzzahl ist eine Feinwertung, bei der die Punkte aller Gegner, gegen die ein Team gespielt hat, aufsummiert werden. Sie dient dazu, bei Punktgleichheit die Platzierung zu bestimmen.
+                            </small>
+                        </div>
+                    @endif
+                @endif
             </div>
         </div>
         <div class="mt-3 w-100">
             <div class="text-center bg-success text-white rounded py-1 px-2 fw-semibold shadow-sm w-100">
-                Tabelle {{ $page }} von {{ $totalPages }}
+                Tabelle {{ $tableIndex+1 }} von {{ $tableCount }}
+                @if($gesamtSeiten > 1)
+                    – Seite {{ $platzPage }} von {{ $gesamtSeiten }}
+                @endif
             </div>
         </div>
-        @if($table->buchholzwertungaktiv ?? false)
-            <div class="alert alert-info py-2 px-3 mb-3">
-                <small class="text-muted">
-                    <sup>*</sup> Die Buchholzzahl ist eine Feinwertung, bei der die Punkte aller Gegner, gegen die ein Team gespielt hat, aufsummiert werden. Sie dient dazu, bei Punktgleichheit die Platzierung zu bestimmen.
-                </small>
-            </div>
-        @endif
+    @else
+        <div class="alert alert-warning">Keine Tabellen vorhanden.</div>
     @endif
 @endsection

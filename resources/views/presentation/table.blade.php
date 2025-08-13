@@ -52,7 +52,7 @@
 @section('content')
     @if($table)
         <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-primary text-white fs-2">
                 <strong>Tabelle: {{ $table->ueberschrift }}</strong>
             </div>
             <div class="card-body">
