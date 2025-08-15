@@ -70,3 +70,5 @@ Route::get('/Praesentation/Ergebnis/Neu/{raceId}',                 [Presentation
 Route::get('/Praesentation/Tabelle/Neu/{tableId}',                 [PresentationController::class, 'newTable'])->name('presentation.newTable');
 Route::get('/Praesentation/Tabelle',                               [PresentationController::class, 'table'])->name('presentation.table');
 Route::get('/Praesentation/Video',                                 [PresentationController::class, 'video'])->name('presentation.video');
+Route::get('/presentation/liveStream', [\App\Http\Controllers\PresentationController::class, 'liveStream'])->name('presentation.liveStream');
+Route::get('/presentation/checkLiveStream', [\App\Http\Controllers\PresentationController::class, 'checkLiveStream'])->name('presentation.checkLiveStream');

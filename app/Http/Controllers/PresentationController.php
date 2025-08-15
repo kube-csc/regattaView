@@ -132,10 +132,34 @@ class PresentationController extends Controller
         return null;
     }
 
+    /**
+     * Prüft, ob ein Rennen mit liveStream=1 existiert und leitet ggf. weiter.
+     * Gibt ggf. ein Redirect-Response zurück, sonst null.
+     */
+    private function checkAndRedirectLiveStream()
+    {
+        $event = $this->event;
+        $raceWithLiveStream = \App\Models\Race::where('event_id', $event?->event_id)
+            ->where('liveStream', 1)
+            ->orderBy('rennDatum')
+            ->orderBy('rennUhrzeit')
+            ->first();
+
+        if ($raceWithLiveStream) {
+            // Weiterleitung zur Livestream-Seite
+            return redirect()->route('presentation.liveStream');
+        }
+        return null;
+    }
+
     public function welcome()
     {
         $this->initEventAndRegattaStarted();
         $event = $this->event;
+
+        if ($redirect = $this->checkAndRedirectLiveStream()) {
+            return $redirect;
+        }
 
         // Prüfe, ob die Regatta bereits gestartet ist (Session-Variable)
         if ($this->regattaStarted) {
@@ -149,6 +173,11 @@ class PresentationController extends Controller
     {
         $this->initEventAndRegattaStarted();
         $event = $this->event;
+
+        if ($redirect = $this->checkAndRedirectLiveStream()) {
+            return $redirect;
+        }
+
         $eventId = $event->event_id;
 
         // Teams nach Wertungsgruppen sortieren
@@ -225,6 +254,11 @@ class PresentationController extends Controller
     {
         $this->initEventAndRegattaStarted();
         $event = $this->event;
+
+        if ($redirect = $this->checkAndRedirectLiveStream()) {
+            return $redirect;
+        }
+
         $eventId = $event->event_id;
 
         $newResult = $this->checkForNewRaceResult();
@@ -319,6 +353,11 @@ class PresentationController extends Controller
     {
         $this->initEventAndRegattaStarted();
         $event = $this->event;
+
+        if ($redirect = $this->checkAndRedirectLiveStream()) {
+            return $redirect;
+        }
+
         $eventId = $event->event_id;
 
         // Prüfung auf neues Ergebnis und ggf. Redirect
@@ -350,10 +389,28 @@ class PresentationController extends Controller
 
     public function video()
     {
-        //session(['lastShownResultRaceId' => 0]); // Temp: Setze die zuletzt angezeigte Ergebnis-ID zurück
         $this->initEventAndRegattaStarted();
         $event = $this->event;
+
+        if ($redirect = $this->checkAndRedirectLiveStream()) {
+            return $redirect;
+        }
+
+        // Nur anzeigen, wenn die Regatta noch nicht gestartet wurde
+        if ($this->regattaStarted) {
+            return redirect()->route('presentation.welcome');
+        }
+
         return view('presentation.video', [
+            'event' => $event,
+        ]);
+    }
+
+    public function liveStream()
+    {
+        $this->initEventAndRegattaStarted();
+        $event = $this->event;
+        return view('presentation.liveStream', [
             'event' => $event,
         ]);
     }
@@ -362,6 +419,11 @@ class PresentationController extends Controller
     {
         $this->initEventAndRegattaStarted();
         $event = $this->event;
+
+        if ($redirect = $this->checkAndRedirectLiveStream()) {
+            return $redirect;
+        }
+
         $eventId = $event->event_id;
 
         // Lade Tabellen mit Tabellendaten und Team
@@ -391,6 +453,11 @@ class PresentationController extends Controller
     {
         $this->initEventAndRegattaStarted();
         $event = $this->event;
+
+        if ($redirect = $this->checkAndRedirectLiveStream()) {
+            return $redirect;
+        }
+
         $eventId = $event->event_id;
 
         // Prüfen, ob bereits ein Ergebnis existiert (status > 2)
@@ -447,6 +514,11 @@ class PresentationController extends Controller
     {
         $this->initEventAndRegattaStarted();
         $event = $this->event;
+
+        if ($redirect = $this->checkAndRedirectLiveStream()) {
+            return $redirect;
+        }
+
         $eventId = $event?->event_id;
 
         $now = now();
@@ -567,5 +639,18 @@ class PresentationController extends Controller
             'event' => $event,
             'redirectUrl' => $redirectUrl,
         ]);
+    }
+
+    // AJAX-Check, ob Livestream noch aktiv ist
+    public function checkLiveStream()
+    {
+        $this->initEventAndRegattaStarted();
+        $event = $this->event;
+
+        $active = \App\Models\Race::where('event_id', $event?->event_id)
+            ->where('liveStream', 1)
+            ->exists();
+
+        return response()->json(['active' => $active]);
     }
 }

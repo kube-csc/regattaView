@@ -1,5 +1,15 @@
 ## Update Anleitung
-**Version V00.13.01**
+**Version V00.14.00
+
+#Funktion
+- Slite Show wurde eingebaut: https://[Domain]/Praesentation
+
+#Installation
+- Für die Verwaltung der Regatta muss die APP Vereinsverwaltung mindestens  V00.05.xx installiert sein.
+  [GitHub Projekt Vereinsverwaltung](https://github.com/kube-csc/vereinsverwaltung)
+  zum GitHub Projekt Vereinsverwaltung ab V00.09.02
+
+**Version V00.13.01
 
 - composer install
 - 

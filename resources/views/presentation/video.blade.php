@@ -11,10 +11,13 @@
 @endsection
 
 @section('content')
+    @php
+        $videoUrl = include(resource_path('views/textimport/slideShow_options.php'));
+    @endphp
     <div class="position-fixed top-0 start-0 w-100 h-100 bg-black" style="z-index:9999;">
         <iframe
             class="w-100 h-100 border-0"
-            src="https://www.youtube.com/embed/Gjf1a5btgcc?autoplay=1&mute=1"
+            src="{{ $videoUrl }}"
             title="YouTube video"
             allow="autoplay; encrypted-media"
             allowfullscreen>
