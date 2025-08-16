@@ -29,12 +29,7 @@ class TabeleController extends Controller
      */
     public function index()
     {
-        $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-            ->where('events.regatta' , '1')
-            ->where('events.verwendung' , 0)
-            ->orderby('events.datumvon' , 'desc')
-            ->limit(1)
-            ->get();
+        $events = $this->getCurrentEventsQuery()->get();
 
         // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
         $eventId=0;
@@ -71,6 +66,21 @@ class TabeleController extends Controller
                 'ueberschrift' => 'Tabellen',
                 'eventname'    => $events->first()->ueberschrift,
             ]);
+    }
+
+    /**
+     * Gibt die aktuelle Event-Query zurück.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private function getCurrentEventsQuery()
+    {
+        return Event::join('races as ra', 'events.id', '=', 'ra.event_id')
+            ->where('ra..status' , '>',1)
+            ->where('events.regatta', '1')
+            ->where('events.verwendung', 0)
+            ->orderby('events.datumvon', 'desc')
+            ->limit(1);
     }
 
     /**

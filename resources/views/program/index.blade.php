@@ -98,16 +98,18 @@
                                     <br>Voraussichtlich: {{ date("H:i", strtotime($race->verspaetungUhrzeit)) }} Uhr
                                  @endif
                             </p>
-                            @if($race->beschreibung != '')
-                                <b>Notiz zum Rennen:</b><br>
-                                <p>{!! $race->beschreibung !!}</p>
-                            @endif
-                            @if($race->programmDatei != Null)
-                                <p>
-                                   <a href="{{env('VEREIN_URL')}}/storage/raceDokumente/{{ $race->programmDatei }}" target="_blank">
+                            @if($race->status == 2)
+                               @if($race->beschreibung != '')
+                                 <b>Notiz zum Rennen:</b><br>
+                                 <p>{!! $race->beschreibung !!}</p>
+                               @endif
+                               @if($race->programmDatei != Null)
+                                  <p>
+                                     <a href="{{env('VEREIN_URL')}}/storage/raceDokumente/{{ $race->programmDatei }}" target="_blank">
                                         <i class="bx bxs-file-doc"></i>Programm Dokument
-                                   </a>
-                                </p>
+                                     </a>
+                                  </p>
+                               @endif
                             @endif
                             @if($race->status >= 2 && $race->status <= 4)
                                     <p>

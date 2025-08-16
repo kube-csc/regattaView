@@ -22,12 +22,7 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-            ->where('events.regatta' , '1')
-            ->where('events.verwendung' , 0)
-            ->orderby('events.datumvon' , 'desc')
-            ->limit(1)
-            ->get();
+        $events = $this->getCurrentEventsQuery()->get();
 
         // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
         $eventId=0;
@@ -60,12 +55,8 @@ class ProgramController extends Controller
 
     public function indexNotResult()
     {
-        $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-            ->where('ra.visible' , 1)   // ToDo: Events können noch nicht mit visible abgefragt werden
-            ->where('events.regatta' , '1')
-            ->where('events.verwendung' , 0)
-            ->orderby('events.datumvon' , 'desc')
-            ->limit(1)
+        $events = $this->getCurrentEventsQuery()
+            ->where('ra.visible', 1)   // ToDo: Events können noch nicht mit visible abgefragt werden
             ->get();
 
         // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
@@ -106,12 +97,8 @@ class ProgramController extends Controller
 
     public function indexResult()
     {
-        $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-            ->where('ra.visible' , 1)   // ToDo: Events koennen noch nicht mit visible abgefragt werden
-            ->where('events.regatta' , '1')
-            ->where('events.verwendung' , 0)
-            ->orderby('events.datumvon' , 'desc')
-            ->limit(1)
+        $events = $this->getCurrentEventsQuery()
+            ->where('ra.visible', 1)   // ToDo: Events koennen noch nicht mit visible abgefragt werden
             ->get();
 
         // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
@@ -186,12 +173,8 @@ class ProgramController extends Controller
 
     public function laneOccupancy($raceId)
     {
-        $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-            ->where('ra.visible' , 1)
-            ->where('events.regatta' , '1')
-            ->where('events.verwendung' , 0)
-            ->orderby('events.datumvon' , 'desc')
-            ->limit(1)
+        $events = $this->getCurrentEventsQuery()
+            ->where('ra.visible', 1)
             ->get();
 
         $eventId=0;
@@ -292,12 +275,8 @@ class ProgramController extends Controller
 
     public function result($raceId)
     {
-        $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-            ->where('ra.visible' , 1)
-            ->where('events.regatta' , '1')
-            ->where('events.verwendung' , 0)
-            ->orderby('events.datumvon' , 'desc')
-            ->limit(1)
+        $events = $this->getCurrentEventsQuery()
+            ->where('ra.visible', 1)
             ->get();
 
         $eventId=0;
@@ -395,12 +374,7 @@ class ProgramController extends Controller
     // Neue Seite zur Auswahl der Mannschaft als Filter
     public function selectTeamFilter()
     {
-        $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-            ->where('events.regatta' , '1')
-            ->where('events.verwendung' , 0)
-            ->orderby('events.datumvon' , 'desc')
-            ->limit(1)
-            ->get();
+        $events = $this->getCurrentEventsQuery()->get();
 
         $eventId = 0;
 
@@ -549,5 +523,20 @@ class ProgramController extends Controller
             return redirect($redirectUrl);
         }
         return redirect()->route('program.index');
+    }
+
+    /**
+     * Gibt die aktuelle Event-Query zurück.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private function getCurrentEventsQuery()
+    {
+        return Event::join('races as ra', 'events.id', '=', 'ra.event_id')
+            ->where('ra..status' , '>',1)
+            ->where('events.regatta', '1')
+            ->where('events.verwendung', 0)
+            ->orderby('events.datumvon', 'desc')
+            ->limit(1);
     }
 }
