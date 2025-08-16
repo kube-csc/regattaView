@@ -100,8 +100,8 @@
                             </p>
                             @if($race->status == 2)
                                @if($race->beschreibung != '')
-                                 <b>Notiz zum Rennen:</b><br>
-                                 <p>{!! $race->beschreibung !!}</p>
+                                  <b>Notiz zum Rennen:</b><br>
+                                  <p>{!! $race->beschreibung !!}</p>
                                @endif
                                @if($race->programmDatei != Null)
                                   <p>
@@ -110,13 +110,11 @@
                                      </a>
                                   </p>
                                @endif
-                            @endif
-                            @if($race->status >= 2 && $race->status <= 4)
-                                    <p>
-                                       <a href="/Bahnbelegung/{{$race->id}}">
-                                            <i class="bx bxs-label"></i>Bahnbelegung
-                                       </a>
-                                    </p>
+                                  <p>
+                                     <a href="/Bahnbelegung/{{$race->id}}">
+                                          <i class="bx bxs-label"></i>Bahnbelegung
+                                     </a>
+                                  </p>
                             @endif
                             @if($race->veroeffentlichungUhrzeit < Illuminate\Support\Carbon::now()->toTimeString() && $race->rennDatum == Illuminate\Support\Carbon::now()->toDateString()
                                    || $race->rennDatum < Illuminate\Support\Carbon::now()->toDateString())
