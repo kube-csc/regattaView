@@ -1,33 +1,16 @@
 @extends('layouts.presentation')
 
-@section('title', 'Ergebnisse')
-
-@php
-    $raceIndex = request()->query('race', 0);
-    $raceCount = count($races);
-    $nextRaceIndex = $raceIndex + 1;
-    $hasNext = $nextRaceIndex < $raceCount;
-    $nextUrl = $hasNext
-        ? route('presentation.result', ['race' => $nextRaceIndex])
-        : route('presentation.table');
-    $race = $races[$raceIndex] ?? null;
-@endphp
-
 @section('head')
-    @if($race)
-        <meta http-equiv="refresh" content="10;url={{ $nextUrl }}">
-    @else
-        <meta http-equiv="refresh" content="1;url={{ route('presentation.table') }}">
-    @endif
+    <meta http-equiv="refresh" content="10;url={{ $redirectUrl }}">
 @endsection
 
 @section('content')
     @if($race)
         <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <strong class="fs-2">Rennen {{ $race->nummer }}: {{ $race->rennBezeichnung }}</strong>
+            <div class="card-header bg-success text-white">
+                <strong class="fs-2">Neues Ergebnis – Rennen {{ $race->nummer }}: {{ $race->rennBezeichnung ?? $race->name }}</strong>
                 <div class="mt-1">
-                   <span class="badge bg-secondary">Abschnitt: {{ $race->level }}</span>
+                     <span class="badge bg-secondary">Abschnitt: {{ $race->level }}</span>
                 </div>
             </div>
             <div class="card-body p-0">
@@ -37,7 +20,7 @@
                     {{ \Carbon\Carbon::parse($race->rennUhrzeit)->format('H:i') }} Uhr
                 </div>
                 <table class="table table-striped mb-0">
-                    <thead class="table-primary">
+                    <thead class="table-success">
                         <tr>
                             <th class="text-end" style="width:45%;">Platz</th>
                             <th class="text-end" style="width:5%;">Bahn</th>
@@ -67,11 +50,9 @@
             </div>
         </div>
         <div class="mt-3 w-100">
-            <div class="text-center bg-primary text-white rounded py-1 px-2 fw-semibold shadow-sm w-100">
-                Rennen {{ $raceIndex+1 }} von {{ $raceCount }}
+            <div class="text-center bg-success text-white rounded py-1 px-2 fw-semibold shadow-sm w-100">
+                Rennen 1 von 1
             </div>
         </div>
-    @else
-        <div class="alert alert-warning">Keine Ergebnisse vorhanden.</div>
     @endif
 @endsection

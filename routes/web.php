@@ -60,11 +60,15 @@ Route::post('/Sprecher/Tabellen/Auswahl',                          [SpeekerContr
 Route::get('/Mannschaftsfilter',                                   [ProgramController::class, 'selectTeamFilter'])->name('program.selectTeamFilter');
 Route::post('/Mannschaftsfilter/aktiv',                            [ProgramController::class, 'setTeamFilter'])->name('program.setTeamFilter');
 
-Route::get('/Praesentation/Welcome',                               [PresentationController::class, 'welcome'])->name('presentation.welcome');
+Route::get('/Praesentation',                                       [PresentationController::class, 'welcome'])->name('presentation.welcome');
 Route::get('/Praesentation/Information',                           [PresentationController::class, 'information'])->name('presentation.information');
 Route::get('/Praesentation/Mannschaft',                            [PresentationController::class, 'teams'])->name('presentation.teams');
 Route::get('/Praesentation/Mannschaftssteckbrief',                 [PresentationController::class, 'teamProfile'])->name('presentation.teamProfile');
 Route::get('/Praesentation/Bahnaufstellung',                       [PresentationController::class, 'laneOccupancy'])->name('presentation.laneOccupancy');
 Route::get('/Praesentation/Ergebnis',                              [PresentationController::class, 'result'])->name('presentation.result');
+Route::get('/Praesentation/Ergebnis/Neu/{raceId}',                 [PresentationController::class, 'newResult'])->name('presentation.newResult');
+Route::get('/Praesentation/Tabelle/Neu/{tableId}',                 [PresentationController::class, 'newTable'])->name('presentation.newTable');
 Route::get('/Praesentation/Tabelle',                               [PresentationController::class, 'table'])->name('presentation.table');
 Route::get('/Praesentation/Video',                                 [PresentationController::class, 'video'])->name('presentation.video');
+Route::get('/presentation/liveStream', [\App\Http\Controllers\PresentationController::class, 'liveStream'])->name('presentation.liveStream');
+Route::get('/presentation/checkLiveStream', [\App\Http\Controllers\PresentationController::class, 'checkLiveStream'])->name('presentation.checkLiveStream');

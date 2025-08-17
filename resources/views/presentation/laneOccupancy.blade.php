@@ -3,6 +3,7 @@
 @section('title', 'Bahnaufstellungen')
 
 @php
+    // Es wird angenommen, dass $races bereits entsprechend gefiltert ist (nur level 1, falls keine Ergebnisse existieren)
     $raceIndex = request()->query('race', 0);
     $raceCount = count($races);
     $nextRaceIndex = $raceIndex + 1;
@@ -16,6 +17,8 @@
 @section('head')
     @if($race)
         <meta http-equiv="refresh" content="10;url={{ $nextUrl }}">
+    @else
+        <meta http-equiv="refresh" content="0;url={{ $nextUrl }}">
     @endif
 @endsection
 
@@ -23,8 +26,12 @@
     @if($race)
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <strong>Rennen {{ $race->nummer }}: {{ $race->rennBezeichnung }}</strong>
+                <strong class="fs-2">Rennen {{ $race->nummer }}: {{ $race->rennBezeichnung }}</strong>
+                <div class="mt-1">
+                     <span class="badge bg-secondary">Abschnitt: {{ $race->level  }}</span>
+                </div>
             </div>
+
             <div class="card-body p-0">
                 <div class="p-3">
                     <strong>Startzeit:</strong>
@@ -68,10 +75,10 @@
                 </table>
             </div>
         </div>
-        <div class="text-center mb-2 bg-dark text-white rounded py-1 px-2">
-            <small>Rennen {{ $raceIndex+1 }} von {{ $raceCount }}</small>
+        <div class="mt-3 w-100">
+            <div class="text-center bg-primary text-white rounded py-1 px-2 fw-semibold shadow-sm w-100">
+                Rennen {{ $raceIndex+1 }} von {{ $raceCount }}
+            </div>
         </div>
-    @else
-        <div class="alert alert-warning">Keine Rennen vorhanden.</div>
     @endif
 @endsection

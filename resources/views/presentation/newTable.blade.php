@@ -1,6 +1,6 @@
 @extends('layouts.presentation')
 
-@section('title', 'Tabellen')
+@section('title', 'Neue Tabelle')
 
 @php
     $tableIndex = request()->query('table', 0);
@@ -27,13 +27,9 @@
 
     // Für Slideshow: nächste Seite oder nächste Tabelle
     if ($platzPage < $gesamtSeiten) {
-        $nextUrl = route('presentation.table', ['table' => $tableIndex, 'platzPage' => $platzPage + 1]);
+        $nextUrl = route('presentation.newTable', ['tableId' => $table->id, 'platzPage' => $platzPage + 1]);
     } else {
-        $nextTableIndex = $tableIndex + 1;
-        $hasNext = $nextTableIndex < $tableCount;
-        $nextUrl = $hasNext
-            ? route('presentation.table', ['table' => $nextTableIndex])
-            : route('presentation.video');
+        $nextUrl = $redirectUrl;
     }
 
     // Platzberechnung
@@ -52,17 +48,17 @@
 @section('content')
     @if($table)
         <div class="card mb-4">
-            <div class="card-header bg-primary text-white fs-2">
-                <strong>Tabelle: {{ $table->ueberschrift }}</strong>
+            <div class="card-header bg-success text-white">
+                <strong class="fs-2">Neue Tabelle: {{ $table->ueberschrift }}</strong>
             </div>
-            <div class="card-body">
+            <div class="card-body p-0">
                 @if($table->beschreibung)
                     <div class="mb-2">{{ $table->beschreibung }}</div>
                 @endif
                 @if($platzierungenSeite->count())
                     <div class="table-responsive">
                         <table class="table table-striped mb-0">
-                            <thead class="table-primary">
+                            <thead class="table-success">
                                 <tr>
                                     <th>Platz</th>
                                     <th>Team</th>
@@ -137,7 +133,7 @@
             </div>
         </div>
         <div class="mt-3 w-100">
-            <div class="text-center bg-primary text-white rounded py-1 px-2 fw-semibold shadow-sm w-100">
+            <div class="text-center bg-success text-white rounded py-1 px-2 fw-semibold shadow-sm w-100">
                 Tabelle {{ $tableIndex+1 }} von {{ $tableCount }}
                 @if($gesamtSeiten > 1)
                     – Seite {{ $platzPage }} von {{ $gesamtSeiten }}

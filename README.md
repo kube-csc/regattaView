@@ -74,13 +74,33 @@ Die Url hierfür ist:
     <li>[Domain]/Sprecher</li>
 </ul>
 
-<h2>Backend</h2>
+<h2>Slite Show</h2>
 <p>
-Die die Verwaltung der Regatta muss die APP Vereinsverwaltung installiert werden.
-<a href="https://github.com/kube-csc/vereinsverwaltung" target="_blank"></a>
-zum GitHub Projekt Vereinsverwaltung ab V00.05.xx
+Die Slite Show Funktion ermöglicht die automatische Präsentation von Ergebnissen, Tabellen und Livestreams auf einem Bildschirm. Einzelne Rennen oder Tabellen können gezielt für die Präsentation markiert werden. Die Anzeige wechselt automatisch zwischen den verschiedenen Ansichten.<br>
+Sie kann sinnvollerweise nur unter <b>[Domain]/presentation</b> abgerufen werden.
 </p>
 
+<ul>
+  <li>Willkommensseite (Welcome)</li>
+  <li>Informationsseite (Information)</li>
+  <li>Ergebnisseite (Ergebnisse)</li>
+  <li>Bahnaufstellung (Lane Occupancy)</li>
+  <li>Teamprofile (Teamprofile)</li>
+  <li>Automatische Anzeige neuer Rennergebnisse, sobald diese markiert wurden.</li>
+  <li>Automatische Anzeige neuer Tabellen, wenn diese für die Präsentation markiert wurden.</li>
+  <li>Automatischer Start eines Livestreams, wenn dieser aktiviert wurde.</li>
+  <li>Anzeige eines hinterlegten Videos in der Präsentation.</li>
+</ul>
+<p>
+Start-URL: <b>[Domain]/presentation</b>
+</p>
+
+<h2>Backend</h2>
+<p>
+Für die Verwaltung der Regatta muss die APP Vereinsverwaltung installiert werden.
+<a href="https://github.com/kube-csc/vereinsverwaltung" target="_blank"></a>
+zum GitHub Projekt Vereinsverwaltung ab V00.09.02
+</p>
 
 <h2>Installation</h2>
 <ul>

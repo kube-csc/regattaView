@@ -5,16 +5,19 @@
 @section('head')
     @if($info)
         <meta http-equiv="refresh" content="10;url={{ $nextUrl }}">
+    @else
+        <meta http-equiv="refresh" content="0;url={{ route('presentation.teams') }}">
     @endif
 @endsection
 
 @section('content')
     @if($info)
         <div class="card mb-4">
-            <div class="card-header bg-primary text-white text-center">
-                <strong class="fs-2">{{ $info->informationTittel }}</strong>
+            <div class="card-header bg-primary text-white text-center fs-2">
+                <strong>Regatta Information</strong>
             </div>
             <div class="card-body bg-light">
+                <h3 class="mb-3 text-primary text-center">{{ $info->informationTittel }}</h3>
                 {!! $info->informationBeschreibung !!}
             </div>
         </div>
@@ -23,7 +26,5 @@
                 Information {{ $infoIndex+1 }} von {{ $infoCount }}
             </div>
         </div>
-    @else
-        <div class="alert alert-warning text-center">Keine aktuellen Informationen vorhanden.</div>
     @endif
 @endsection
