@@ -18,11 +18,12 @@ class HomeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\View\View
      */
     public function index()
     {
         $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
+            ->where('ra..status' , '>',1)
             ->where('events.regatta' , '1')
             ->where('events.verwendung' , 0)
             ->orderby('events.datumvon' , 'desc')
@@ -118,14 +119,14 @@ class HomeController extends Controller
         return view('home.home')->with(
             [
                 'boards'                      => $boards,
-                'sportSectionTeamName'        => $sportSectionTeamName,
-                'events'                      => $events,
-                'racecount'                   => $raceCount,
+                'sportSectionTeamName'  => $sportSectionTeamName,
+                'events'                             => $events,
+                'racecount'                        => $raceCount,
                 'raceNewCount'                => $raceNewCount,
-                'raceProgrammCount'           => $raceProgrammCount,
-                'raceResoultCount'            => $raceResoultCount,
-                'eventDokumentes'             => $eventDokumentes,
-                'regattaInformations'         => $regattaInformations
+                'raceProgrammCount'       => $raceProgrammCount,
+                'raceResoultCount'           => $raceResoultCount,
+                'eventDokumentes'          => $eventDokumentes,
+                'regattaInformations'        => $regattaInformations
             ]
         );
     }
@@ -162,7 +163,7 @@ class HomeController extends Controller
             ->get();
 
         return view('instruction.show')->with([
-            'documents'                   => $documents,
+            'documents'                 => $documents,
             'instructions'                => $instructions
         ]);
     }
