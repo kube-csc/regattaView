@@ -13,11 +13,11 @@
                     if (!data.active) {
                         window.location.href = "{{ route('presentation.welcome') }}";
                     } else {
-                        // Wiederhole die Prüfung alle 30 Sekunden
-                        setTimeout(checkLive, 15000); // 30 Sekunden
+                        // Wiederhole die Prüfung alle 15 Sekunden
+                        setTimeout(checkLive, 15000); // 15 Sekunden
                     }
                 });
-        }, 120000); // 2 Minuten
+        }, 105000); // 1 Minute und 45 Sekunden
         // Keine automatische Weiterleitung oder Seitenreload!
     </script>
 @endsection

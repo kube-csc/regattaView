@@ -139,7 +139,7 @@ class PresentationController extends Controller
     private function checkAndRedirectLiveStream()
     {
         $event = $this->event;
-        $raceWithLiveStream = \App\Models\Race::where('event_id', $event?->event_id)
+        $raceWithLiveStream = Race::where('event_id', $event?->event_id)
             ->where('liveStream', 1)
             ->orderBy('rennDatum')
             ->orderBy('rennUhrzeit')
@@ -185,7 +185,7 @@ class PresentationController extends Controller
             ->where('status', '!=','Gelöscht')
             ->orderBy('gruppe_id')
             ->orderBy('teamname')
-            ->limit(10)  // Temp: Testweise nur 10 Teams laden
+           // ->limit(10)  // Temp: Testweise nur 10 Teams laden
             ->get();
 
         $wertungsGruppen = $teams->groupBy(function ($team) {
@@ -410,8 +410,32 @@ class PresentationController extends Controller
     {
         $this->initEventAndRegattaStarted();
         $event = $this->event;
+
+        // 1. Suche aktuelles Rennen mit Livestream
+        $raceWithLiveStream = \App\Models\Race::where('event_id', $event->event_id)
+            ->where('liveStream', 1)
+            ->orderBy('rennDatum')
+            ->orderBy('rennUhrzeit')
+            ->first();
+
+        // 2. Falls nicht gefunden, suche das nächstältere Rennen mit liveStreamURL
+        if (!$raceWithLiveStream || empty($raceWithLiveStream->liveStreamURL)) {
+            $raceWithLiveStream = Race::where('event_id', $event->event_id)
+                ->whereNotNull('liveStreamURL')
+                ->where('liveStreamURL', '!=', '')
+                ->orderBy('rennDatum')
+                ->orderBy('rennUhrzeit')
+                ->first();
+        }
+
+        // Setze die Video-ID: aus liveStreamURL oder Null
+        $videoId = ($raceWithLiveStream && !empty($raceWithLiveStream->liveStreamURL))
+            ? $raceWithLiveStream->liveStreamURL
+            : null;
+
         return view('presentation.liveStream', [
             'event' => $event,
+            'videoId' => $videoId,
         ]);
     }
 
@@ -474,7 +498,7 @@ class PresentationController extends Controller
         $teams = RegattaTeam::where('regatta_id', $eventId)
             ->where('status', '!=', 'Gelöscht')
             ->orderBy('teamname')
-            ->limit(2)  // Temp: Testweise nur
+            //->limit(2)  // Temp: Testweise nur
             ->get();
 
         $teamIndex = (int) $request->query('team', 0);
@@ -635,8 +659,8 @@ class PresentationController extends Controller
         }
 
         return view('presentation.newTable', [
-            'tables' => $tables,
-            'event' => $event,
+            'tables'        => $tables,
+            'event'         => $event,
             'redirectUrl' => $redirectUrl,
         ]);
     }
