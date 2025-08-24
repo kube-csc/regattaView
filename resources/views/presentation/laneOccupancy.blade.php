@@ -44,8 +44,9 @@
                         $timfrom = $from[0]*60 + $from[1];
                         $diff_in_minutes = $timfrom - $timto;
                         $diff_in_minutes =20;
+                        $isToday = \Carbon\Carbon::parse($race->rennDatum)->isToday();
                     @endphp
-                    @if($diff_in_minutes > 5 && $race->verspaetungUhrzeit)
+                    @if($diff_in_minutes > 5 && $race->verspaetungUhrzeit && $isToday)
                         <br>
                         <strong>Voraussichtliche Startzeit:</strong>
                         {{ \Carbon\Carbon::parse($race->verspaetungUhrzeit)->format('H:i') }} Uhr

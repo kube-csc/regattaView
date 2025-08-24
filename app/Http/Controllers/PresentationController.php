@@ -95,7 +95,7 @@ class PresentationController extends Controller
         }
 
         // Prüfe zuerst auf sliteShowResult = 1
-        $sliteShowRace = \App\Models\Race::where('event_id', $eventId)
+        $sliteShowRace = Race::where('event_id', $eventId)
             ->where('status', 4)
             ->where('visible', 1)
             ->where('sliteShowResult', 1)
@@ -366,11 +366,13 @@ class PresentationController extends Controller
             return redirect()->route('presentation.newResult', ['raceId' => $newResult->id]);
         }
 
-        // Nur Rennen mit Ergebnis und sichtbar (status == 4, visible == 1)
+        // Zeit-Filterung: Nur Rennen, deren rennDatum und veroeffentlichungUhrzeit <= jetzt
+        $now = now();
         $races = Race::with(['lanes.regattaTeam'])
             ->where('event_id', $eventId)
             ->where('status', 4)
             ->where('visible', 1)
+            ->whereRaw("(CONCAT(rennDatum, ' ', veroeffentlichungUhrzeit) <= ?)", [$now->format('Y-m-d H:i:s')])
             ->orderBy('rennDatum')
             ->orderBy('rennZeit')
             ->get();
@@ -378,7 +380,6 @@ class PresentationController extends Controller
         // Wenn keine Rennen vorhanden sind, direkt zur nächsten Präsentationsseite (Video)
         if ($races->isEmpty()) {
             return redirect()->route('presentation.video');
-            // return redirect()->route('presentation.welcome'); // Temp: Zurück zur Willkommensseite
         }
 
         return view('presentation.result', [
@@ -396,9 +397,33 @@ class PresentationController extends Controller
             return $redirect;
         }
 
-        // Nur anzeigen, wenn die Regatta noch nicht gestartet wurde
-        if ($this->regattaStarted) {
-            return redirect()->route('presentation.welcome');
+        // Prüfe, ob heute ein Rennen stattfindet und das nächste Rennen noch mindestens 20 Minuten entfernt ist
+        $now = now();
+        $eventId = $event?->event_id;
+
+        $nextRace = Race::where('event_id', $eventId)
+            ->where('rennDatum', $now->format('Y-m-d'))
+            ->where('status', 2)
+            ->where('visible', 1)
+            ->orderBy('verspaetungUhrzeit')
+            ->first();
+
+        $showVideo = false;
+
+        if (!$this->regattaStarted) {
+            $showVideo = true;
+        } elseif ($nextRace) {
+            // Zeitdifferenz in Minuten berechnen
+            $verspaetung = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $nextRace->rennDatum . ' ' . $nextRace->verspaetungUhrzeit);
+            $diffMinutes = $now->diffInMinutes($verspaetung, false);
+            if ($diffMinutes >= 20) {
+                $showVideo = true;
+            }
+        }
+
+        if (!$showVideo) {
+            return redirect()->route('presentation.laneOccupancy');
+            //return redirect()->route('presentation.welcome');
         }
 
         return view('presentation.video', [
@@ -412,7 +437,7 @@ class PresentationController extends Controller
         $event = $this->event;
 
         // 1. Suche aktuelles Rennen mit Livestream
-        $raceWithLiveStream = \App\Models\Race::where('event_id', $event->event_id)
+        $raceWithLiveStream = Race::where('event_id', $event->event_id)
             ->where('liveStream', 1)
             ->orderBy('rennDatum')
             ->orderBy('rennUhrzeit')
@@ -451,9 +476,11 @@ class PresentationController extends Controller
         $eventId = $event->event_id;
 
         // Lade Tabellen mit Tabellendaten und Team
+        $now = now();
         $tables = Tabele::with(['tabeledataShows.getMannschaft'])
             ->where('event_id', $eventId)
             ->where('tabelleVisible', 1)
+            ->whereRaw('DATE_ADD(tabelleDatumVon, INTERVAL finaleAnzeigen MINUTE) <= ?', [$now])
             ->orderBy('id')
             ->get()
             // Filtere Tabellen ohne Platzierungen heraus
@@ -598,10 +625,13 @@ class PresentationController extends Controller
         $this->initEventAndRegattaStarted();
         $event = $this->event;
 
+        // Zeit-Filterung: Nur Rennen, deren rennDatum und veroeffentlichungUhrzeit <= jetzt
+        $now = now();
         $race = \App\Models\Race::with(['lanes.regattaTeam'])
             ->where('id', $raceId)
             ->where('status', 4)
             ->where('visible', 1)
+            ->whereRaw("(CONCAT(rennDatum, ' ', veroeffentlichungUhrzeit) <= ?)", [$now->format('Y-m-d H:i:s')])
             ->first();
 
         // Prüfe, ob eine Tabelle vorhanden ist
@@ -635,14 +665,16 @@ class PresentationController extends Controller
         $this->initEventAndRegattaStarted();
         $event = $this->event;
 
-        $table = \App\Models\Tabele::with(['tabeledataShows.getMannschaft'])
-            ->where('id', $tableId)
-            ->where('tabelleVisible', 1)
-            ->first();
+       // $table = Tabele::with(['tabeledataShows.getMannschaft'])
+       //    ->where('id', $tableId)
+       //     ->where('tabelleVisible', 1)
+       //     ->first();
 
+        $now = now();
         $tables = Tabele::with(['tabeledataShows.getMannschaft'])
             ->where('id', $tableId)
             ->where('tabelleVisible', 1)
+            ->whereRaw('DATE_ADD(tabelleDatumVon, INTERVAL finaleAnzeigen MINUTE) <= ?', [$now])
             ->orderBy('id')
             ->get()
             // Filtere Tabellen ohne Platzierungen heraus

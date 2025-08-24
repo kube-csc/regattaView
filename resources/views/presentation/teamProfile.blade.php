@@ -4,7 +4,14 @@
 
 @section('head')
     @if($team)
-        <meta http-equiv="refresh" content="10;url={{ $nextUrl }}">
+        @php
+            $minTime = 10; // Mindestzeit in Sekunden
+            $charsPerSec = 40; // Pro 40 Zeichen 1 Sekunde zusätzlich
+            $beschreibung = strip_tags($team->beschreibung ?? '');
+            $extraTime = $beschreibung ? ceil(strlen($beschreibung) / $charsPerSec) : 0;
+            $refreshTime = $minTime + $extraTime;
+        @endphp
+        <meta http-equiv="refresh" content="{{ $refreshTime }};url={{ $nextUrl }}">
     @endif
 @endsection
 

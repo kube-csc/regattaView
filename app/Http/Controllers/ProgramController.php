@@ -377,13 +377,13 @@ class ProgramController extends Controller
         $events = $this->getCurrentEventsQuery()->get();
 
         $eventId = 0;
-
         foreach($events as $event) {
            $eventId        = $event->event_id;
         }
 
         // Nur Teams, die in Rennen des aktuellen Events gemeldet sind
         $teams = RegattaTeam::where('regatta_id', $eventId)
+            ->where('status', '!=','Gelöscht')
             ->orderBy('teamname')
             ->get();
 
