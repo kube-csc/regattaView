@@ -313,7 +313,7 @@ class PresentationController extends Controller
         $levelsToShow = [$activeLevel];
 
         // Wenn 2 oder weniger Rennen offen sind, ermittle das nächsthöhere Level mit offenen Rennen
-        if ($openRacesCount <= 1) {
+        if ($openRacesCount <= 3) {
             $nextLevel = Race::where('event_id', $eventId)
                 ->where('level', '>', $activeLevel)
                 ->where('status', 2)
@@ -480,7 +480,7 @@ class PresentationController extends Controller
         $tables = Tabele::with(['tabeledataShows.getMannschaft'])
             ->where('event_id', $eventId)
             ->where('tabelleVisible', 1)
-            ->whereRaw('DATE_ADD(tabelleDatumVon, INTERVAL finaleAnzeigen MINUTE) <= ?', [$now])
+            ->whereRaw("(CONCAT(tabelleDatumVon, ' ', finaleAnzeigen) <= ?)", [$now->format('Y-m-d H:i:s')])
             ->orderBy('id')
             ->get()
             // Filtere Tabellen ohne Platzierungen heraus
@@ -627,7 +627,7 @@ class PresentationController extends Controller
 
         // Zeit-Filterung: Nur Rennen, deren rennDatum und veroeffentlichungUhrzeit <= jetzt
         $now = now();
-        $race = \App\Models\Race::with(['lanes.regattaTeam'])
+        $race = Race::with(['lanes.regattaTeam'])
             ->where('id', $raceId)
             ->where('status', 4)
             ->where('visible', 1)
@@ -635,7 +635,7 @@ class PresentationController extends Controller
             ->first();
 
         // Prüfe, ob eine Tabelle vorhanden ist
-        $hasTable = \App\Models\Tabele::where('event_id', $event?->event_id)
+        $hasTable = Tabele::where('event_id', $event?->event_id)
             ->where('tabelleVisible', 1)
             ->exists();
 
@@ -674,7 +674,7 @@ class PresentationController extends Controller
         $tables = Tabele::with(['tabeledataShows.getMannschaft'])
             ->where('id', $tableId)
             ->where('tabelleVisible', 1)
-            ->whereRaw('DATE_ADD(tabelleDatumVon, INTERVAL finaleAnzeigen MINUTE) <= ?', [$now])
+            ->whereRaw("(CONCAT(tabelleDatumVon, ' ', finaleAnzeigen) <= ?)", [$now->format('Y-m-d H:i:s')])
             ->orderBy('id')
             ->get()
             // Filtere Tabellen ohne Platzierungen heraus
