@@ -38,39 +38,39 @@
                         <div class="box">
                             @if($raceNext1 != Null)
                                 <a href="/Sprecher/{{ $raceNext1->id  }}" class="me-2">
-                                   <button type="button" class="btn btn-secondary ml-2 px-4">
+                                   <button type="button" class="btn btn-secondary btn-sm ml-2">
                                         <i class="bx bx-refresh"></i>
                                     </button>
                                 </a>
                             @elseif($raceResoult1->id != Null)
                                 <a href="/Sprecher/{{ $raceResoult1->id }}" class="me-2">
-                                    <button type="button" class="btn btn-secondary ml-2 px-4">
+                                    <button type="button" class="btn btn-secondary btn-sm ml-2">
                                         <i class="bx bx-refresh"></i>
                                     </button>
                                 </a>
                             @endif
                                 <a href="/Sprecher" class="me-2">
-                                    <button type="button" class="btn btn-secondary ml-2 px-4">
+                                    <button type="button" class="btn btn-secondary btn-sm ml-2">
                                         <i class="bx bx-time"></i>
                                     </button>
                                 </a>
                             @if($nachId>0)
                                 <a href="/Sprecher/{{ $nachId }}" class="me-2">
-                                    <button type="button" class="btn btn-secondary ml-2 px-4">
+                                    <button type="button" class="btn btn-secondary btn-sm ml-2">
                                         <i class="bx bx-left-arrow-alt"></i>
                                     </button>
                                 </a>
                             @else
-                                <button type="button" class="btn btn-secondary ml-2 px-4">&nbsp;</button>
+                                <button type="button" class="btn btn-secondary btn-sm ml-2">&nbsp;</button>
                             @endif
                             @if($vorId>0)
                                 <a href="/Sprecher/{{ $vorId }}">
-                                    <button type="button" class="btn btn-secondary ml-2 px-4">
+                                    <button type="button" class="btn btn-secondary btn-sm ml-2">
                                         <i class="bx bx-right-arrow-alt"></i>
                                     </button>
                                 </a>
                             @else
-                                <button type="button" class="btn btn-secondary ml-2 px-4">&nbsp;</button>
+                                <button type="button" class="btn btn-secondary btn-sm ml-2">&nbsp;</button>
                             @endif
                         </div>
                     </div>

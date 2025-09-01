@@ -69,6 +69,7 @@
                 </div>
 
                 @php
+                    use Carbon\Carbon;
                     $i=0;
                     $delay=75;
                 @endphp
@@ -116,12 +117,17 @@
                                      </a>
                                   </p>
                             @endif
-                            @if($race->veroeffentlichungUhrzeit < Illuminate\Support\Carbon::now()->toTimeString() && $race->rennDatum == Illuminate\Support\Carbon::now()->toDateString()
-                                   || $race->rennDatum < Illuminate\Support\Carbon::now()->toDateString())
+                            @if(
+                                $race->rennDatum < Carbon::now()->toDateString() ||
+                                (
+                                    $race->rennDatum == Carbon::now()->toDateString() &&
+                                    $race->veroeffentlichungUhrzeit < Carbon::now()->toTimeString()
+                                )
+                            )
                                 @if($race->status == 4)
                                     <p>
                                        <a href="/Ergebnis/{{$race->id}}">
-                                            <i class="bx bxs-label"></i>Ergebnis
+                                            <i class="bx bxs-label"></i>Ergebnisse
                                        </a>
                                     </p>
                                 @endif

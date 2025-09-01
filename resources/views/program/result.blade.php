@@ -68,8 +68,8 @@
                                 </a>
                                 <br>
                             @endif
-                            <label for="name">Download zur Tabelle:</label>
                             @if($race->raceTabele->tabelleDatei != Null)
+                                <label for="name">Download zur Tabelle:</label>
                                 <p><a href="{{ env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $race->raceTabele->tabelleDatei }}" target="_blank">
                                         <i class="bx bxs-file-doc"></i>
                                         {{ $race->raceTabele->ueberschrift }}

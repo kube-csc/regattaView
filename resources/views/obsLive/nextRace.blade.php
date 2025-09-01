@@ -14,6 +14,16 @@
                             {{ $race->nummer }} / {{ $race->rennBezeichnung }}
                        @endif
                     </p>
+                    <p>
+                        {{-- Uhrzeit im deutschen Format anzeigen --}}
+                        @if(!empty($race->startzeit))
+                            @php
+                                use Carbon\Carbon;
+                                $startzeit = Carbon::parse($race->startzeit)->format('H:i \U\h\r');
+                            @endphp
+                            Startzeit: {{ $startzeit }}
+                        @endif
+                    </p>
                 </div>
             </div>
         </section>

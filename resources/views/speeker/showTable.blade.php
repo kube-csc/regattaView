@@ -30,17 +30,17 @@
                     <div class="col-md-6">
                         <div class="box">
                             <a href="/Sprecher/Tabelle/{{ $tableId }}/{{ $raceId }}" class="me-2">
-                                <button type="button" class="btn btn-secondary ml-2 px-4">
+                                <button type="button" class="btn btn-secondary btn-sm ml-2">
                                     <i class="bx bx-refresh"></i>
                                 </button>
                             </a>
                             <a href="/Sprecher" class="me-2">
-                                <button type="button" class="btn btn-secondary ml-2 px-4">
+                                <button type="button" class="btn btn-secondary btn-sm ml-2">
                                     <i class="bx bx-time"></i>
                                 </button>
                             </a>
                             <a href="/Sprecher/{{ $raceId }}">
-                                <button type="button" class="btn btn-secondary ml-2 px-4">Programm</button>
+                                <button type="button" class="btn btn-secondary btn-sm ml-2">Programm</button>
                             </a>
                         </div>
                     </div>
@@ -143,7 +143,7 @@
                                                @if($victoCremonyTable == 1)
                                                    <h2>
                                                        <a href="/Sprecher/Tabelle/{{ $table->id }}/{{ $race->id }}" class="me-2">
-                                                           <button type="button" class="btn btn-primary ml-2">Tabelle</button>
+                                                           <button type="button" class="btn btn-primary btn-sm ml-2">Tabelle</button>
                                                        </a>
                                                        {{ $table->ueberschrift }}
                                                    </h2>

@@ -122,6 +122,7 @@ class ProgramController extends Controller
             })
             ->orderby('rennDatum' , 'desc')
             ->orderby('rennUhrzeit' , 'desc');
+
         if ($teamFilter && $teamFilterActive) {
             $racesQuery->whereHas('lanes', function($q) use ($teamFilter) {
                 $q->where('mannschaft_id', $teamFilter);
@@ -135,7 +136,7 @@ class ProgramController extends Controller
                 'ueberschrift' => 'Ergebnisse der Rennen',
                 'event'        => $events->first()->ueberschrift,
                 'teamFilter'   => $teamFilter ? RegattaTeam::find($teamFilter) : null,
-                'teamFilterActive' => $teamFilterActive,
+                'teamFilterActive' => $teamFilterActive
             ]);
     }
 

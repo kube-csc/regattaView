@@ -34,7 +34,13 @@ class OBSLiveController extends Controller
                 ->orderBy('platz')
                 ->get();
 
-            if ($race->veroeffentlichungUhrzeit < Carbon::now()->toTimeString() || $race->rennDatum < Carbon::now()->toDateString()) {
+            if (    $race->rennDatum < Carbon::now()->toDateString() ||
+                 (
+                    $race->rennDatum == Carbon::now()->toDateString() &&
+                    $race->veroeffentlichungUhrzeit < Carbon::now()->toTimeString()
+                 )
+               )
+            {
                 return view('obsLive.result')->with(
                     [
                         'race' => $race,
