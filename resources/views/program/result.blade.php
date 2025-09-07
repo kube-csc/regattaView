@@ -62,7 +62,7 @@
                         @endif
                         <br>
                         @if($race->raceTabele->ueberschrift)
-                            @if($race->tabele_id && $race->tabele_id >1)
+                            @if($race->tabele_id && $race->tabele_id >1 && $race->raceTabele->wertungsart==1)
                                 <a href="{{ url('/Tabelle/'.$race->tabele_id) }}" class="btn btn-primary">
                                     Tabelle {{ $race->raceTabele->ueberschrift }}
                                 </a>
