@@ -72,3 +72,4 @@ Route::get('/Praesentation/Tabelle',                                [Presentatio
 Route::get('/Praesentation/Video',                                  [PresentationController::class, 'video'])->name('presentation.video');
 Route::get('/Preasentation/liveStream',                           [PresentationController::class, 'liveStream'])->name('presentation.liveStream');
 Route::get('/Praesentation/checkLiveStream',                 [PresentationController::class, 'checkLiveStream'])->name('presentation.checkLiveStream');
+Route::get('/Praesentation/Start',                                   [PresentationController::class, 'resetAndStartPresentation'])->name('presentation.reset');

@@ -8,6 +8,7 @@ use App\Models\Race;
 use App\Models\Tabele;
 use App\Models\RegattaInformation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
 
 class PresentationController extends Controller
@@ -52,7 +53,6 @@ class PresentationController extends Controller
         return false;
     }
 
-    // Gibt ein Array mit ['eventId' => ..., 'event' => ...] zurück
     private function getCurrentEvent()
     {
         $event = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
@@ -397,7 +397,6 @@ class PresentationController extends Controller
             return $redirect;
         }
 
-        // Prüfe, ob heute ein Rennen stattfindet und das nächste Rennen noch mindestens 20 Minuten entfernt ist
         $now = now();
         $eventId = $event?->event_id;
 
@@ -409,25 +408,59 @@ class PresentationController extends Controller
             ->first();
 
         $showVideo = false;
+        $videoUrl = null;
+        $videoLaenge = 120000; // Default: 120 Sek.
 
         if (!$this->regattaStarted) {
             $showVideo = true;
         } elseif ($nextRace) {
-            // Zeitdifferenz in Minuten berechnen
-            $verspaetung = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $nextRace->rennDatum . ' ' . $nextRace->verspaetungUhrzeit);
+            $verspaetung = Carbon::createFromFormat('Y-m-d H:i:s', $nextRace->rennDatum . ' ' . $nextRace->verspaetungUhrzeit);
             $diffMinutes = $now->diffInMinutes($verspaetung, false);
             if ($diffMinutes >= 20) {
                 $showVideo = true;
             }
         }
 
-        if (!$showVideo) {
-            return redirect()->route('presentation.laneOccupancy');
-            //return redirect()->route('presentation.welcome');
+        // Session-Handling für Einspieler
+        if ($nextRace && !empty($nextRace->einspielerURL)) {
+            // Wenn $nextRace einen Einspieler hat, verwende diesen und überschreibe die Session
+            $videoUrl = $nextRace->einspielerURL;
+            $videoLaenge = $nextRace->abspielzeit ? $nextRace->abspielzeit * 1000 : 120000;
+            session([
+                'einspielerURL' => $videoUrl,
+                'abspielzeit' => $videoLaenge,
+            ]);
+        } elseif (session()->has('einspielerURL') && session()->has('abspielzeit')) {
+            // Wenn Session vorhanden, verwende diese Werte
+            $videoUrl = session('einspielerURL');
+            $videoLaenge = session('abspielzeit');
+        } else {
+            // Sonst suche den letzten Einspieler und speichere in Session
+            $lastEinspieler = Race::where('event_id', $eventId)
+                ->whereNotNull('einspielerURL')
+                ->where('einspielerURL', '!=', '')
+                ->orderByDesc('rennDatum')
+                ->orderByDesc('rennUhrzeit')
+                ->first();
+            if ($lastEinspieler) {
+                $videoUrl = $lastEinspieler->einspielerURL;
+                $videoLaenge = $lastEinspieler->abspielzeit ? $lastEinspieler->abspielzeit * 1000 : 120000;
+                session([
+                    'einspielerURL' => $videoUrl,
+                    'abspielzeit'      => $videoLaenge,
+                ]);
+            }
         }
 
+        if (!$showVideo || !$videoUrl) {
+            return redirect()->route('presentation.laneOccupancy');
+        }
+
+        $videoUrl = "https://www.youtube.com/embed/$videoUrl?autoplay=1";
+
         return view('presentation.video', [
-            'event' => $event,
+            'videoUrl'        => $videoUrl,
+            'videoLaenge' => $videoLaenge,
         ]);
     }
 
@@ -453,14 +486,17 @@ class PresentationController extends Controller
                 ->first();
         }
 
-        // Setze die Video-ID: aus liveStreamURL oder Null
+        // Setze die Video-ID: aus liveStreamURL oder Standard
         $videoId = ($raceWithLiveStream && !empty($raceWithLiveStream->liveStreamURL))
             ? $raceWithLiveStream->liveStreamURL
-            : null;
+            : 'ehWh1zntCDw';
+
+        // Baue die YouTube-URL direkt hier
+        $liveStreamUrl = "https://www.youtube.com/embed/$videoId?autoplay=1";
 
         return view('presentation.liveStream', [
             'event' => $event,
-            'videoId' => $videoId,
+            'liveStreamUrl' => $liveStreamUrl,
         ]);
     }
 
@@ -512,7 +548,7 @@ class PresentationController extends Controller
         $eventId = $event->event_id;
 
         // Prüfen, ob bereits ein Ergebnis existiert (status > 2)
-        $hasResults = \App\Models\Race::where('event_id', $eventId)
+        $hasResults = Race::where('event_id', $eventId)
             ->where('status', '>', 2)
             ->exists();
 
@@ -665,11 +701,6 @@ class PresentationController extends Controller
         $this->initEventAndRegattaStarted();
         $event = $this->event;
 
-       // $table = Tabele::with(['tabeledataShows.getMannschaft'])
-       //    ->where('id', $tableId)
-       //     ->where('tabelleVisible', 1)
-       //     ->first();
-
         $now = now();
         $tables = Tabele::with(['tabeledataShows.getMannschaft'])
             ->where('id', $tableId)
@@ -703,10 +734,26 @@ class PresentationController extends Controller
         $this->initEventAndRegattaStarted();
         $event = $this->event;
 
-        $active = \App\Models\Race::where('event_id', $event?->event_id)
+        $active = Race::where('event_id', $event?->event_id)
             ->where('liveStream', 1)
             ->exists();
 
         return response()->json(['active' => $active]);
+    }
+
+    /**
+     * Setzt die Session zurück und startet die Präsentation.
+     */
+    public function resetAndStartPresentation()
+    {
+        Session::forget([
+            'event',
+            'regattaStarted',
+            'lastShownResultRennDatum',
+            'lastShownResultRennUhrzeit',
+            'einspielerURL',
+            'abspielzeit'
+        ]);
+        return redirect()->route('presentation.welcome');
     }
 }
