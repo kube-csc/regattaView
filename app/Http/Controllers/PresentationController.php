@@ -185,7 +185,6 @@ class PresentationController extends Controller
             ->where('status', '!=','Gelöscht')
             ->orderBy('gruppe_id')
             ->orderBy('teamname')
-           // ->limit(10)  // Temp: Testweise nur 10 Teams laden
             ->get();
 
         $wertungsGruppen = $teams->groupBy(function ($team) {
@@ -412,6 +411,9 @@ class PresentationController extends Controller
         $videoLaenge = 120000; // Default: 120 Sek.
 
         if (!$this->regattaStarted) {
+            $showVideo = true;
+        } elseif (!$nextRace) {
+            // Wenn kein $nextRace gefunden wurde, Video immer abspielen
             $showVideo = true;
         } elseif ($nextRace) {
             $verspaetung = Carbon::createFromFormat('Y-m-d H:i:s', $nextRace->rennDatum . ' ' . $nextRace->verspaetungUhrzeit);
@@ -714,17 +716,17 @@ class PresentationController extends Controller
             })
             ->values();
 
-        // Nach Anzeige der Tabelle weiter zur normalen Tabellenpräsentation oder Video
-        $redirectUrl = route('presentation.video');
-
-        if (!$tables) {
-            return redirect($redirectUrl);
+        // Weiterleitung, wenn keine Tabellen vorhanden sind
+        if ($tables->isEmpty()) {
+            return redirect()->route('presentation.video');
         }
+
+        $redirectUrl = route('presentation.video');
 
         return view('presentation.newTable', [
             'tables'        => $tables,
             'event'         => $event,
-            'redirectUrl' => $redirectUrl,
+            'redirectUrl'   => $redirectUrl,
         ]);
     }
 
