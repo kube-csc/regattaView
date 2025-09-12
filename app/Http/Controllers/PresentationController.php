@@ -46,9 +46,25 @@ class PresentationController extends Controller
     {
         if ($this->event) {
             $eventId = $this->event->event_id;
-            return Race::where('event_id', $eventId)
-                ->where('status', '>', 2)
+            $started = Race::where('event_id', $eventId)
+                ->where('status', '>', 3)
                 ->exists();
+
+            // Session-Variablen einmalig setzen, wenn Regatta gestartet ist
+            if ($started && !Session::has('lastShownResultRennDatum') && !Session::has('lastShownResultRennUhrzeit')) {
+                $firstResultRace = Race::where('event_id', $eventId)
+                    ->where('status', 4)
+                    ->where('visible', 1)
+                    ->orderByDesc('rennDatum')
+                    ->orderByDesc('rennUhrzeit')
+                    ->first();
+                if ($firstResultRace) {
+                    Session::put('lastShownResultRennDatum', $firstResultRace->rennDatum);
+                    Session::put('lastShownResultRennUhrzeit', $firstResultRace->rennUhrzeit);
+                }
+            }
+
+            return $started;
         }
         return false;
     }
@@ -352,17 +368,16 @@ class PresentationController extends Controller
     {
         $this->initEventAndRegattaStarted();
         $event = $this->event;
-
-        if ($redirect = $this->checkAndRedirectLiveStream()) {
-            return $redirect;
-        }
-
         $eventId = $event->event_id;
 
         // Prüfung auf neues Ergebnis und ggf. Redirect
         $newResult = $this->checkForNewRaceResult();
         if ($newResult) {
             return redirect()->route('presentation.newResult', ['raceId' => $newResult->id]);
+        }
+
+        if ($redirect = $this->checkAndRedirectLiveStream()) {
+            return $redirect;
         }
 
         // Zeit-Filterung: Nur Rennen, deren rennDatum und veroeffentlichungUhrzeit <= jetzt
@@ -413,11 +428,11 @@ class PresentationController extends Controller
         if (!$this->regattaStarted) {
             $showVideo = true;
         } elseif (!$nextRace) {
-            // Wenn kein $nextRace gefunden wurde, Video immer abspielen
             $showVideo = true;
         } elseif ($nextRace) {
             $verspaetung = Carbon::createFromFormat('Y-m-d H:i:s', $nextRace->rennDatum . ' ' . $nextRace->verspaetungUhrzeit);
             $diffMinutes = $now->diffInMinutes($verspaetung, false);
+            //dump('now'.$now, 'verspaetung'.$verspaetung, 'diffMinutes'.$diffMinutes);
             if ($diffMinutes >= 20) {
                 $showVideo = true;
             }
@@ -425,7 +440,6 @@ class PresentationController extends Controller
 
         // Session-Handling für Einspieler
         if ($nextRace && !empty($nextRace->einspielerURL)) {
-            // Wenn $nextRace einen Einspieler hat, verwende diesen und überschreibe die Session
             $videoUrl = $nextRace->einspielerURL;
             $videoLaenge = $nextRace->abspielzeit ? $nextRace->abspielzeit * 1000 : 120000;
             session([
@@ -433,11 +447,9 @@ class PresentationController extends Controller
                 'abspielzeit' => $videoLaenge,
             ]);
         } elseif (session()->has('einspielerURL') && session()->has('abspielzeit')) {
-            // Wenn Session vorhanden, verwende diese Werte
             $videoUrl = session('einspielerURL');
             $videoLaenge = session('abspielzeit');
         } else {
-            // Sonst suche den letzten Einspieler und speichere in Session
             $lastEinspieler = Race::where('event_id', $eventId)
                 ->whereNotNull('einspielerURL')
                 ->where('einspielerURL', '!=', '')
@@ -454,9 +466,26 @@ class PresentationController extends Controller
             }
         }
 
-        if (!$showVideo || !$videoUrl) {
+        // Zeitprüfung: Video nur alle 30 Minuten + $videoLaenge abspielen
+        $lastPlayed = session('lastVideoPlayedAt');
+        $canPlay = true;
+        if ($lastPlayed && $videoUrl) {
+            $lastPlayedTime = Carbon::parse($lastPlayed);
+            $nextAllowedTime = $lastPlayedTime->addMinutes(30)->addMilliseconds($videoLaenge);
+            //dump('nextAllowedTime'.$nextAllowedTime, 'now'.$now);
+            if ($now->lessThan($nextAllowedTime)) {
+                $canPlay = false;
+            }
+        }
+
+        //dump('showVideo',$showVideo, 'videoUrl',$videoUrl, 'canPlay',$canPlay);
+       //dd('stop');
+        if (!$showVideo || !$videoUrl || !$canPlay) {
             return redirect()->route('presentation.laneOccupancy');
         }
+
+        // Setze die neue Abspielzeit
+        session(['lastVideoPlayedAt' => $now]);
 
         $videoUrl = "https://www.youtube.com/embed/$videoUrl?autoplay=1";
 
@@ -519,7 +548,7 @@ class PresentationController extends Controller
             ->where('event_id', $eventId)
             ->where('tabelleVisible', 1)
             ->whereRaw("(CONCAT(tabelleDatumVon, ' ', finaleAnzeigen) <= ?)", [$now->format('Y-m-d H:i:s')])
-            ->orderBy('id')
+            ->orderBy('ueberschrift')
             ->get()
             // Filtere Tabellen ohne Platzierungen heraus
             ->filter(function($table) {
@@ -563,7 +592,6 @@ class PresentationController extends Controller
         $teams = RegattaTeam::where('regatta_id', $eventId)
             ->where('status', '!=', 'Gelöscht')
             ->orderBy('teamname')
-            //->limit(2)  // Temp: Testweise nur
             ->get();
 
         $teamIndex = (int) $request->query('team', 0);
@@ -571,11 +599,11 @@ class PresentationController extends Controller
 
         if ($teamCount === 0) {
             return view('presentation.teamProfile', [
-                'team' => null,
-                'teamIndex' => 0,
+                'team'           => null,
+                'teamIndex'  => 0,
                 'teamCount' => 0,
-                'nextUrl' => route('presentation.laneOccupancy'),
-                'event' => $event,
+                'nextUrl'       => route('presentation.laneOccupancy'),
+                'event'          => $event,
             ]);
         }
 
@@ -633,10 +661,10 @@ class PresentationController extends Controller
         $infoCount = $infos->count();
         if ($infoCount === 0) {
             return view('presentation.information', [
-                'info' => null,
+                'info'          => null,
                 'infoIndex' => 0,
                 'infoCount' => 0,
-                'nextUrl' => route('presentation.teams')
+                'nextUrl'     => route('presentation.teams')
             ]);
         }
 
@@ -650,10 +678,10 @@ class PresentationController extends Controller
             : route('presentation.teams');
 
         return view('presentation.information', [
-            'info' => $infos[$index],
+            'info'          => $infos[$index],
             'infoIndex' => $index,
             'infoCount' => $infoCount,
-            'nextUrl' => $nextUrl
+            'nextUrl'     => $nextUrl
         ]);
     }
 
@@ -672,11 +700,6 @@ class PresentationController extends Controller
             ->whereRaw("(CONCAT(rennDatum, ' ', veroeffentlichungUhrzeit) <= ?)", [$now->format('Y-m-d H:i:s')])
             ->first();
 
-        // Prüfe, ob eine Tabelle vorhanden ist
-        $hasTable = Tabele::where('event_id', $event?->event_id)
-            ->where('tabelleVisible', 1)
-            ->exists();
-
         if (!$race) {
             // Falls das Rennen nicht gefunden wird, weiter zur normalen Ergebnisanzeige
             return redirect()->route('presentation.result');
@@ -691,8 +714,8 @@ class PresentationController extends Controller
         }
 
         return view('presentation.newResult', [
-            'race' => $race,
-            'event' => $event,
+            'race'           => $race,
+            'event'         => $event,
             'redirectUrl' => $redirectUrl,
         ]);
     }
@@ -708,7 +731,7 @@ class PresentationController extends Controller
             ->where('id', $tableId)
             ->where('tabelleVisible', 1)
             ->whereRaw("(CONCAT(tabelleDatumVon, ' ', finaleAnzeigen) <= ?)", [$now->format('Y-m-d H:i:s')])
-            ->orderBy('id')
+            ->orderBy('ueberschrift')
             ->get()
             // Filtere Tabellen ohne Platzierungen heraus
             ->filter(function($table) {
@@ -724,9 +747,9 @@ class PresentationController extends Controller
         $redirectUrl = route('presentation.video');
 
         return view('presentation.newTable', [
-            'tables'        => $tables,
-            'event'         => $event,
-            'redirectUrl'   => $redirectUrl,
+            'tables'          => $tables,
+            'event'          => $event,
+            'redirectUrl'  => $redirectUrl,
         ]);
     }
 
@@ -754,7 +777,8 @@ class PresentationController extends Controller
             'lastShownResultRennDatum',
             'lastShownResultRennUhrzeit',
             'einspielerURL',
-            'abspielzeit'
+            'abspielzeit',
+            'lastVideoPlayedAt'
         ]);
         return redirect()->route('presentation.welcome');
     }

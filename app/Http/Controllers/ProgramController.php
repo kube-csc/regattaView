@@ -196,8 +196,7 @@ class ProgramController extends Controller
         if ($teamFilter && $teamFilterActive) {
             $previousRace = Race::where('event_id', $eventId)
                 ->where('id', '!=', $raceId)
-                ->where('status', '>=', 2)
-                ->where('status', '<=', 4)
+                ->where('status', 2)
                 ->whereHas('lanes', function($q) use ($teamFilter) {
                     $q->where('mannschaft_id', $teamFilter);
                 })
@@ -214,8 +213,7 @@ class ProgramController extends Controller
 
             $nextRace = Race::where('event_id', $eventId)
                 ->where('id', '!=', $raceId)
-                ->where('status', '>=', 2)
-                ->where('status', '<=', 4)
+                ->where('status', 2)
                 ->whereHas('lanes', function($q) use ($teamFilter) {
                     $q->where('mannschaft_id', $teamFilter);
                 })
@@ -233,8 +231,7 @@ class ProgramController extends Controller
             // Standard: alle Rennen
             $previousRace = Race::where('event_id', $eventId)
                 ->where('id', '!=', $raceId)
-                ->where('status', '>=', 2)
-                ->where('status', '<=', 4)
+                ->where('status', 2)
                 ->where(function($query) use ($race) {
                     $query->where('rennDatum', '<', $race->rennDatum)
                           ->orWhere(function($q2) use ($race) {
@@ -248,8 +245,7 @@ class ProgramController extends Controller
 
             $nextRace = Race::where('event_id', $eventId)
                 ->where('id', '!=', $raceId)
-                ->where('status', '>=', 2)
-                ->where('status', '<=', 4)
+                ->where('status',  2)
                 ->where(function($query) use ($race) {
                     $query->where('rennDatum', '>', $race->rennDatum)
                           ->orWhere(function($q2) use ($race) {
@@ -290,6 +286,7 @@ class ProgramController extends Controller
         $teamFilter = session('team_filter');
         $teamFilterActive = session('team_filter_active', true);
 
+        $now = now();
         // Filter nur anwenden, wenn auch aktiv
         if ($teamFilter && $teamFilterActive) {
             $previousRace = Race::where('event_id', $eventId)
@@ -305,6 +302,7 @@ class ProgramController extends Controller
                                  ->where('rennUhrzeit', '<', $race->rennUhrzeit);
                           });
                 })
+                ->whereRaw("(CONCAT(rennDatum, ' ', veroeffentlichungUhrzeit) <= ?)", [$now->format('Y-m-d H:i:s')])
                 ->orderBy('rennDatum', 'desc')
                 ->orderBy('rennUhrzeit', 'desc')
                 ->first();
@@ -322,6 +320,7 @@ class ProgramController extends Controller
                                  ->where('rennUhrzeit', '>', $race->rennUhrzeit);
                           });
                 })
+                ->whereRaw("(CONCAT(rennDatum, ' ', veroeffentlichungUhrzeit) <= ?)", [$now->format('Y-m-d H:i:s')])
                 ->orderBy('rennDatum', 'asc')
                 ->orderBy('rennUhrzeit', 'asc')
                 ->first();
@@ -336,6 +335,7 @@ class ProgramController extends Controller
                                  ->where('rennUhrzeit', '<', $race->rennUhrzeit);
                           });
                 })
+                ->whereRaw("(CONCAT(rennDatum, ' ', veroeffentlichungUhrzeit) <= ?)", [$now->format('Y-m-d H:i:s')])
                 ->orderBy('rennDatum', 'desc')
                 ->orderBy('rennUhrzeit', 'desc')
                 ->first();
@@ -350,9 +350,11 @@ class ProgramController extends Controller
                                  ->where('rennUhrzeit', '>', $race->rennUhrzeit);
                           });
                 })
+                ->whereRaw("(CONCAT(rennDatum, ' ', veroeffentlichungUhrzeit) <= ?)", [$now->format('Y-m-d H:i:s')])
                 ->orderBy('rennDatum', 'asc')
                 ->orderBy('rennUhrzeit', 'asc')
                 ->first();
+
         }
 
         $lanes = Lane::where('rennen_id', $raceId)
@@ -362,13 +364,13 @@ class ProgramController extends Controller
 
         return view('program.result')->with(
             [
-                'race'         => $race,
+                'race'               => $race,
                 'previousRace' => $previousRace,
-                'nextRace'     => $nextRace,
-                'lanes'        => $lanes,
-                'ueberschrift' => 'Bahnbelegung',
+                'nextRace'       => $nextRace,
+                'lanes'             => $lanes,
+                'ueberschrift'  => 'Bahnbelegung',
                 'eventname'    => $events->first()->ueberschrift,
-                'teamFilter'   => session('team_filter') ? RegattaTeam::find(session('team_filter')) : null
+                'teamFilter'      => session('team_filter') ? RegattaTeam::find(session('team_filter')) : null
             ]);
     }
 
