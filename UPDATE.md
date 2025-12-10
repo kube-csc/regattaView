@@ -1,4 +1,12 @@
 ## Update Anleitung
+**Version V00.14.01
+
+#Bugfixes
+- Ergebniseinblendung OBS
+
+#Funktion
+- Verbesserung der SlideShow
+
 **Version V00.14.00
 
 #Funktion

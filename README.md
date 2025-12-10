@@ -60,10 +60,10 @@ Es wird immer die aktuellen Daten eingetragen, wenn die Ergebnisse zeitgleichen 
 Alternativ kann ein Rennen auch als aktuell in der Regattaverwaltung angepint werden.
 </p>
 <ul>
-    <li>[Domain]/OBSLive/Ergebniss</li>
-    <li>[Domain]/OBSLive/Ergebnissall</li>
-    <li>[Domain]/OBSLive/Bahnbelegung</li>
-    <li>[Domain]/OBSLive/Naechstesrennen</li>
+    <li>http://[Domain]/OBSLive/Ergebniss</li>
+    <li>http://[Domain]/OBSLive/Ergebnissall</li>
+    <li>http://[Domain]/OBSLive/Bahnbelegung</li>
+    <li>http://[Domain]/OBSLive/Naechstesrennen</li>
 </ul>
 
 <h2>Live Sprecherinformation</h2>
@@ -72,14 +72,14 @@ Es gibt die möglichkeit, dass der Sprecher die Informationen über die Rennen a
 Die Url hierfür ist:
 </p>
 <ul>
-    <li>[Domain]/Sprecher</li>
+    <li>http://[Domain]/Sprecher</li>
 </ul>
 
 <h2>SlideShow</h2>
 <p>
 Die SlideShow Funktion ermöglicht die automatische Präsentation von Ergebnissen, Tabellen und Livestreams auf einem Bildschirm. Einzelne Rennen oder Tabellen können gezielt für die Präsentation markiert werden. Die Anzeige wechselt automatisch zwischen den verschiedenen Ansichten.<br>
-Sie wird unter <b>[Domain]/Praesentation</b> abgerufen werden.<br>
-Ein Neustart  der Präsentation ist mit <b>[Domain]/Praesentation/Start</b> möglich.
+Sie wird unter <b>http://[Domain]/Praesentation</b> abgerufen werden.<br>
+Ein Neustart  der Präsentation ist mit <b>http://[Domain]/Praesentation/Start</b> möglich.
 </p>
 
 <ul>
@@ -120,6 +120,26 @@ zum GitHub Projekt Vereinsverwaltung ab V00.10.xx
    <li>git pull origin main</li>
 </ul>
 <h2>Zugehörige Projekte</h2>
+<h3>Regatta Managment</h3>  
+<p>
+    Meldeportal für Teilnehmer für Regatten<br>
+    Die Version V00.01.XX <a href="https://github.com/kube-csc/regattamanager.git" target="_blank">https://github.com/kube-csc/regattamanager.git</a> 
+    ist kompatibel ab der Version V00.08.XX <a href="https://github.com/kube-csc/vereinsverwaltung.git" target="_blank">https://github.com/kube-csc/vereinsverwaltung.git</a>.
+</p>
+<h3>Kurse</h3>
+<p>
+Die App bietet ein Kursbuchungssystem, das auch für Fahrten oder Trainings verwendet werden kann. Sie hat folgende Funktionen:<br>
+Verwaltung: Sportgeräte, Räume usw. können verwaltet werden.<br>
+Teilnehmer: Accounts anlegen und verwalten.<br>
+Kursübersicht: Anzeige der verfügbaren Kurse und Termine sowie Informationen zu den Kursen, Trainings, Übungen oder Fahrten, die angeboten werden.<br>
+Trainer bzw. Fahrtenleiter: Trainer bzw. Fahrtenleiter können Termine für die Kurse anlegen und bearbeiten.<br>
+Sportgeräte und Räume: Zu den Kursen können Sportgeräte, Räume usw. zugeordnet werden.<br>
+Buchung: Teilnehmer können Kurse buchen und ihre eigenen Buchungen bearbeiten.<br>
+Teilnehmerverwaltung: Hinzufügen und Entfernen von Teilnehmern durch Trainer bzw. Fahrtenleiter.<br>
+Die Version V00.02.XX <a href="https://github.com/kube-csc/kurse.git" target="_blank">https://github.com/kube-csc/kurse.git</a> ist kompatibel mit der Version V00.10.XX 
+<a href="https://github.com/kube-csc/helferplanung.git" target="_blank">https://github.com/kube-csc/vereinsverwaltung.git</a>.
+</p>
+<hr>
 <h3>Helferlisten</h3>
 <p>
 Helferliste ist eine APP, die eine Liste von Personen verwaltet, die bereit sind, bei einem Event, einer Veranstaltung oder einem Projekt zu helfen. 

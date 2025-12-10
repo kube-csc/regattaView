@@ -16,8 +16,7 @@
                         {{-- Uhrzeit im deutschen Format anzeigen --}}
                         @if(!empty($race->startzeit))
                             @php
-                                use Carbon\Carbon;
-                                $startzeit = Carbon::parse($race->startzeit)->format('H:i \U\h\r');
+                                $startzeit = \Carbon\Carbon::parse($race->startzeit)->format('H:i \U\h\r');
                             @endphp
                             Startzeit: {{ $startzeit }}
                         @endif
