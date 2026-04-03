@@ -8,6 +8,7 @@ use App\Models\Race;
 use App\Models\Tabele;
 use App\Models\RegattaInformation;
 use App\Models\SportSection;
+use App\Models\Lane;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
@@ -249,7 +250,7 @@ class PresentationController extends Controller
         $page = (int) $request->query('page', 1);
 
         // Pagination für Teams innerhalb einer Gruppe (max 15 pro Seite)
-        $teamsPerPage = 15;
+        $teamsPerPage = config('presentation.limits.teams_per_page', 15);
         $totalPages = max(1, ceil($teamsInGroup->count() / $teamsPerPage));
         $page = max(1, min($page, $totalPages));
         $start = ($page - 1) * $teamsPerPage;
@@ -480,7 +481,8 @@ class PresentationController extends Controller
 
         $showVideo = false;
         $videoUrl = null;
-        $videoLaenge = 120000; // Default: 120 Sek.
+        $defaultVideoLength = config('presentation.times.video_default', 120);
+        $videoLaenge = $defaultVideoLength * 1000; // Default: 120 Sek.
 
         if (!$this->regattaStarted) {
             $showVideo = true;
@@ -498,7 +500,7 @@ class PresentationController extends Controller
         // Session-Handling für Einspieler
         if ($nextRace && !empty($nextRace->einspielerURL)) {
             $videoUrl = $nextRace->einspielerURL;
-            $videoLaenge = $nextRace->abspielzeit ? $nextRace->abspielzeit * 1000 : 120000;
+            $videoLaenge = $nextRace->abspielzeit ? $nextRace->abspielzeit * 1000 : ($defaultVideoLength * 1000);
             session([
                 'einspielerURL' => $videoUrl,
                 'abspielzeit' => $videoLaenge,
@@ -515,7 +517,7 @@ class PresentationController extends Controller
                 ->first();
             if ($lastEinspieler) {
                 $videoUrl = $lastEinspieler->einspielerURL;
-                $videoLaenge = $lastEinspieler->abspielzeit ? $lastEinspieler->abspielzeit * 1000 : 120000;
+                $videoLaenge = $lastEinspieler->abspielzeit ? $lastEinspieler->abspielzeit * 1000 : ($defaultVideoLength * 1000);
                 session([
                     'einspielerURL' => $videoUrl,
                     'abspielzeit'      => $videoLaenge,
@@ -623,7 +625,7 @@ class PresentationController extends Controller
         $currentTable = $tables[$tableIndex] ?? null;
 
         if ($currentTable) {
-            $platzProSeite = 12; // Seitenumbruchswert
+            $platzProSeite = config('presentation.limits.table_rows_per_page', 12); // Seitenumbruchswert
             $currentCount = $currentTable->tabeledataShows->count();
 
             // Wenn mehr als eine Seite vorhanden ist, ist das lokale Limit mindestens der Seitenumbruch
@@ -657,13 +659,16 @@ class PresentationController extends Controller
             ->where('status', '>', 2)
             ->exists();
 
-        if ($hasResults) {
-            // Wenn Ergebnisse existieren, Teamprofile überspringen
+        $forceShow = config('presentation.options.show_team_profiles', 0);
+
+        if ($hasResults && !$forceShow) {
+            // Wenn Ergebnisse existieren, Teamprofile überspringen (außer erzwungen)
             return redirect()->route('presentation.laneOccupancy');
         }
 
         // Alle Teams des aktuellen Events
-        $teams = RegattaTeam::where('regatta_id', $eventId)
+        $teams = RegattaTeam::with('teamWertungsGruppe.template')
+            ->where('regatta_id', $eventId)
             ->where('status', '!=', 'Gelöscht')
             ->orderBy('teamname')
             ->get();
@@ -684,6 +689,62 @@ class PresentationController extends Controller
         $teamIndex = max(0, min($teamIndex, $teamCount - 1));
         $team = $teams[$teamIndex];
 
+        // --- NEU: Teilnahme-Statistik ---
+        $participationCount = 0;
+        $lastResults = collect();
+
+        if ($team->teamlink > 0) {
+            // Anzahl der Teilnahmen (via teamlink), nur für vergangene Events
+            // Das Datum des Events liegt in events.datumbisa
+            $participationBaseQuery = RegattaTeam::join('events', 'regatta_teams.regatta_id', '=', 'events.id')
+                ->where('regatta_teams.teamlink', $team->teamlink)
+                ->where('regatta_teams.status', 'Neuanmeldung')
+                ->where('events.datumbisa', '<', now()->format('Y-m-d'));
+
+            // IDs explizit und eindeutig aus regatta_teams lesen.
+            $teamIds = (clone $participationBaseQuery)
+                ->select('regatta_teams.id as team_id')
+                ->pluck('team_id')
+                ->unique()
+                ->values();
+
+            $participationCount = $teamIds->count();
+
+            if ($teamIds->isNotEmpty()) {
+
+                // Für die teilgenommenen Teams die letzten abgeschlossenen Ergebnisse laden
+                $lastResults = Lane::whereIn('mannschaft_id', $teamIds)
+                    ->whereHas('race', function ($q) {
+                        $q->where('status', 4)
+                              ->where('visible', 1)
+                              ->where(function ($query) {
+                                $today = now()->format('Y-m-d');
+                                $now = now()->format('H:i:s');
+                                $query->where('rennDatum', '<', $today)
+                                    ->orWhere(function ($q2) use ($today, $now) {
+                                        $q2->where('rennDatum', $today)
+                                         ->where('veroeffentlichungUhrzeit', '<=', $now);
+                                    });
+                          });
+                    })
+                    ->with('race')
+                    ->get()
+                    ->sortByDesc(function ($lane) {
+                        return ($lane->race?->rennDatum ?? '0000-00-00') . ' ' . ($lane->race?->rennUhrzeit ?? '00:00:00');
+                    })
+                    ->filter(function ($lane) {
+                        return $lane->race && $lane->race->event_id;
+                    })
+                    ->groupBy(function ($lane) {
+                        return $lane->race->event_id;
+                    })
+                    ->map(function ($lanesPerEvent) {
+                        return $lanesPerEvent->first();
+                    })
+                    ->values();
+            }
+        }
+
         // Nächste URL bestimmen
         $nextIndex = $teamIndex + 1;
         if ($nextIndex >= $teamCount) {
@@ -698,6 +759,8 @@ class PresentationController extends Controller
             'teamCount' => $teamCount,
             'nextUrl' => $nextUrl,
             'event' => $event,
+            'participationCount' => $participationCount,
+            'lastResults' => $lastResults,
         ]);
     }
 

@@ -18,4 +18,8 @@ class Lane extends Model
     {
         return $this->belongsTo(Tabele::class, 'tabele_id');
     }
+    public function race(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Race::class, 'rennen_id');
+    }
 }

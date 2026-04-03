@@ -5,8 +5,8 @@
 @section('head')
     @if($team)
         @php
-            $minTime = 10; // Mindestzeit in Sekunden
-            $charsPerSec = 40; // Pro 40 Zeichen 1 Sekunde zusätzlich
+            $minTime = config('presentation.times.team_profile', 10); // Mindestzeit in Sekunden
+            $charsPerSec = config('presentation.times.chars_per_sec', 40); // Pro 40 Zeichen 1 Sekunde zusätzlich
             $beschreibung = strip_tags($team->beschreibung ?? '');
             $extraTime = $beschreibung ? ceil(strlen($beschreibung) / $charsPerSec) : 0;
             $refreshTime = $minTime + $extraTime;
@@ -23,13 +23,40 @@
             </div>
             <div class="card-body text-center bg-light">
                 <h4 class="mb-2 text-primary">{{ $team->verein ?? '' }}</h4>
-                <div class="mb-2"><strong>Wertung:</strong> <span class="text-secondary">{{ $team->teamWertungsGruppe->typ }}</span></div>
+                @php
+                    $rennklasse = $team->teamWertungsGruppe?->typ ?? '-';
+                    $bootsklasse = $team->teamWertungsGruppe?->template?->typ ?? '-';
+                @endphp
+                @if($rennklasse === $bootsklasse)
+                    <div class="mb-2"><strong>Rennklasse:</strong> <span class="text-secondary">{{ $rennklasse }}</span></div>
+                @else
+                    <div class="mb-2"><strong>Rennklasse:</strong> <span class="text-secondary">{{ $rennklasse }}</span></div>
+                    <div class="mb-2"><strong>Bootsklasse:</strong> <span class="text-secondary">{{ $bootsklasse }}</span></div>
+                @endif
                 <div class="mb-2"><strong>Ort:</strong> <span class="text-secondary">{{ $team->ort ?? '-' }}</span></div>
+
+                @if($participationCount > 0)
+                    <div class="mb-2"><strong>Teilnahmen in dieser Bootsklasse:</strong> <span class="text-primary">{{ $participationCount }}</span></div>
+                @endif
+
+                @if($lastResults->count() > 0)
+                    <div class="mt-3 mb-2">
+                        <strong>Letzte Ergebnisse:</strong>
+                        <div class="d-flex justify-content-center flex-wrap gap-2 mt-1">
+                            @foreach($lastResults as $res)
+                                <div class="badge bg-secondary p-2">
+                                    Platz {{ $res->platz ?? '-' }} ({{ $res->race->rennBezeichnung ?? 'Rennen' }} {{ $res->race->rennDatum ? date('d.m.Y', strtotime($res->race->rennDatum)) : '-' }} {{ $team->teamWertungsGruppe?->typ ?? '-' }})
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
                 @if($team->beschreibung)
                     <div class="mb-3"><strong>Beschreibung:</strong><br>{!! $team->beschreibung !!}</div>
                 @endif
                 @if($team->bild)
-                    <img src="{{ env('REGATTA_URL') . '/storage/teamImage/' . $team->bild }}" alt="Teamfoto" class="img-fluid mb-3 rounded shadow" style="max-height:250px;">
+                    <img src="{{ config('app.regatta_url') . '/storage/teamImage/' . $team->bild }}" alt="Teamfoto" class="img-fluid mb-3 rounded shadow" style="max-height:250px;">
                 @endif
             </div>
         </div>

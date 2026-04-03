@@ -22,4 +22,16 @@ return [
         'teams_per_page' => 15,
         'table_rows_per_page' => 12,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Options
+    |--------------------------------------------------------------------------
+    |
+    | show_team_profiles: 1 = always show team profiles, 0 = only if no results exist
+    |
+    */
+    'options' => [
+        'show_team_profiles' => 0,
+    ],
 ];
