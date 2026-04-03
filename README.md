@@ -1,5 +1,5 @@
 <h1>Präsentation von Regatten</h1>
-<p>Version: V00.14.xx</p>
+<p>Version: V00.14.04</p>
 <p>
 Eingesetzt z.B. für die Rennsport- und Drachenbootregatta eines Kanu-Vereins
 </p>
@@ -79,7 +79,8 @@ Die Url hierfür ist:
 <p>
 Die SlideShow Funktion ermöglicht die automatische Präsentation von Ergebnissen, Tabellen und Livestreams auf einem Bildschirm. Einzelne Rennen oder Tabellen können gezielt für die Präsentation markiert werden. Die Anzeige wechselt automatisch zwischen den verschiedenen Ansichten.<br>
 Sie wird unter <b>http://[Domain]/Praesentation</b> abgerufen werden.<br>
-Ein Neustart  der Präsentation ist mit <b>http://[Domain]/Praesentation/Start</b> möglich.
+Ein Neustart der Präsentation ist mit <b>http://[Domain]/Praesentation/Start</b> möglich.<br>
+Die Anzeigezeiten und Seitenlimits (z.B. Teams pro Seite) können zentral in der Datei <b>config/presentation.php</b> angepasst werden.
 </p>
 
 <ul>

@@ -1,7 +1,11 @@
 @extends('layouts.presentation')
 
 @section('head')
-    <meta http-equiv="refresh" content="10;url={{ $redirectUrl }}">
+    @php
+        $rowCount = $race ? $race->lanes->whereNotNull('platz')->where('platz', '!=', 0)->count() : 0;
+        $refreshTime = config('presentation.times.base', 8) + $rowCount;
+    @endphp
+    <meta http-equiv="refresh" content="{{ $refreshTime }};url={{ $redirectUrl }}">
 @endsection
 
 @section('content')

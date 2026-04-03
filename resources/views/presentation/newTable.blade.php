@@ -9,7 +9,7 @@
 
     // Paginierung für Platzierungen
     $platzPage = (int) request()->query('platzPage', 1);
-    $platzProSeite = 12;
+    $platzProSeite = config('presentation.limits.table_rows_per_page', 12);
     $tabeledataShows = $table ? ($table->tabeledataShows ?? []) : [];
     // Sortierung: Punkte absteigend, dann Buchholzzahl absteigend
     $sorted = collect($tabeledataShows)->sort(function($a, $b) {
@@ -41,7 +41,11 @@
 
 @section('head')
     @if($table)
-        <meta http-equiv="refresh" content="10;url={{ $nextUrl }}">
+        @php
+            $currentRows = $platzierungenSeite->count();
+            $refreshTime = config('presentation.times.base', 8) + $currentRows;
+        @endphp
+        <meta http-equiv="refresh" content="{{ $refreshTime }};url={{ $nextUrl }}">
     @endif
 @endsection
 

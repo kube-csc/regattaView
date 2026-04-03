@@ -5,11 +5,11 @@
 @section('head')
     @if($info)
         @php
-            $minTime = 10; // Mindestzeit in Sekunden
-            $charsPerSec = 40; // Pro 40 Zeichen 1 Sekunde zusätzlich
+            $baseTime = config('presentation.times.base', 8); // Basiszeit in Sekunden
+            $charsPerSec = config('presentation.times.chars_per_sec', 40); // Pro 40 Zeichen 1 Sekunde zusätzlich
             $beschreibung = strip_tags($info->informationBeschreibung ?? '');
             $extraTime = $beschreibung ? ceil(strlen($beschreibung) / $charsPerSec) : 0;
-            $refreshTime = $minTime + $extraTime;
+            $refreshTime = $baseTime + $extraTime;
         @endphp
         <meta http-equiv="refresh" content="{{ $refreshTime }};url={{ $nextUrl }}">
     @else

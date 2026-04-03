@@ -10,12 +10,15 @@
         $rows = ceil($count / $columns);
         $filled = $rows * $columns;
         $page = request()->query('page', 1);
-        $teamsPerPage = 15;
+        $teamsPerPage = config('presentation.limits.teams_per_page', 15);
         $totalPages = max(1, ceil($count / $teamsPerPage));
         $page = max(1, min($page, $totalPages));
         $nextPage = $page < $totalPages ? $page + 1 : 1;
+
+        $baseTime = config('presentation.times.base', 8);
+        $refreshTime = $baseTime + count($teams);
     @endphp
-    <meta http-equiv="refresh" content="10;url={{ $nextUrl }}">
+    <meta http-equiv="refresh" content="{{ $refreshTime }};url={{ $nextUrl }}">
 @endsection
 
 @section('content')

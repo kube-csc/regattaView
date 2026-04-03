@@ -15,7 +15,12 @@
 
 @section('head')
     @if($race)
-        <meta http-equiv="refresh" content="10;url={{ $nextUrl }}">
+        @php
+            $results = $race->lanes->whereNotNull('platz')->where('platz', '!=', 0)->sortBy('platz');
+            $currentRows = $results->count();
+            $refreshTime = config('presentation.times.base', 8) + $currentRows;
+        @endphp
+        <meta http-equiv="refresh" content="{{ $refreshTime }};url={{ $nextUrl }}">
     @else
         <meta http-equiv="refresh" content="1;url={{ route('presentation.table') }}">
     @endif

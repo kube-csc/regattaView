@@ -3,7 +3,7 @@
 @section('title', 'Willkommen')
 
 @section('head')
-    <meta http-equiv="refresh" content="10;url={{ route('presentation.information') }}">
+    <meta http-equiv="refresh" content="{{ config('presentation.times.welcome', 8) }};url={{ route('presentation.information') }}">
 @endsection
 
 @section('content')

@@ -1,4 +1,15 @@
 ## Update Anleitung
+**Version V00.14.02
+**
+#Funktion
+- Zentralisierung aller Anzeigezeiten (Refresh-Intervalle) und Seitenlimits in `config/presentation.php`.
+- Umstellung auf dynamische Anzeigezeiten: 8 Sekunden Basiszeit + 1 Sekunde pro realer Zeile/Eintrag.
+- Implementierung eines dynamischen Hintergrundbilds (Abteilungsbild aus `sport_sections`), das einmalig pro Session ermittelt wird.
+- Verbesserung der Layout-Stabilität für Tabellen durch kontinuierliche Aktualisierung des Maximalwerts (`maximaleTabelleMerk`) auf allen Seiten.
+
+#Installation
+- Die Datei `config/presentation.php` muss vorhanden sein. Falls nicht, kann sie aus der Vorlage erstellt werden.
+
 **Version V00.14.01
 
 #Bugfixes

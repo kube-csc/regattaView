@@ -16,7 +16,11 @@
 
 @section('head')
     @if($race)
-        <meta http-equiv="refresh" content="10;url={{ $nextUrl }}">
+        @php
+            $currentLanes = $race->lanes->count();
+            $refreshTime = config('presentation.times.base', 8) + $currentLanes;
+        @endphp
+        <meta http-equiv="refresh" content="{{ $refreshTime }};url={{ $nextUrl }}">
     @else
         <meta http-equiv="refresh" content="0;url={{ $nextUrl }}">
     @endif
