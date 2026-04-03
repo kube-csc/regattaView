@@ -7,6 +7,7 @@ use App\Models\RegattaTeam;
 use App\Models\Race;
 use App\Models\Tabele;
 use App\Models\RegattaInformation;
+use App\Models\SportSection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
@@ -38,6 +39,29 @@ class PresentationController extends Controller
                 Session::put('regattaStarted', true);
             } else {
                 Session::put('regattaStarted', false);
+            }
+        }
+
+        // Hintergrundbild initialisieren
+        if (!Session::has('presentation_background_image')) {
+            $backgroundImage = null;
+            if ($this->event && $this->event->sportSection_id) {
+                $section = SportSection::find($this->event->sportSection_id);
+                if ($section && $section->bild) {
+                    $backgroundImage = str_replace('_', ' ', env('VEREIN_URL')) . "/storage/header/" . $section->bild;
+                }
+            }
+
+            // Fallback auf Standard-Abteilung (status = 1)
+            if (!$backgroundImage) {
+                $section = SportSection::where('status', '1')->first();
+                if ($section && $section->bild) {
+                    $backgroundImage = str_replace('_', ' ', env('VEREIN_URL')) . "/storage/header/" . $section->bild;
+                }
+            }
+
+            if ($backgroundImage) {
+                Session::put('presentation_background_image', $backgroundImage);
             }
         }
     }
@@ -830,7 +854,8 @@ class PresentationController extends Controller
             'abspielzeit',
             'lastVideoPlayedAt',
             'maximaleRennbahnMerk',
-            'maximaleTabelleMerk'
+            'maximaleTabelleMerk',
+            'presentation_background_image'
         ]);
         return redirect()->route('presentation.welcome');
     }

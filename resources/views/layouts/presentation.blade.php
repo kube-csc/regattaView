@@ -7,6 +7,17 @@
     <!-- Bootstrap CSS (optional, für einfaches Styling) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ asset('assets/css/presentation.css') }}" rel="stylesheet">
+    @if(Session::has('presentation_background_image'))
+        <style>
+            body {
+                background: url("{{ Session::get('presentation_background_image') }}") no-repeat center center fixed;
+                background-size: cover;
+            }
+            .slide-container {
+                background: rgba(0, 0, 0, 0.7);
+            }
+        </style>
+    @endif
     @yield('head')
 </head>
 <body>
