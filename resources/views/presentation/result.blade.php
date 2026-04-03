@@ -45,23 +45,34 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($race->lanes->sortBy('platz') as $lane)
-                            @if(isset($lane->platz) && $lane->platz != 0)
-                                <tr>
-                                    <td class="text-end">
-                                        {{ $lane->platz }}
-                                    </td>
-                                    <td class="text-end">{{ $lane->bahn }}</td>
-                                    <td class="text-start">
-                                        @if($lane->regattaTeam)
-                                            {{ $lane->regattaTeam->teamname }}
-                                        @else
-                                            Frei
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endif
+                        @php
+                            $maxLanes = session('maximaleRennbahnMerk', 0);
+                            $results = $race->lanes->whereNotNull('platz')->where('platz', '!=', 0)->sortBy('platz');
+                            $rowCount = 0;
+                        @endphp
+                        @foreach($results as $lane)
+                            @php $rowCount++; @endphp
+                            <tr>
+                                <td class="text-end">
+                                    {{ $lane->platz }}
+                                </td>
+                                <td class="text-end">{{ $lane->bahn }}</td>
+                                <td class="text-start">
+                                    @if($lane->regattaTeam)
+                                        {{ $lane->regattaTeam->teamname }}
+                                    @else
+                                        Frei
+                                    @endif
+                                </td>
+                            </tr>
                         @endforeach
+                        @for($i = $rowCount + 1; $i <= $maxLanes; $i++)
+                            <tr>
+                                <td class="text-end">&nbsp;</td>
+                                <td class="text-end">&nbsp;</td>
+                                <td class="text-start">&nbsp;</td>
+                            </tr>
+                        @endfor
                     </tbody>
                 </table>
             </div>

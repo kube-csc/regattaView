@@ -60,18 +60,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($race->lanes as $lane)
+                        @php
+                            $maxLanes = session('maximaleRennbahnMerk', 0);
+                            $lanes = $race->lanes->keyBy('bahn');
+                        @endphp
+                        @for($i = 1; $i <= $maxLanes; $i++)
+                            @php $lane = $lanes->get($i); @endphp
                             <tr>
-                                <td class="text-end" style="width:50%;">{{ $lane->bahn }}</td>
+                                <td class="text-end" style="width:50%;">{{ $i }}</td>
                                 <td class="text-start" style="width:50%;">
-                                    @if($lane->regattaTeam)
+                                    @if($lane && $lane->regattaTeam)
                                         {{ $lane->regattaTeam->teamname }}
                                     @else
                                         Frei
                                     @endif
                                 </td>
                             </tr>
-                        @endforeach
+                        @endfor
                     </tbody>
                 </table>
             </div>

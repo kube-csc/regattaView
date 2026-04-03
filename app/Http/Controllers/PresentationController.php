@@ -298,6 +298,17 @@ class PresentationController extends Controller
 
             $activeLevel = $races->first() ? $races->first()->level : null;
 
+            $raceIndex = request()->query('race', 0);
+            $currentRace = $races[$raceIndex] ?? null;
+
+            if ($currentRace) {
+                $currentMax = $currentRace->lanes->count();
+                $maxLanes = session('maximaleRennbahnMerk', 0);
+                if ($currentMax > $maxLanes) {
+                    session(['maximaleRennbahnMerk' => $currentMax]);
+                }
+            }
+
             return view('presentation.laneOccupancy', [
                 'races' => $races,
                 'event' => $event,
@@ -357,6 +368,17 @@ class PresentationController extends Controller
 
         $activeLevel = $races->first() ? $races->first()->level : null;
 
+        $raceIndex = request()->query('race', 0);
+        $currentRace = $races[$raceIndex] ?? null;
+
+        if ($currentRace) {
+            $currentMax = $currentRace->lanes->count();
+            $maxLanes = session('maximaleRennbahnMerk', 0);
+            if ($currentMax > $maxLanes) {
+                session(['maximaleRennbahnMerk' => $currentMax]);
+            }
+        }
+
         return view('presentation.laneOccupancy', [
             'races' => $races,
             'event' => $event,
@@ -394,6 +416,17 @@ class PresentationController extends Controller
         // Wenn keine Rennen vorhanden sind, direkt zur nächsten Präsentationsseite (Video)
         if ($races->isEmpty()) {
             return redirect()->route('presentation.video');
+        }
+
+        $raceIndex = request()->query('race', 0);
+        $currentRace = $races[$raceIndex] ?? null;
+
+        if ($currentRace) {
+            $currentMax = $currentRace->lanes->count();
+            $maxLanes = session('maximaleRennbahnMerk', 0);
+            if ($currentMax > $maxLanes) {
+                session(['maximaleRennbahnMerk' => $currentMax]);
+            }
         }
 
         return view('presentation.result', [
@@ -778,7 +811,8 @@ class PresentationController extends Controller
             'lastShownResultRennUhrzeit',
             'einspielerURL',
             'abspielzeit',
-            'lastVideoPlayedAt'
+            'lastVideoPlayedAt',
+            'maximaleRennbahnMerk'
         ]);
         return redirect()->route('presentation.welcome');
     }
