@@ -123,6 +123,25 @@
                                         </td>
                                     </tr>
                                 @endforeach
+                                @php
+                                    $maxTableRows = (int) session('maximaleTabelleMerk', 0);
+                                    // Wir füllen jede Seite bis zum Maximum auf, das wir für diese Tabelle oder historisch ermittelt haben.
+                                    // Da $maxTableRows im Controller für mehrseitige Tabellen bereits auf $platzProSeite (12) gesetzt wird,
+                                    // sollte jede Seite voll aufgefüllt werden.
+                                    // WICHTIG: Wir berechnen die Differenz nur basierend auf den Einträgen DIESER Seite ($platzierungenSeite->count()).
+                                    $toFill = max(0, $maxTableRows - $platzierungenSeite->count());
+                                @endphp
+                                @for($i = 0; $i < $toFill; $i++)
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        @if($table->buchholzwertungaktiv ?? false)
+                                            <td>&nbsp;</td>
+                                        @endif
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                @endfor
                             </tbody>
                         </table>
                     </div>

@@ -594,6 +594,23 @@ class PresentationController extends Controller
             return redirect()->route('presentation.video');
         }
 
+        $tableIndex = request()->query('table', 0);
+        $platzPage = (int) request()->query('platzPage', 1);
+        $currentTable = $tables[$tableIndex] ?? null;
+
+        if ($currentTable) {
+            $platzProSeite = 12; // Seitenumbruchswert
+            $currentCount = $currentTable->tabeledataShows->count();
+
+            // Wenn mehr als eine Seite vorhanden ist, ist das lokale Limit mindestens der Seitenumbruch
+            $currentMax = $currentCount > $platzProSeite ? $platzProSeite : $currentCount;
+
+            $maxTableRows = session('maximaleTabelleMerk', 0);
+            if ($currentMax > $maxTableRows) {
+                session(['maximaleTabelleMerk' => $currentMax]);
+            }
+        }
+
         return view('presentation.table', [
             'tables' => $tables,
             'event' => $event,
@@ -812,7 +829,8 @@ class PresentationController extends Controller
             'einspielerURL',
             'abspielzeit',
             'lastVideoPlayedAt',
-            'maximaleRennbahnMerk'
+            'maximaleRennbahnMerk',
+            'maximaleTabelleMerk'
         ]);
         return redirect()->route('presentation.welcome');
     }
