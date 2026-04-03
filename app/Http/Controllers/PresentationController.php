@@ -717,6 +717,9 @@ class PresentationController extends Controller
                     ->whereHas('race', function ($q) {
                         $q->where('status', 4)
                               ->where('visible', 1)
+                              ->whereHas('raceTabele', function ($q2) {
+                                  $q2->where('finale', 1);
+                              })
                               ->where(function ($query) {
                                 $today = now()->format('Y-m-d');
                                 $now = now()->format('H:i:s');

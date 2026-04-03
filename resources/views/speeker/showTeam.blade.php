@@ -61,6 +61,23 @@
                             <p>
                                 {!! $team->beschreibung !!}
                             </p>
+                            @if($participationCount > 0)
+                                <hr>
+                                <div class="mb-2"><strong>Teilnahmen:</strong> {{ $participationCount }}</div>
+                            @endif
+
+                            @if($lastResults->count() > 0)
+                                <div class="mt-3 mb-2">
+                                    <strong>Letzte Ergebnisse:</strong>
+                                    <div class="d-flex flex-wrap gap-2 mt-1">
+                                        @foreach($lastResults as $res)
+                                            <div class="badge bg-secondary p-2 mb-1 mr-1">
+                                                Platz {{ $res->platz ?? '-' }} ({{ $res->race->rennBezeichnung ?? 'Rennen' }} {{ $res->race->rennDatum ? date('d.m.Y', strtotime($res->race->rennDatum)) : '-' }})
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="col-md-6">

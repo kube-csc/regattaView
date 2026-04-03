@@ -494,6 +494,63 @@ class SpeekerController extends Controller
 
         $team = RegattaTeam::find($teamId);
 
+        // --- NEU: Teilnahme-Statistik für die Anzeige der letzten Ergebnisse ---
+        $participationCount = 0;
+        $lastResults = collect();
+
+        if ($team && $team->teamlink > 0) {
+            // Anzahl der Teilnahmen (via teamlink), nur für vergangene Events
+            $participationBaseQuery = RegattaTeam::join('events', 'regatta_teams.regatta_id', '=', 'events.id')
+                ->where('regatta_teams.teamlink', $team->teamlink)
+                ->where('regatta_teams.status', 'Neuanmeldung')
+                ->where('events.datumbisa', '<', now()->format('Y-m-d'));
+
+            // IDs explizit und eindeutig aus regatta_teams lesen.
+            $teamIds = (clone $participationBaseQuery)
+                ->select('regatta_teams.id as team_id')
+                ->pluck('team_id')
+                ->unique()
+                ->values();
+
+            $participationCount = $teamIds->count();
+
+            if ($teamIds->isNotEmpty()) {
+                // Für die teilgenommenen Teams die letzten abgeschlossenen Ergebnisse laden
+                $lastResults = Lane::whereIn('mannschaft_id', $teamIds)
+                    ->whereHas('race', function ($q) {
+                        $q->where('status', 4)
+                            ->where('visible', 1)
+                            ->whereHas('raceTabele', function ($q2) {
+                                $q2->where('finale', 1);
+                            })
+                            ->where(function ($query) {
+                                $today = now()->format('Y-m-d');
+                                $now = now()->format('H:i:s');
+                                $query->where('rennDatum', '<', $today)
+                                    ->orWhere(function ($q2) use ($today, $now) {
+                                        $q2->where('rennDatum', $today)
+                                            ->where('veroeffentlichungUhrzeit', '<=', $now);
+                                    });
+                            });
+                    })
+                    ->with('race')
+                    ->get()
+                    ->sortByDesc(function ($lane) {
+                        return ($lane->race?->rennDatum ?? '0000-00-00') . ' ' . ($lane->race?->rennUhrzeit ?? '00:00:00');
+                    })
+                    ->filter(function ($lane) {
+                        return $lane->race && $lane->race->event_id;
+                    })
+                    ->groupBy(function ($lane) {
+                        return $lane->race->event_id;
+                    })
+                    ->map(function ($lanesPerEvent) {
+                        return $lanesPerEvent->first();
+                    })
+                    ->values();
+            }
+        }
+
         $teamsChoose = RegattaTeam::where('regatta_id', $eventId)
             ->orderBy('teamname')
             ->get();
@@ -575,6 +632,8 @@ class SpeekerController extends Controller
               'victoCremony'      => $victoCremony,
               'victoCremonyTable' => $victoCremonyTable,
               'tabeledatas'       => $tabeledatas,
+              'participationCount' => $participationCount,
+              'lastResults'       => $lastResults,
            ]);
     }
 
