@@ -42,12 +42,25 @@
                 @if($lastResults->count() > 0)
                     <div class="mt-3 mb-2">
                         <strong>Letzte Ergebnisse:</strong>
-                        <div class="d-flex justify-content-center flex-wrap gap-2 mt-1">
-                            @foreach($lastResults as $res)
-                                <div class="badge bg-secondary p-2">
-                                    Platz {{ $res->platz ?? '-' }} ({{ $res->race->rennBezeichnung ?? 'Rennen' }} {{ $res->race->rennDatum ? date('d.m.Y', strtotime($res->race->rennDatum)) : '-' }} {{ $team->teamWertungsGruppe?->typ ?? '-' }})
-                                </div>
-                            @endforeach
+                        <div class="table-responsive mt-1">
+                            <table class="table table-sm table-bordered table-striped bg-white w-auto mx-auto">
+                                <thead class="table-secondary">
+                                    <tr>
+                                        <th class="text-center">Platz</th>
+                                        <th class="text-center">Rennen</th>
+                                        <th class="text-center">Datum</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($lastResults as $res)
+                                        <tr>
+                                            <td class="text-end fw-bold text-primary">Platz {{ $res->platz ?? '-' }}</td>
+                                            <td class="text-start">{{ $res->race->rennBezeichnung ?? 'Rennen' }}</td>
+                                            <td class="text-start text-muted small">{{ $res->race->rennDatum ? date('d.m.Y', strtotime($res->race->rennDatum)) : '-' }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 @endif

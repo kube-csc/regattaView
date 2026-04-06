@@ -32,18 +32,14 @@
                     </div>
                     <div class="col-md-6">
                         <div class="box">
-                            <a href="/Sprecher/Mannschaft/{{ $teamId }}/{{ $raceId }}" class="me-2">
-                                <button type="button" class="btn btn-secondary btn-sm ml-2">
-                                    <i class="bx bx-refresh"></i>
-                                </button>
+                            <a href="/Sprecher/Mannschaft/{{ $teamId }}/{{ $raceId }}" class="me-2 inline-block px-3 py-1 text-xs font-semibold leading-none text-white bg-gray-600 rounded-full">
+                                <i class="bx bx-refresh"></i>
                             </a>
-                            <a href="/Sprecher" class="me-2">
-                                <button type="button" class="btn btn-secondary btn-sm ml-2">
-                                    <i class="bx bx-time"></i>
-                                </button>
+                            <a href="/Sprecher" class="me-2 inline-block px-3 py-1 text-xs font-semibold leading-none text-white bg-gray-600 rounded-full">
+                                <i class="bx bx-time"></i>
                             </a>
-                            <a href="/Sprecher/{{ $raceId }}">
-                                <button type="button" class="btn btn-secondary btn-sm ml-2">Programm</button>
+                            <a href="/Sprecher/{{ $raceId }}" class="inline-block px-3 py-1 text-xs font-semibold leading-none text-white bg-gray-600 rounded-full">
+                                Programm
                             </a>
                         </div>
                     </div>
@@ -71,7 +67,7 @@
                                     <strong>Letzte Ergebnisse:</strong>
                                     <div class="d-flex flex-wrap gap-2 mt-1">
                                         @foreach($lastResults as $res)
-                                            <div class="badge bg-secondary p-2 mb-1 mr-1">
+                                            <div class="inline-block px-3 py-1 text-xs font-semibold leading-none text-white bg-gray-600 rounded-full mb-1 mr-1">
                                                 Platz {{ $res->platz ?? '-' }} ({{ $res->race->rennBezeichnung ?? 'Rennen' }} {{ $res->race->rennDatum ? date('d.m.Y', strtotime($res->race->rennDatum)) : '-' }})
                                             </div>
                                         @endforeach
@@ -132,8 +128,8 @@
                                             <div class="my-4">
                                                 @if($victoCremonyTable == 1)
                                                     <h2>
-                                                        <a href="/Sprecher/Tabelle/{{ $race->raceTabele->id }}/{{ $race->id }}" class="me-2">
-                                                            <button type="button" class="btn btn-primary btn-sm ml-2">Tabelle</button>
+                                                        <a href="/Sprecher/Tabelle/{{ $race->raceTabele->id }}/{{ $race->id }}" class="me-2 inline-block px-3 py-1 text-xs font-semibold leading-none text-white bg-gray-600 rounded-full">
+                                                            Tabelle
                                                         </a>
                                                         {{ $race->raceTabele->ueberschrift }}
                                                     </h2>
@@ -152,8 +148,8 @@
                                                         @endforeach
                                                         @if($race->raceTabele->fileTabelleDatei != Null)
                                                             <hr />
-                                                            <a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $race->raceTabele->tabelleDatei }}" target="_blank">
-                                                                <i class="bx bxs-file-doc"></i>Tabellen Dokument
+                                                            <a href="{{env('VEREIN_URL')}}/storage/tabeleDokumente/{{ $race->raceTabele->tabelleDatei }}" target="_blank" class="inline-block px-3 py-2 text-xs font-semibold leading-none text-white bg-gray-600 rounded-full">
+                                                                <i class="bx bxs-file-doc"></i> Tabellen Dokument
                                                             </a>
                                                         @endif
                                                     @endif
