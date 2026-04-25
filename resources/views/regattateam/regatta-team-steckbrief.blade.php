@@ -71,11 +71,11 @@
                                 @if($team->bild)
                                     <div class="position-relative d-inline-block w-100">
                                         <img
-                                            src="{{ config('app.regatta_url') . '/storage/teamImage/' . $team->bild }}"
+                                            src="{{ config('app.regatta_url') }}/storage/teamImage/{{ $team->bild }}"
                                             alt="Teamfoto"
                                             class="img-fluid rounded shadow-lg w-100 object-fit-cover"
                                             style="max-height: 55vh;"
-                                            onerror="if (!this.dataset.fallback){ this.dataset.fallback='1'; this.src='{{ asset('assets/img/keinBild.png') }}'; }"
+                                            onerror="if (!this.dataset.fallback){ this.dataset.fallback='1'; this.src='{{ config('app.regatta_url') }}/assets/img/keinBild.png'; }"
                                         >
                                         @if($fallbackYear)
                                             <div class="position-absolute bottom-0 end-0 bg-dark text-white p-2 small rounded-start opacity-75">
