@@ -1470,9 +1470,15 @@ section {
     padding-bottom: 0.25rem;
 }
 
+
 /*--------------------------------------------------------------
 # Steckbrief / Team-Profil
 --------------------------------------------------------------*/
+/* Default (Desktop): Label-Spalte hat feste Breite */
+.team-detail-label {
+    min-width: 12.5rem;
+}
+
 /* Auf kleinen & mittleren Screens (z.B. Handy, 2 Handys nebeneinander, kleine Tablets)
    sollen Label und Wert untereinander stehen. Erst ab "lg" wieder zweispaltig. */
 @media (max-width: 991.98px) {
@@ -1490,3 +1496,18 @@ section {
         margin-left: 0 !important;
     }
 }
+
+/* Ab "lg" (Desktop-/Breitbild): Labels sollen nicht innerhalb der Label-Spalte umbrechen,
+   damit der Umbruch (untereinander) für alle Felder konsistent erst am Breakpoint passiert. */
+@media (min-width: 992px) {
+    .team-detail-label {
+        white-space: nowrap;
+    }
+}
+
+/* Lange URLs (z.B. Webseite) sollen auch bei schmalen Breiten sauber umbrechen */
+.team-detail-value,
+.team-detail-value a {
+    overflow-wrap: anywhere;
+}
+
