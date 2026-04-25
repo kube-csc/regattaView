@@ -1,5 +1,5 @@
 <h1>Präsentation von Regatten</h1>
-<p>Version: V00.14.04</p>
+<p>Version: V00.14.02</p>
 <p>
 Eingesetzt z.B. für die Rennsport- und Drachenbootregatta eines Kanu-Vereins
 </p>
@@ -42,12 +42,22 @@ benötigt.
         <li>verloste Rennen</li>
         <li>gewertete Rennen</li>
         <li>Tabellen</li>
+        <li>Team-Steckbriefe
+          <ul>
+            <li>Direkter Zugriff über Links in Bahnbelegung und Ergebnislisten</li>
+            <li>Teamdetails: Verein, Rennklasse, Bootsklasse, Ort</li>
+            <li>Teilnahmestatistik und letzte Erfolge aus vergangenen Events</li>
+            <li>Umschaltbarer Filter: nur Finale oder alle Ergebnisse</li>
+            <li>Fallback-Bilder aus früheren Regatten</li>
+            <li>Navigation durch alle Teams des aktuellen Events (zyklisch)</li>
+          </ul>
+        </li>
       </ul> 
     </li>
     <li>Footer
       <ul>
         <li>Links zu Webseiten der Abteilungen/Sportgruppen</li>
-        <li>Impresssum</li>
+        <li>Impressum</li>
         <li>Datenschutzerklärung</li>
       </ul>
     </li>
@@ -64,6 +74,24 @@ Alternativ kann ein Rennen auch als aktuell in der Regattaverwaltung angepint we
     <li>http://[Domain]/OBSLive/Ergebnissall</li>
     <li>http://[Domain]/OBSLive/Bahnbelegung</li>
     <li>http://[Domain]/OBSLive/Naechstesrennen</li>
+</ul>
+
+<h2>Team-Steckbrief</h2>
+<p>
+  Der Team-Steckbrief bietet eine detaillierte Übersicht über ein Team mit seinen Erfolgen und Statistiken.
+  Er wird direkt aus der Bahnbelegung oder Ergebnisliste über das Symbol <code>bx bx-detail</code> aufgerufen.
+</p>
+<ul>
+  <li><strong>Verfügbar unter:</strong> <code>http://[Domain]/Regattateam/Steckbrief/{teamId}</code></li>
+  <li><strong>Datenquellen:</strong>
+    <ul>
+      <li>Aktuelle Teaminformationen aus dem aktuellen Event</li>
+      <li>Teilnahmehistorie: Anzahl vergangener Teilnahmen in der gleichen Bootsklasse</li>
+      <li>Erfolgsstatistik: letzte Platzierungen aus abgeschlossenen Regatten</li>
+    </ul>
+  </li>
+  <li><strong>Filter:</strong> <code>?finale=1</code> (Standard, nur Finale) oder <code>?finale=0</code> (alle Ergebnisse)</li>
+  <li><strong>Navigation:</strong> zyklische Navigation durch alle Teams des aktuellen Events (Zurück/Weiter)</li>
 </ul>
 
 <h2>Live Sprecherinformation</h2>
@@ -109,7 +137,7 @@ zum GitHub Projekt Vereinsverwaltung ab V00.10.xx
    <li>Composer herunterladen curl -sS https://getcomposer.org/installer</li>
    <li>Installation des Composer</li>
    <li>composer.phar install</li>
-   <li>in Ordner "public sind die folgenden Dateien anzulegen:
+   <li>In Ordner "public sind die folgenden Dateien anzulegen:
    <ul>
      <li>apple-touch-icon.png</li>
      <li>favicon.ico</li>
@@ -121,7 +149,7 @@ zum GitHub Projekt Vereinsverwaltung ab V00.10.xx
    <li>git pull origin main</li>
 </ul>
 <h2>Zugehörige Projekte</h2>
-<h3>Regatta Managment</h3>  
+<h3>Regatta Management</h3>  
 <p>
     Meldeportal für Teilnehmer für Regatten<br>
     Die Version V00.01.XX <a href="https://github.com/kube-csc/regattamanager.git" target="_blank">https://github.com/kube-csc/regattamanager.git</a> 

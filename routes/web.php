@@ -10,6 +10,7 @@ use App\Http\Controllers\SpeekerController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\InstructionController;
 use App\Http\Controllers\PresentationController;
+use App\Http\Controllers\RaceTeamController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,9 +39,10 @@ Route::get('/Ergebnisse',                                          [ProgramContr
 
 Route::get('/Bahnbelegung/{raceId}',                          [ProgramController::class, 'laneOccupancy'])        ->name('program.laneOccupancy');
 Route::get('/Ergebnis/{raceId}',                                   [ProgramController::class, 'result'])               ->name('program.result');
+Route::get('/Regattateam/Steckbrief/{teamId?}',         [RaceTeamController::class, 'steckbrief'])          ->name('RegattaTeam.steckbrief');
 
 Route::get('/Tabellen',                                                   [TabeleController::class, 'index'])                   ->name('table.index');
-Route::get('Tabelle/{tableId}',                                        [TabeleController::class, 'show'])                   ->name('table.show');
+Route::get('/Tabelle/{tableId}',                                        [TabeleController::class, 'show'])                   ->name('table.show');
 
 Route::get('/Dokumente',                                              [DokumenteController::class, 'index'])            ->name('dokumente.index');
 

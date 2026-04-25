@@ -110,6 +110,11 @@
                                 <td>
                                     @if($lane->mannschaft_id)
                                         {{ $lane->regattaTeam->teamname }}
+                                        <a href="{{ route('RegattaTeam.steckbrief', ['teamId' => $lane->mannschaft_id]) }}"
+                                           class="ml-2"
+                                           title="Steckbrief anzeigen">
+                                            <i class="bx bx-detail"></i>
+                                         </a>
                                     @else
                                         Frei
                                     @endif
