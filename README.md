@@ -63,10 +63,25 @@ benötigt.
     </li>
 </ul>
 
+<h2>Dynamischer Header / Hero-Bereich</h2>
+<p>
+Der Header der Anwendung passt sich automatisch an die aufgerufene Domain an.
+Die Einrichtung erfolgt in der <strong>Vereinsverwaltung</strong> unter dem Menüpunkt <strong>Vereinsserver</strong>.
+Dort werden die benötigten Angaben in einem Formular eingegeben – es sind keine Datenbankänderungen von Hand notwendig.
+</p>
+<ul>
+  <li><strong>Hero-Hintergrundbild:</strong> Ist für eine Domain ein Headerbild hinterlegt, wird dieses als vollflächiges Hintergrundbild im oberen Seitenbereich (Hero) angezeigt. Das Bild wird aus dem Datei-Speicher des Vereinsservers geladen.</li>
+  <li><strong>Akzentfarbe:</strong> Ist für eine Domain eine Akzentfarbe hinterlegt, wird diese automatisch auf den Header, den Footer-Balken, Buttons und den Zurück-nach-oben-Button angewendet. So erhält jede Domain ihr eigenes Corporate Design, ohne eigene CSS-Dateien anlegen zu müssen.</li>
+  <li><strong>Fallback:</strong> Ist kein Bild und keine Farbe hinterlegt, greift das Standard-Design der Anwendung.</li>
+</ul>
+<p>
+Technische Details und Einrichtungshinweise sind in der Datei <code>resources/views/layouts/headerPrompt.md</code> dokumentiert.
+</p>
+
 <h2>Live Einblendung z.B. OBS</h2>
 <p>
 Es gibt URL's für sie Einblendung für aktuelle Renninformationen. Diesen können z.B. in OBS eingebunden werden.
-Es wird immer die aktuellen Daten eingetragen, wenn die Ergebnisse zeitgleichen mit den aktullen Rennen erfolgt.
+Es wird immer die aktuellen Daten eingetragen, wenn das Ergebnis zeitgleich mit den aktullen Rennen erfolgt.
 Alternativ kann ein Rennen auch als aktuell in der Regattaverwaltung angepint werden.
 </p>
 <ul>

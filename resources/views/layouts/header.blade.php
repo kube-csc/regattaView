@@ -1,91 +1,85 @@
 <!-- Template Main CSS File abgeändert bei verschieden Ausgaben -->
 <?php
-$serverdomain=$_SERVER["HTTP_HOST"];
+$serverdomain = parse_url(url('/'), PHP_URL_HOST);
+$serverdomain = str_replace('www.', '', $serverdomain);
 
-if(isset($sportSectionSearch)){
- $abteilungStyls  = DB::table('sport_sections')->where('abteilung' , $sportSectionSearch)->get();
- }
- else{
-  $abteilungStyls = DB::table('sport_sections')->where('status' , '1')->orwhere('domain',$serverdomain)->orderby('status')->get();
- }
+$eventGroupHeader = DB::table('event_groups')
+    ->where('domain', $serverdomain)
+    ->where('visible', 1)
+    ->orderby('id', 'desc')
+    ->first();
 
-$abteilungStylsCount = $abteilungStyls->count();
+$eventGroupHeaderBild = null;
+if (!empty($eventGroupHeader?->headerBild)) {
+    $eventGroupHeaderBild = str_replace('_', ' ', env('VEREIN_URL'))."/storage/groupEventHeader/".$eventGroupHeader->headerBild;
+}
 
-$i=0;
+$eventGroupAccentColor = trim((string) ($eventGroupHeader?->accentColor ?? ''));
+if ($eventGroupAccentColor === '') {
+    $eventGroupAccentColor = null;
+}
 ?>
+
 <style>
 
-@foreach ( $abteilungStyls as $abteilungStyl)
-    @php
-    //dd($abteilungStyl);
-        ++$i;
-    @endphp
-    @if ($i == $abteilungStylsCount)
-
-          @if( $abteilungStyl->bild<>'' )
-            @php
-             $header = str_replace('_' , ' ' , env('VEREIN_URL'))."/storage/header/".$abteilungStyl->bild;
-           @endphp
-           #hero {
-                    width: 100%;
-                    height: 100vh;
-                    background: url("{{ $header }}") top center;
-                    background-size: cover;
-                    position: relative;
-                    margin-bottom: -90px;
-                }
-           @endif
-           @if( $abteilungStyl->farbe<>'' )
-                @php
-                    $farbe= $abteilungStyl->farbe;
-                @endphp
-
-          #header {
-               transition: all 0.5s;
-               z-index: 997;
-               transition: all 0.5s;
-               padding: 15px 0;
-               background: rgba(<?php echo $farbe ;?>);
-           }
-
-          #header.header-scrolled {
-              background: rgba(<?php echo $farbe ;?>);
-              padding: 0;
-          }
-
-          #footer .footer-top .footer-info {
-              border-top: 4px solid rgba(<?php echo $farbe ;?>);
-          }
-
-          .about .content .about-btn {
-              background: rgba(<?php echo $farbe ;?>);
-          }
-
-          .back-to-top {
-              background: rgba(<?php echo $farbe ;?>);
-          }
-
-          /* @media (max-width: 768px) { */
-          @media (max-width: 995px) {
-              #header.header-scrolled {
-                  padding: 15px 0;
-              }
-
-          #footer .footer-top .footer-info {
-              border-top: 4px solid rgba(<?php echo $farbe ;?>);
-          }
-
-          .about .content .about-btn {
-              background: rgba(<?php echo $farbe ;?>);
-          }
-
-          .back-to-top {
-
-              background: rgba(<?php echo $farbe ;?>);
-          }
-
-
-           @endif
+    @if($eventGroupHeaderBild)
+    #hero {
+        width: 100%;
+        height: 100vh;
+        background: url("{{ $eventGroupHeaderBild }}") top center;
+        background-size: cover;
+        position: relative;
+        margin-bottom: -90px;
+    }
     @endif
-@endforeach
+
+@if($eventGroupAccentColor)
+
+ #header {
+        transition: all 0.5s;
+        z-index: 997;
+        transition: all 0.5s;
+        padding: 15px 0;
+        background: {{ $eventGroupAccentColor }};
+    }
+
+    #header.header-scrolled {
+        background: {{ $eventGroupAccentColor }} !important;
+        padding: 0px;
+    }
+
+    #footer .footer-top .footer-info {
+        border-top: 4px solid {{ $eventGroupAccentColor }};
+    }
+
+    .about .content .about-btn {
+        background: {{ $eventGroupAccentColor }};
+    }
+
+    .back-to-top {
+        background: {{ $eventGroupAccentColor }};
+    }
+
+    /* @media (max-width: 768px) { */
+    @media (max-width: 995px) {
+        #header.header-scrolled {
+            background: {{ $eventGroupAccentColor }} !important;
+            padding: 15px 0;
+        }
+
+        #footer .footer-top .footer-info {
+            border-top: 4px solid {{ $eventGroupAccentColor }};
+        }
+
+        .about .content .about-btn {
+            background: {{ $eventGroupAccentColor }};
+        }
+
+        .back-to-top {
+            background: {{ $eventGroupAccentColor }};
+        }
+
+    }
+    @endif
+
 </style>

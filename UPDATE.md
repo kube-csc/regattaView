@@ -1,7 +1,8 @@
 ## Update Anleitung
+
 **Version V00.14.02**
 
-#Funktion
+#Funktion History und Presentation
 - Zentralisierung aller Anzeigezeiten (Refresh-Intervalle) und Seitenlimits in `config/presentation.php`.
 - Umstellung auf dynamische Anzeigezeiten: 8 Sekunden Basiszeit + 1 Sekunde pro realer Zeile/Eintrag.
 - Implementierung eines dynamischen Hintergrundbilds (Abteilungsbild aus `sport_sections`), das einmalig pro Session ermittelt wird.
@@ -17,6 +18,18 @@
 
 #Installation
 - Die Datei `config/presentation.php` muss vorhanden sein. Falls nicht, kann sie aus der Vorlage erstellt werden.
+
+#Funktion Header
+- Dynamischer Header / Hero-Bereich: Der Header der Anwendung passt sich automatisch an die aufgerufene Domain an.
+    - Für jede Domain kann in der Vereinsverwaltung unter dem Menüpunkt **Vereinsserver** ein Hero-Hintergrundbild hinterlegt werden, das als vollflächiges Bild im oberen Seitenbereich erscheint.
+    - Zusätzlich kann dort eine Akzentfarbe für Header, Footer-Balken, Buttons und den Zurück-nach-oben-Button festgelegt werden.
+    - Sind kein Bild und keine Farbe hinterlegt, greift das Standard-Design.
+    - Die Eingabe erfolgt über ein Formular in der Vereinsverwaltung – es sind keine manuellen Datenbankänderungen erforderlich.
+
+#Installation
+- In der Vereinsverwaltung unter **Vereinsserver** die Einstellungen für die gewünschten Domains eintragen (Headerbild und/oder Akzentfarbe).
+- Den Laravel-Storage-Symlink einrichten, falls noch nicht vorhanden (`php artisan storage:link`).
+- Den Wert `VEREIN_URL` in der `.env`-Datei setzen (keine Unterstriche verwenden).
 
 **Version V00.14.01
 

@@ -86,8 +86,23 @@
     <div class="hero-container" data-aos="fade-up">
 
         <?php
+            $serverdomain = $_SERVER['HTTP_HOST'] ?? '';
+            $eventGroupHeader = DB::table('event_groups')
+                ->where('domain', $serverdomain)
+                ->where('visible', 1)
+                ->orderby('id', 'desc')
+                ->first();
+
             $Verein = str_replace('_', ' ', env('VEREIN_NAME'));
             $Slogen = str_replace('_', ' ', env('VEREIN_SLOGEN'));
+
+            if (!empty($eventGroupHeader?->headerTitel)) {
+                $Verein = str_replace('_', ' ', $eventGroupHeader->headerTitel);
+            }
+
+            if (!empty($eventGroupHeader?->headerSlogen)) {
+                $Slogen = str_replace('_', ' ', $eventGroupHeader->headerSlogen);
+            }
         ?>
 
         <h1>{{ $Verein }}</h1>
