@@ -11,7 +11,7 @@ $eventGroupHeader = DB::table('event_groups')
 
 $eventGroupHeaderBild = null;
 if (!empty($eventGroupHeader?->headerBild)) {
-    $eventGroupHeaderBild = str_replace('_', ' ', env('VEREIN_URL'))."/storage/groupEventHeader/".$eventGroupHeader->headerBild;
+    $eventGroupHeaderBild = env('VEREIN_URL')."/storage/groupEventHeader/".$eventGroupHeader->headerBild;
 }
 
 $eventGroupAccentColor = trim((string) ($eventGroupHeader?->accentColor ?? ''));

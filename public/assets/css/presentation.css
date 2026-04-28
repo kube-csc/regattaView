@@ -3,10 +3,16 @@ body {
     color: #fff;
 }
 .slide-container {
-    min-height: 90vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+@supports (height: 100dvh) {
+    .slide-container {
+        min-height: 100dvh;
+    }
 }
 .slide {
     background: rgba(0,0,0,0.7);

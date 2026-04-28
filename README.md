@@ -123,8 +123,33 @@ Die Url hierfür ist:
 Die SlideShow Funktion ermöglicht die automatische Präsentation von Ergebnissen, Tabellen und Livestreams auf einem Bildschirm. Einzelne Rennen oder Tabellen können gezielt für die Präsentation markiert werden. Die Anzeige wechselt automatisch zwischen den verschiedenen Ansichten.<br>
 Sie wird unter <b>http://[Domain]/Praesentation</b> abgerufen werden.<br>
 Ein Neustart der Präsentation ist mit <b>http://[Domain]/Praesentation/Start</b> möglich.<br>
-Die Anzeigezeiten und Seitenlimits (z.B. Teams pro Seite) können zentral in der Datei <b>config/presentation.php</b> angepasst werden.
+Die Anzeigezeiten und Seitenlimits (z.B. Teams pro Seite) sind in <b>config/presentation.php</b> als Standardwerte definiert.<br>
+Lokale Anpassungen sollen in <b>config/presentation_options.php</b> vorgenommen werden.<br>
+Diese Datei muss vorher aus <b>config/presentation_options.example.php</b> erstellt werden.
+Zusätzlich gibt es in den Optionen u.a. den Schalter <code>show_background_image</code> (1 = aktiv, 0 = aus).
 </p>
+
+<h3>Update-sichere lokale Konfiguration der SlideShow</h3>
+<p>
+Damit lokale Anpassungen bei Updates nicht überschrieben werden, unterstützt die Anwendung eine lokale Override-Datei:
+</p>
+<ul>
+  <li>Zuerst <code>config/presentation_options.php</code> aus <code>config/presentation_options.example.php</code> erstellen.</li>
+  <li>Basiswerte liegen in <code>config/presentation.php</code>.</li>
+  <li>Anschließend nur die gewünschten lokalen Abweichungen in <code>config/presentation_options.php</code> setzen.</li>
+  <li>Die Datei <code>config/presentation_options.example.php</code> enthält alle verfügbaren Werte als auskommentierte Vorlage.</li>
+  <li>Beim Laden der Konfiguration werden lokale Werte rekursiv über <code>array_replace_recursive(...)</code> über die Basiswerte gelegt.</li>
+  <li><code>config/presentation_options.php</code> ist in <code>.gitignore</code> eingetragen und bleibt bei Updates erhalten.</li>
+</ul>
+<p>
+Empfehlung: <strong>Nur</strong> lokale Abweichungen in <code>config/presentation_options.php</code> pflegen und <code>config/presentation.php</code> als Update-Standard unverändert lassen.
+</p>
+
+<ul>
+  <li><strong>Entwicklung:</strong> Nach Änderungen an <code>config/presentation_options.php</code> <code>php artisan config:clear</code> ausführen.</li>
+  <li><strong>Produktion:</strong> Nach dem Clear zusätzlich <code>php artisan config:cache</code> ausführen.</li>
+  <li><strong>Hinweis:</strong> Ohne Refresh des Config-Caches werden Änderungen ggf. nicht sofort wirksam.</li>
+</ul>
 
 <ul>
   <li>Willkommensseite (Welcome)</li>
@@ -142,7 +167,7 @@ Die Anzeigezeiten und Seitenlimits (z.B. Teams pro Seite) können zentral in der
 <p>
 Für die Verwaltung der Regatta muss die APP Vereinsverwaltung installiert werden.
 <a href="https://github.com/kube-csc/vereinsverwaltung" target="_blank"></a>
-zum GitHub Projekt Vereinsverwaltung ab V00.10.xx
+zum GitHub Projekt Vereinsverwaltung ab V00.10.05
 </p>
 
 <h2>Installation</h2>

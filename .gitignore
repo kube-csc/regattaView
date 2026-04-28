@@ -16,3 +16,5 @@ yarn-error.log
 vorlage
 /public/apple-touch-icon.png
 /public/favicon.ico
+*Prompt*
+/config/presentation_options.php

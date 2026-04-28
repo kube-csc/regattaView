@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     @php
-        $vereinsname = str_replace('_', ' ', env('VEREIN_DOMAIN'));
+        $vereinsname = env('VEREIN_DOMAIN');
     @endphp
     <title> @yield( 'title' , '$vereinsname' ) </title>
     @php
@@ -52,7 +52,7 @@
     <div class="container d-flex align-items-center">
 
         <div class="logo mr-auto">
-            <h1 class="text-light"><a href="{{env('APP_URL')}}"><span>{{ str_replace('_' , ' ' , env('VIEWREGATTA_DOMAIN')) }}</span></a></h1>
+            <h1 class="text-light"><a href="{{env('APP_URL')}}"><span>{{ env('VIEWREGATTA_DOMAIN') }}</span></a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="index.html"><img src="/assets/img/logo.png" alt="" class="img-fluid"></a> -->
         </div>
@@ -86,9 +86,10 @@
     <div class="hero-container" data-aos="fade-up">
 
         <?php
-            $serverdomain = $_SERVER['HTTP_HOST'] ?? '';
+            $serverdomain = parse_url(url('/'), PHP_URL_HOST);
+            $serverdomain = str_replace('www.', '', $serverdomain);
             $eventGroupHeader = DB::table('event_groups')
-                ->where('domain', $serverdomain)
+                ->where('liveDomain', $serverdomain)
                 ->where('visible', 1)
                 ->orderby('id', 'desc')
                 ->first();
@@ -97,11 +98,11 @@
             $Slogen = str_replace('_', ' ', env('VEREIN_SLOGEN'));
 
             if (!empty($eventGroupHeader?->headerTitel)) {
-                $Verein = str_replace('_', ' ', $eventGroupHeader->headerTitel);
+                $Verein = $eventGroupHeader->headerTitel;
             }
 
             if (!empty($eventGroupHeader?->headerSlogen)) {
-                $Slogen = str_replace('_', ' ', $eventGroupHeader->headerSlogen);
+                $Slogen = $eventGroupHeader->headerSlogen;
             }
         ?>
 

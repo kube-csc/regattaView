@@ -11,6 +11,7 @@ use App\Models\SportSection;
 use App\Models\Lane;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class PresentationController extends Controller
@@ -43,21 +44,33 @@ class PresentationController extends Controller
             }
         }
 
+        // Hintergrundbild nur laden, wenn in der Konfiguration aktiviert
+        if (!config('presentation.options.show_background_image', 1)) {
+            Session::forget('presentation_background_image');
+            return;
+        }
+
         // Hintergrundbild initialisieren
         if (!Session::has('presentation_background_image')) {
+            $serverdomain = parse_url(url('/'), PHP_URL_HOST);
+            $serverdomain = str_replace('www.', '', $serverdomain);
+
             $backgroundImage = null;
-            if ($this->event && $this->event->sportSection_id) {
-                $section = SportSection::find($this->event->sportSection_id);
-                if ($section && $section->bild) {
-                    $backgroundImage = str_replace('_', ' ', env('VEREIN_URL')) . "/storage/header/" . $section->bild;
-                }
+            $eventGroupHeader = DB::table('event_groups')
+                ->where('liveDomain', $serverdomain)
+                ->where('visible', 1)
+                ->orderby('id', 'desc')
+                ->first();
+
+            if ($eventGroupHeader && $eventGroupHeader->headerBild) {
+                $backgroundImage = env('VEREIN_URL')."/storage/groupEventHeader/". $eventGroupHeader->headerBild;
             }
 
-            // Fallback auf Standard-Abteilung (status = 1)
+            // Fallback auf SportSection-Header Bild, wenn kein Event Group Header Bild vorhanden ist
             if (!$backgroundImage) {
-                $section = SportSection::where('status', '1')->first();
+                $section = SportSection::find($this->event->sportSection_id);
                 if ($section && $section->bild) {
-                    $backgroundImage = str_replace('_', ' ', env('VEREIN_URL')) . "/storage/header/" . $section->bild;
+                    $backgroundImage = env('VEREIN_URL') . "/storage/header/" . $section->bild;
                 }
             }
 

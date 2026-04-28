@@ -1,6 +1,6 @@
 <?php
 
-return [
+$presentation = [
     /*
     |--------------------------------------------------------------------------
     | Presentation Settings
@@ -29,9 +29,22 @@ return [
     |--------------------------------------------------------------------------
     |
     | show_team_profiles: 1 = always show team profiles, 0 = only if no results exist
+    | show_background_image: 1 = show presentation background image, 0 = disable it
     |
     */
     'options' => [
         'show_team_profiles' => 0,
+        'show_background_image' => 1,
     ],
 ];
+
+$localOverrideFile = __DIR__ . '/presentation_options.php';
+if (is_file($localOverrideFile)) {
+    $localOverrides = include $localOverrideFile;
+    if (is_array($localOverrides)) {
+        $presentation = array_replace_recursive($presentation, $localOverrides);
+    }
+}
+
+return $presentation;
+
