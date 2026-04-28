@@ -327,7 +327,7 @@ class PresentationController extends Controller
                 ->where('visible', 1)
                 ->orderBy('level')
                 ->orderBy('rennDatum')
-                ->orderBy('rennZeit')
+                ->orderBy('rennUhrzeit')
                 ->get();
 
             if ($races->isEmpty()) {
@@ -397,7 +397,7 @@ class PresentationController extends Controller
             ->where('visible', 1)
             ->orderBy('level')
             ->orderBy('rennDatum')
-            ->orderBy('rennZeit')
+            ->orderBy('rennUhrzeit')
             ->get();
 
         if ($races->isEmpty()) {
@@ -448,7 +448,7 @@ class PresentationController extends Controller
             ->where('visible', 1)
             ->whereRaw("(CONCAT(rennDatum, ' ', veroeffentlichungUhrzeit) <= ?)", [$now->format('Y-m-d H:i:s')])
             ->orderBy('rennDatum')
-            ->orderBy('rennZeit')
+            ->orderBy('rennUhrzeit')
             ->get();
 
         // Wenn keine Rennen vorhanden sind, direkt zur nächsten Präsentationsseite (Video)
