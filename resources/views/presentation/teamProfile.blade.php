@@ -33,7 +33,24 @@
                     <div class="mb-2"><strong>Rennklasse:</strong> <span class="text-secondary">{{ $rennklasse }}</span></div>
                     <div class="mb-2"><strong>Bootsklasse:</strong> <span class="text-secondary">{{ $bootsklasse }}</span></div>
                 @endif
-                <div class="mb-2"><strong>Ort:</strong> <span class="text-secondary">{{ $team->ort ?? '-' }}</span></div>
+                @php
+                    $plz = trim((string) ($team->plz ?? ''));
+                    $ort = trim((string) ($team->ort ?? ''));
+
+                    // 99999 is used as placeholder and should not be displayed.
+                    if ($plz === '99999') {
+                        $plz = '';
+                    }
+
+                    if (mb_strtolower($ort) === 'nicht angegeben') {
+                        $ort = '';
+                    }
+
+                    $ortAnzeige = trim($plz . ' ' . $ort);
+                @endphp
+                @if($ortAnzeige !== '')
+                    <div class="mb-2"><strong>Ort:</strong> <span class="text-secondary">{{ $ortAnzeige }}</span></div>
+                @endif
 
                 @if($participationCount > 0)
                     <div class="mb-2"><strong>Teilnahmen in dieser Bootsklasse:</strong> <span class="text-primary">{{ $participationCount }}</span></div>

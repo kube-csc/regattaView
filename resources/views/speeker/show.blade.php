@@ -99,7 +99,7 @@
                                 <p>
                                     @if($raceNext1->status < 2)
                                         <br>Rennen noch nicht gesetzt<br><br>
-                                    @else
+                                    @elseif($raceNext1->status >= 2)
                                     @foreach($lanesNext1 as $lane)
                                         @include('components.raceProgram', ['raceNext' => $raceNext1])
                                     @endforeach
@@ -200,7 +200,7 @@
                                 @endif
                                 @if($raceNext1->status < 2)
                                     <p>Rennen noch nicht gesetzt</p>
-                                @else
+                                @elseif($raceNext1->status >= 2)
                                     <p>
                                         Ergebnis wird auf der Siegerehrung bekannt gegeben.
                                     </p>
@@ -261,7 +261,7 @@
                                 <p>
                                     @if($raceNext2->status < 2)
                                         <br>Rennen noch nicht gesetzt<br><br>
-                                    @else
+                                    @elseif($raceNext2->status >= 2)
                                           @foreach($lanesNext2 as $lane)
                                                @include('components.raceProgram', ['raceNext' => $raceNext2])
                                           @endforeach
@@ -365,7 +365,7 @@
                                 @endif
                                 @if($raceNext2->status < 2)
                                         <p>Rennen noch nicht gesetzt</p>
-                                @else
+                                @elseif($raceNext2->status >= 2)
                                     <p>
                                         Ergebnis wird auf der Siegerehrung bekannt gegeben.
                                     </p>

@@ -54,6 +54,23 @@
                         <div class="box">
                             <!-- Content for the first box -->
                             <h2>{{ $team->teamname }}</h2>
+                            @php
+                                $plzAnzeige = trim((string) ($team->plz ?? ''));
+                                $ortAnzeige = trim((string) ($team->ort ?? ''));
+
+                                if ($plzAnzeige === '99999') {
+                                    $plzAnzeige = '';
+                                }
+
+                                if (mb_strtolower($ortAnzeige) === 'nicht angegeben') {
+                                    $ortAnzeige = '';
+                                }
+
+                                $ortZeile = trim($plzAnzeige . ' ' . $ortAnzeige);
+                            @endphp
+                            @if($ortZeile !== '')
+                                <p><strong>Ort:</strong> {{ $ortZeile }}</p>
+                            @endif
                             <p>
                                 {!! $team->beschreibung !!}
                             </p>
@@ -88,7 +105,7 @@
                                 @else
                                     <h2>{{ $race->nummer }} / {{ $race->rennBezeichnung }}</h2>
                                 @endif
-                                @if($race->status < 2)
+                                @if($race->status == 0)
                                 <p>Rennen noch nicht gesetzt</p>
                                 @endif
                                 @if($race->status == 2 or ($victoCremony == 0 and $race->status == 4))

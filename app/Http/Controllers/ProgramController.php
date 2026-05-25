@@ -41,6 +41,8 @@ class ProgramController extends Controller
             $racesQuery->whereHas('lanes', function($q) use ($teamFilter) {
                 $q->where('mannschaft_id', $teamFilter);
             });
+            // Bei aktivem Team-Filter nur bestaetigte Rennen anzeigen.
+            $racesQuery->where('status', '>', 1);
         }
         $races = $racesQuery->get();
 

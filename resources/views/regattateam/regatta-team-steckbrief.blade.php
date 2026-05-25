@@ -130,10 +130,24 @@
                                             </div>
                                         @endif
 
-                                        @if($team->ort)
+                                        @php
+                                            $plzAnzeige = trim((string) ($team->plz ?? ''));
+                                            $ortAnzeige = trim((string) ($team->ort ?? ''));
+
+                                            if ($plzAnzeige === '99999') {
+                                                $plzAnzeige = '';
+                                            }
+
+                                            if (mb_strtolower($ortAnzeige) === 'nicht angegeben') {
+                                                $ortAnzeige = '';
+                                            }
+
+                                            $ortZeile = trim($plzAnzeige . ' ' . $ortAnzeige);
+                                        @endphp
+                                        @if($ortZeile !== '')
                                             <div class="d-flex align-items-baseline team-detail-row">
                                                 <div class="font-weight-bold text-right team-detail-label">Ort:</div>
-                                                <div class="text-primary ml-2 team-detail-value">{{ $team->ort }}</div>
+                                                <div class="text-primary ml-2 team-detail-value">{{ $ortZeile }}</div>
                                             </div>
                                         @endif
 
@@ -159,9 +173,16 @@
                                 --}}
                                 */
                                 @endphp
-                                @if($lastResults->count() > 0)
+                                @php
+                                    $sichtbareResults = $lastResults->filter(function ($res) {
+                                        return (int) ($res->race->status ?? 0) >= 2;
+                                    })->values();
+                                @endphp
+                                @if($sichtbareResults->count() > 0)
                                     <div class="mt-auto">
-                                        <h4 class="border-bottom pb-2">Letzte Erfolge</h4>
+                                        <h4 class="border-bottom pb-2">
+                                            {{ $finaleOnly ? 'Letzte Erfolge' : 'Teilnahmen mit Ergebnissen' }}
+                                        </h4>
                                         <div class="table-responsive aos-erfolge-anchor">
                                             <table class="table table-striped table-bordered bg-white shadow-sm">
                                                 <thead class="table-dark">
@@ -172,8 +193,9 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="fs-5">
-                                                    @foreach($lastResults as $res)
-                                                        <tr>
+                                                 // foreach($lastResults as $res)
+                                                 @foreach($sichtbareResults as $res)
+                                                      <tr>
                                                             @php
                                                                 $aosDelay = 200 + ($loop->index * 300);
                                                             @endphp
