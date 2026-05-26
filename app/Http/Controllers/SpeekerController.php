@@ -8,13 +8,17 @@ use App\Models\Race;
 use App\Models\RegattaTeam;
 use App\Models\Tabele;
 use App\Models\Tabledata;
+use App\Services\EventSelectionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 class SpeekerController extends Controller
 {
-    public function __construct()
+    private EventSelectionService $eventSelectionService;
+
+    public function __construct(EventSelectionService $eventSelectionService)
     {
+        $this->eventSelectionService = $eventSelectionService;
         $currentDateTime = Carbon::now();
         $this->currentDate = $currentDateTime->toDateString();
         $this->currentTime = $currentDateTime->toTimeString();
@@ -28,13 +32,13 @@ class SpeekerController extends Controller
         $vorId=0;
         $nachId=0;
         if (is_Null($speekerId)) {
-            $event = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-                ->where('events.regatta' , '1')
-                ->where('events.verwendung' , 0)
-                ->orderby('events.datumvon' , 'desc')
-                ->first();
+            $event = $this->eventSelectionService->getCurrentRegattaEvent();
 
-            $eventId=$event->event_id;
+            if (!$event) {
+                return view('speeker.empty');
+            }
+
+            $eventId = $event->id;
             $now=Carbon::now()->toDateString();
 
             if($now < $event->datumvon) {
@@ -482,13 +486,13 @@ class SpeekerController extends Controller
 
     public function teamShow($teamId, $raceId)
     {
-        $event = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-            ->where('events.regatta' , '1')
-            ->where('events.verwendung' , 0)
-            ->orderby('events.datumvon' , 'desc')
-            ->first();
+        $event = $this->eventSelectionService->getCurrentRegattaEvent();
 
-        $eventId=$event->event_id;
+        if (!$event) {
+            return view('speeker.empty');
+        }
+
+        $eventId = $event->id;
 
         $race = Race::find($raceId);
 
@@ -647,13 +651,13 @@ class SpeekerController extends Controller
 
     public function tabeleShow($tableId, $raceId)
     {
-        $event = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-            ->where('events.regatta' , '1')
-            ->where('events.verwendung' , 0)
-            ->orderby('events.datumvon' , 'desc')
-            ->first();
+        $event = $this->eventSelectionService->getCurrentRegattaEvent();
 
-        $eventId=$event->event_id;
+        if (!$event) {
+            return view('speeker.empty');
+        }
+
+        $eventId = $event->id;
 
         $race = Race::find($raceId);
 

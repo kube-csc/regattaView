@@ -193,7 +193,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="fs-5">
-                                                 // foreach($lastResults as $res)
+
                                                  @foreach($sichtbareResults as $res)
                                                       <tr>
                                                             @php

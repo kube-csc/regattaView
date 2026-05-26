@@ -8,10 +8,17 @@ use App\Http\Requests\UpdateDokumenteRequest;
 use App\Models\Event;
 use App\Models\Report;
 use App\Models\Tabele;
+use App\Services\EventSelectionService;
 use Illuminate\Support\Carbon;
 
 class DokumenteController extends Controller
 {
+    private EventSelectionService $eventSelectionService;
+
+    public function __construct(EventSelectionService $eventSelectionService)
+    {
+        $this->eventSelectionService = $eventSelectionService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -19,18 +26,9 @@ class DokumenteController extends Controller
      */
     public function index()
     {
-        $events = Event::join('races as ra', 'events.id', '=', 'ra.event_id')
-            ->where('events.regatta', '1')
-            ->where('events.verwendung', 0)
-            ->orderby('events.datumvon', 'desc')
-            ->limit(1)
-            ->get();
+        $event = $this->eventSelectionService->getCurrentRegattaEvent();
 
-        // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
-        $eventId = 0;
-        foreach ($events as $event) {
-            $eventId = $event->event_id;
-        }
+        $eventId = $event?->id ?? 0;
 
         $temp = 0;
         $eventDokumentes = Report::where('event_id', $eventId)

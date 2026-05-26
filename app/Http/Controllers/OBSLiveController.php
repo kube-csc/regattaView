@@ -5,11 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Lane;
 use App\Models\Race;
+use App\Services\EventSelectionService;
 use Illuminate\Support\Carbon;
 
 class OBSLiveController extends Controller
 {
+    private EventSelectionService $eventSelectionService;
     public $eventId=0;
+
+    public function __construct(EventSelectionService $eventSelectionService)
+    {
+        $this->eventSelectionService = $eventSelectionService;
+    }
     public function result()
     {
         $eventId = $this->eventId();
@@ -195,18 +202,13 @@ class OBSLiveController extends Controller
 
     public function eventId()
     {
-        $events = Event::join('races as ra', 'events.id', '=', 'ra.event_id')
-            ->where('events.regatta', '1')
-            ->where('events.verwendung', 0)
-            ->orderby('events.datumvon', 'desc')
-            ->limit(1)
-            ->get();
+        $event = $this->eventSelectionService->getCurrentRegattaEvent();
 
-        foreach ($events as $event) {
-            $eventId = $event->event_id;
+        if ($event) {
+            return $event->id;
         }
 
-        return $eventId;
+        return 0;
     }
 
 }
