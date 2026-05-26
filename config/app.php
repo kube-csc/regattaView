@@ -58,7 +58,7 @@ return [
 
     'regatta_url' => env('REGATTA_URL', env('APP_URL', 'http://localhost')),
 
-    'verein_domain' => env('VEREIN_DOMAIN', env('APP_URL', 'http://localhost')),
+    'verein_url' => env('VEREIN_URL', env('APP_URL', 'http://localhost')),
 
     /*
     |--------------------------------------------------------------------------
