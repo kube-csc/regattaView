@@ -32,7 +32,7 @@ class SpeekerController extends Controller
         $vorId=0;
         $nachId=0;
         if (is_Null($speekerId)) {
-            $event = $this->eventSelectionService->getCurrentRegattaEvent();
+            $event = $this->eventSelectionService->getNextRegattaEventWithAnmeldetext(14);
 
             if (!$event) {
                 return view('speeker.empty');
@@ -486,7 +486,7 @@ class SpeekerController extends Controller
 
     public function teamShow($teamId, $raceId)
     {
-        $event = $this->eventSelectionService->getCurrentRegattaEvent();
+        $event = $this->eventSelectionService->getNextRegattaEventWithAnmeldetext(14);
 
         if (!$event) {
             return view('speeker.empty');
@@ -651,7 +651,7 @@ class SpeekerController extends Controller
 
     public function tabeleShow($tableId, $raceId)
     {
-        $event = $this->eventSelectionService->getCurrentRegattaEvent();
+        $event = $this->eventSelectionService->getNextRegattaEventWithAnmeldetext(14);
 
         if (!$event) {
             return view('speeker.empty');

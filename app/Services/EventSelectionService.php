@@ -8,21 +8,6 @@ use Illuminate\Support\Facades\Cache;
 
 class EventSelectionService
 {
-    /**
-     * Liefert das aktuelle Regatta-Event (verwendung=0).
-     */
-    public function getCurrentRegattaEvent(): ?Event
-    {
-        $cacheKey = 'events:current_regatta:verwendung0';
-
-        return Cache::remember($cacheKey, now()->addMinutes(10), function () {
-            return Event::query()
-                ->where('events.regatta', 1)
-                ->where('events.verwendung', 0)
-                ->orderByDesc('events.datumvon')
-                ->first();
-        });
-    }
 
     /**
      * Liefert das naechste Regatta-Event mit Anmeldetext.

@@ -202,7 +202,7 @@ class OBSLiveController extends Controller
 
     public function eventId()
     {
-        $event = $this->eventSelectionService->getCurrentRegattaEvent();
+        $event = $this->eventSelectionService->getNextRegattaEventWithAnmeldetext(14);
 
         if ($event) {
             return $event->id;

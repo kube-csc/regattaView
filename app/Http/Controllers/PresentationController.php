@@ -115,7 +115,7 @@ class PresentationController extends Controller
 
     private function getCurrentEvent()
     {
-        return $this->eventSelectionService->getCurrentRegattaEvent();
+        return $this->eventSelectionService->getNextRegattaEventWithAnmeldetext(14);
     }
 
     /**

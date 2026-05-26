@@ -26,7 +26,7 @@ class DokumenteController extends Controller
      */
     public function index()
     {
-        $event = $this->eventSelectionService->getCurrentRegattaEvent();
+        $event = $this->eventSelectionService->getNextRegattaEventWithAnmeldetext(14);
 
         $eventId = $event?->id ?? 0;
 

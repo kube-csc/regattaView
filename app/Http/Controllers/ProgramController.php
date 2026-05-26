@@ -513,6 +513,6 @@ class ProgramController extends Controller
      */
     private function getCurrentEvent(): ?Event
     {
-        return $this->eventSelectionService->getCurrentRegattaEvent();
+        return $this->eventSelectionService->getNextRegattaEventWithAnmeldetext(14);
     }
 }
