@@ -100,25 +100,24 @@ class EventSelectionService
 
     /**
      * Liefert das naechste Regatta-Event mit Anmeldetext.
-     * Beruecksichtigt nur Events (verwendung=0), die aktuell laufen
-     * oder innerhalb des Vorlauf-Fensters starten.
+     * Zeigt das Event solange an, bis das naechste Event in 14 Tagen ansteht.
      */
     public function getNextRegattaEventWithAnmeldetext(int $daysBefore = 14): ?Event
     {
         $today = Carbon::today()->toDateString();
-        $showFromDate = Carbon::today()->addDays($daysBefore)->toDateString();
+        $dateBefore = Carbon::today()->addDays($daysBefore)->toDateString();
         $baseDomain = $this->getCurrentBaseDomain();
 
         $cacheKey = sprintf(
-            'events:next_regatta:anmeldetext:verwendung0:days_%d:today_%s:domain_%s',
+            'events:current_anmeldetext:verwendung0:days_%d:today_%s:domain_%s',
             $daysBefore,
             $today,
             $baseDomain !== '' ? $baseDomain : 'none'
         );
 
         // Kurzer Cache reduziert DB-Last, reagiert aber zeitnah auf Aenderungen.
-        return Cache::remember($cacheKey, now()->addMinutes(15), function () use ($today, $showFromDate, $baseDomain) {
-            $events = Event::query()
+        return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($dateBefore, $today, $daysBefore, $baseDomain) {
+            $baseQuery = Event::query()
                 ->join('event_groups', 'events.eventGroup_id', '=', 'event_groups.id')
                 ->where('events.regatta', 1)
                 ->where('events.verwendung', 0)
@@ -127,19 +126,67 @@ class EventSelectionService
                 ->whereRaw("TRIM(event_groups.liveDomain) <> ''")
                 ->whereNotNull('events.anmeldetext')
                 ->whereRaw("TRIM(events.anmeldetext) <> ''")
-                ->whereDate('events.datumbis', '>=', $today)
-                ->whereDate('events.datumvon', '<=', $showFromDate)
-                ->select('events.*', 'event_groups.liveDomain as event_group_domain')
-                ->orderBy('events.datumvon')
-                ->get();
+                ->select('events.*', 'event_groups.liveDomain as event_group_domain');
 
-            if ($baseDomain === '') {
-                return $events->first();
+            // Wenn baseDomain gesetzt ist, filtere nur Events dieser Domain
+            if ($baseDomain !== '') {
+                $baseQuery->where('event_groups.liveDomain', 'LIKE', '%' . $baseDomain . '%');
             }
 
-            return $events->first(function (Event $event) use ($baseDomain) {
-                return $this->normalizeDomain((string) $event->event_group_domain) === $baseDomain;
-            });
+            $query = clone $baseQuery;
+            $query->whereDate('events.datumvon', '<=', $dateBefore)  // nur Events die jetzt laufen oder in $daysBefore Tage starten
+                ->whereDate('events.datumbis', '>=', $today)          // keine Events die bereits abgelaufen sind
+                ->orderBy('events.datumvon');
+
+            $allEvents = $query->get();
+
+            if ($allEvents->isEmpty()) {
+                // Kein aktuelles oder zukünftiges Event gefunden – letztes abgelaufenes Event anzeigen
+                $lastExpiredQuery = clone $baseQuery;
+                $lastExpired = $lastExpiredQuery
+                    ->whereDate('events.datumbis', '<', $today)
+                    ->orderByDesc('events.datumbis')
+                    ->orderByDesc('events.datumvon')
+                    ->first();
+
+                return $lastExpired ?? null;
+            }
+
+            // Laufende Events haben die hoechste Prioritaet.
+            $runningEvent = $allEvents
+                ->where('datumvon', '<=', $today)
+                ->where('datumbis', '>=', $today)
+                ->last();
+
+            if ($runningEvent) {
+                return $runningEvent;
+            }
+
+            // Sonst: letztes bereits gestartetes Event.
+            $currentEvent = $allEvents->where('datumvon', '<=', $today)->last();
+
+            // Falls es noch kein gestartetes Event gibt, nimm das erste kommende.
+            if (!$currentEvent) {
+                $currentEvent = $allEvents->first();
+            }
+
+            if (!$currentEvent) {
+                return null;
+            }
+
+            // Wenn das naechste Event 14 Tage vorher ansteht, auf dieses umschalten.
+            $nextEvent = $allEvents->where('datumvon', '>', $currentEvent->datumvon)->first();
+            if ($nextEvent) {
+                $switchDate = Carbon::createFromFormat('Y-m-d', $nextEvent->datumvon)
+                    ->subDays($daysBefore)
+                    ->toDateString();
+
+                if ($today >= $switchDate) {
+                    return $nextEvent;
+                }
+            }
+
+            return $currentEvent;
         });
     }
 
