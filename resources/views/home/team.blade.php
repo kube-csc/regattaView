@@ -17,6 +17,7 @@
                 @php
                     $delay=50;
                     $delayname ="data-aos-delay=\"".$delay."\"";
+                    $vereinDomain = rtrim((string) config('app.verein_domain', config('app.url')), '/');
                 @endphp
                 @foreach($boards as $board)
                     <div class="col-lg-3 col-md-6" >
@@ -27,10 +28,10 @@
                                         @endif
                                         <div class="pic">
                                             @if(isset($board->postenPortraet))
-                                                <img src="{{ env('VEREIN_URL') }}/storage/boardPortrait/{{ $board->postenPortraet }}" class="img-fluid"
+                                                <img src="{{ $vereinDomain }}/storage/boardPortrait/{{ $board->postenPortraet }}" class="img-fluid"
                                                      alt="{{ $board->geschlecht=='m' ? $board->postenMaenlich : $board->postenWeiblich }}">
                                             @else
-                                                <img src="{{ env('VEREIN_URL') }}/asset/img/postenLeer.jpg" class="img-fluid">
+                                                <img src="{{ $vereinDomain }}/assets/img/postenLeer.jpg" class="img-fluid">
                                             @endif
                                         </div>
                                         <div class="member-info">

@@ -1,6 +1,14 @@
 ## Update Anleitung
-
 **Version V00.14.02**
+## Presentation
+- Ergebnisse und Bahnbelegung werden nun konsequent nach `rennDatum` und `rennUhrzeit` sortiert.
+- Bei aktivem Team-Filter werden im Programm nur Rennen mit `status > 1` angezeigt.
+- Der Team-Steckbrief blendet Platzhalterwerte wie `PLZ = 99999` und `Ort = nicht angegeben` aus.
+
+## Sprecher 
+- Im Team-Steckbrief und in der Sprecheransicht werden Platzhalterwerte wie `PLZ = 99999` und `Ort = nicht angegeben` nicht mehr angezeigt.
+- Rennen mit `status = 1` werden als terminlich vorgemerkt behandelt und geben keinen Zustands-Text mehr aus.
+- In den Sprecheransichten werden nur bestätigte Rennen mit `status >= 2` angezeigt, wenn die entsprechende Ausgabe aufgerufen wird.
 
 ## Presentation
 - Neue Option `show_background_image` in `config/presentation.php`:
@@ -20,7 +28,6 @@
 - Anpassungen für die Präsentation künftig in `config/presentation_options.php` vornehmen (nicht direkt in `config/presentation.php`).
 - Nur lokal abweichende Werte in `config/presentation_options.php` setzen.
 - Bei aktiviertem Config-Cache nach Änderungen `php artisan config:clear` ausführen.
-
 
 ## History und Presentation
 **Neu: Presentation**
