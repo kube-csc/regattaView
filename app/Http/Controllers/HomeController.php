@@ -30,6 +30,7 @@ class HomeController extends Controller
     public function index()
     {
         $selectedEvent = $this->eventSelectionService->getNextRegattaEventWithAnmeldetext(14);
+        $hasTable = $this->eventSelectionService->currentEventHasVisibleTables(14);
         $events = $selectedEvent ? collect([$selectedEvent]) : collect();
 
         $eventId = 0;
@@ -127,7 +128,8 @@ class HomeController extends Controller
                 'raceProgrammCount'       => $raceProgrammCount,
                 'raceResoultCount'           => $raceResoultCount,
                 'eventDokumentes'          => $eventDokumentes,
-                'regattaInformations'        => $regattaInformations
+                'regattaInformations'        => $regattaInformations,
+                'hasTable'                   => $hasTable,
             ]
         );
     }

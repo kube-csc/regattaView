@@ -8,13 +8,19 @@
 
 @section('content')
 
+    @php
+        $hasTable = (bool) ($hasTable ?? false);
+    @endphp
+
     <main id="main">
 
         @include('home.regatta')
 
-        @include('home.ctaSection')
+        @if($hasTable)
+            @include('home.ctaSection')
 
-        @include('home.counts')
+            @include('home.counts')
+        @endif
 
         <! -- include('home.testimonials') -->
 

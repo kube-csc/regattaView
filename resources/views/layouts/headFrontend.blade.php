@@ -51,6 +51,13 @@
 <header id="header" class="fixed-top header-transparent">
     <div class="container d-flex align-items-center">
 
+        @php
+            $hasTable = (bool) (
+                $hasTable
+                ?? app(\App\Services\EventSelectionService::class)->currentEventHasVisibleTables(14)
+            );
+        @endphp
+
         <div class="logo mr-auto">
             <h1 class="text-light"><a href="{{env('APP_URL')}}"><span>{{ env('VIEWREGATTA_DOMAIN') }}</span></a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
@@ -61,19 +68,23 @@
             <ul>
                 <!-- <li class="active"><a href="index.html">Home</a></li> -->
                 <li class="{{ Request::is('home') ? 'active' : '' }}"><a href="/#about">Home</a></li>
-                <li><a href="/#portfolio">Aktueller Stand</a></li>
+                @if($hasTable)
+                    <li><a href="/#portfolio">Aktueller Stand</a></li>
+                @endif
                 <li><a href="/#team">Team</a></li>
-                <li class="drop-down"><a href="">Programm</a>
-                    <ul>
-                        <li><a href="/Programm">alle Rennen</a></li>
-                        <li><a href="/Programm/geplante">geplante Rennen</a></li>
-                        <li><a href="/Ergebnisse">gewertete Rennen</a></li>
-                        <li><a href="/Tabellen">Tabellen</a></li>
-                        @if(session('team_filter_possible', true))
-                            <li><a href="{{ route('program.selectTeamFilter') }}">Team filtern</a></li>
-                        @endif
-                    </ul>
-                </li>
+                @if($hasTable)
+                    <li class="drop-down"><a href="">Programm</a>
+                        <ul>
+                            <li><a href="/Programm">alle Rennen</a></li>
+                            <li><a href="/Programm/geplante">geplante Rennen</a></li>
+                            <li><a href="/Ergebnisse">gewertete Rennen</a></li>
+                            <li><a href="/Tabellen">Tabellen</a></li>
+                            @if(session('team_filter_possible', true))
+                                <li><a href="{{ route('program.selectTeamFilter') }}">Team filtern</a></li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
                 <li><a href="/Dokumente">Dokumente</a></li>
                 <li><a href="/#contact">Kontakt</a></li>
             </ul>

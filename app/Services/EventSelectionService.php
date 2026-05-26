@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Event;
+use App\Models\Tabele;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -116,7 +117,7 @@ class EventSelectionService
         );
 
         // Kurzer Cache reduziert DB-Last, reagiert aber zeitnah auf Aenderungen.
-        return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($today, $showFromDate, $baseDomain) {
+        return Cache::remember($cacheKey, now()->addMinutes(15), function () use ($today, $showFromDate, $baseDomain) {
             $events = Event::query()
                 ->join('event_groups', 'events.eventGroup_id', '=', 'event_groups.id')
                 ->where('events.regatta', 1)
@@ -139,6 +140,26 @@ class EventSelectionService
             return $events->first(function (Event $event) use ($baseDomain) {
                 return $this->normalizeDomain((string) $event->event_group_domain) === $baseDomain;
             });
+        });
+    }
+
+    /**
+     * Prueft gecacht, ob das aktuelle Event mindestens eine sichtbare Tabelle hat.
+     */
+    public function currentEventHasVisibleTables(int $daysBefore = 14): bool
+    {
+        $event = $this->getNextRegattaEventWithAnmeldetext($daysBefore);
+
+        if (!$event) {
+            return false;
+        }
+
+        $cacheKey = sprintf('events:%d:has_visible_tables', $event->id);
+
+        return Cache::remember($cacheKey, now()->addMinutes(20), function () use ($event) {
+            return Tabele::where('event_id', $event->id)
+                ->where('tabelleVisible', 1)
+                ->exists();
         });
     }
 }
