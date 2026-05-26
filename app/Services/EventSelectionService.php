@@ -5,9 +5,41 @@ namespace App\Services;
 use App\Models\Event;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class EventSelectionService
 {
+    /**
+     * Liefert die passende Event-Group fuer die aktuelle Domain.
+     * Wird fuer Headerbild/Titel verwendet und gecacht.
+     */
+    public function getCurrentEventGroupHeader(): ?object
+    {
+        $baseDomain = $this->getCurrentBaseDomain();
+
+        $cacheKey = sprintf(
+            'event_groups:header:visible:domain_%s',
+            $baseDomain !== '' ? $baseDomain : 'none'
+        );
+
+        return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($baseDomain) {
+            $eventGroups = DB::table('event_groups')
+                ->where('visible', 1)
+                ->orderByDesc('id')
+                ->get();
+
+            if ($baseDomain === '') {
+                return $eventGroups->first();
+            }
+
+            return $eventGroups->first(function ($eventGroup) use ($baseDomain) {
+                $groupDomain = (string) ($eventGroup->liveDomain ?? '');
+
+                return $this->normalizeDomain($groupDomain) === $baseDomain;
+            });
+        });
+    }
+
     /**
      * Extrahiert die Basis-Domain ohne Subdomain aus einem Hostnamen.
      */
@@ -90,13 +122,13 @@ class EventSelectionService
                 ->where('events.regatta', 1)
                 ->where('events.verwendung', 0)
                 ->where('event_groups.visible', 1)
-                ->whereNotNull('event_groups.domain')
-                ->whereRaw("TRIM(event_groups.domain) <> ''")
+                ->whereNotNull('event_groups.liveDomain')
+                ->whereRaw("TRIM(event_groups.liveDomain) <> ''")
                 ->whereNotNull('events.anmeldetext')
                 ->whereRaw("TRIM(events.anmeldetext) <> ''")
                 ->whereDate('events.datumbis', '>=', $today)
                 ->whereDate('events.datumvon', '<=', $showFromDate)
-                ->select('events.*', 'event_groups.domain as event_group_domain')
+                ->select('events.*', 'event_groups.liveDomain as event_group_domain')
                 ->orderBy('events.datumvon')
                 ->get();
 

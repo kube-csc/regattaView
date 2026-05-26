@@ -84,15 +84,8 @@
 
 <section id="hero">
     <div class="hero-container" data-aos="fade-up">
-
-        <?php
-            $serverdomain = parse_url(url('/'), PHP_URL_HOST);
-            $serverdomain = str_replace('www.', '', $serverdomain);
-            $eventGroupHeader = DB::table('event_groups')
-                ->where('liveDomain', $serverdomain)
-                ->where('visible', 1)
-                ->orderby('id', 'desc')
-                ->first();
+        @php
+            $eventGroupHeader = app(\App\Services\EventSelectionService::class)->getCurrentEventGroupHeader();
 
             $Verein = str_replace('_', ' ', env('VEREIN_NAME'));
             $Slogen = str_replace('_', ' ', env('VEREIN_SLOGEN'));
@@ -104,7 +97,7 @@
             if (!empty($eventGroupHeader?->headerSlogen)) {
                 $Slogen = $eventGroupHeader->headerSlogen;
             }
-        ?>
+        @endphp
 
         <h1>{{ $Verein }}</h1>
         <h2>{{ $Slogen }}</h2>

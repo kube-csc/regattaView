@@ -58,15 +58,8 @@ class PresentationController extends Controller
 
         // Hintergrundbild initialisieren
         if (!Session::has('presentation_background_image')) {
-            $serverdomain = parse_url(url('/'), PHP_URL_HOST);
-            $serverdomain = str_replace('www.', '', $serverdomain);
-
             $backgroundImage = null;
-            $eventGroupHeader = DB::table('event_groups')
-                ->where('liveDomain', $serverdomain)
-                ->where('visible', 1)
-                ->orderby('id', 'desc')
-                ->first();
+            $eventGroupHeader = app(\App\Services\EventSelectionService::class)->getCurrentEventGroupHeader();
 
             if ($eventGroupHeader && $eventGroupHeader->headerBild) {
                 $backgroundImage = env('VEREIN_URL')."/storage/groupEventHeader/". $eventGroupHeader->headerBild;
