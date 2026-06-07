@@ -7,6 +7,7 @@ use App\Models\Program;
 use App\Models\Event;
 use App\Models\Race;
 use App\Models\RegattaTeam;
+use App\Services\EventSelectionService;
 use App\Http\Requests\StoreProgramRequest;
 use App\Http\Requests\UpdateProgramRequest;
 use Illuminate\Http\Request;
@@ -15,6 +16,13 @@ use Illuminate\Support\Facades\Session;
 
 class ProgramController extends Controller
 {
+    private EventSelectionService $eventSelectionService;
+
+    public function __construct(EventSelectionService $eventSelectionService)
+    {
+        $this->eventSelectionService = $eventSelectionService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,13 +30,9 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        $events = $this->getCurrentEventsQuery()->get();
-
-        // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
-        $eventId=0;
-        foreach($events as $event) {
-           $eventId=$event->event_id;
-        }
+        $event = $this->getCurrentEvent();
+        $eventId = $event?->id ?? 0;
+        $eventTitle = $event?->ueberschrift ?? '';
 
         $teamFilter = session('team_filter');
         $teamFilterActive = session('team_filter_active', true);
@@ -49,7 +53,7 @@ class ProgramController extends Controller
         return view('program.index')->with([
                 'races'        => $races,
                 'ueberschrift' => 'Programm von allen Rennen',
-                'event'        => $events->first()->ueberschrift,
+                'event'        => $eventTitle,
                 'teamFilter'   => $teamFilter ? RegattaTeam::find($teamFilter) : null,
                 'teamFilterActive' => $teamFilterActive,
             ]);
@@ -57,15 +61,9 @@ class ProgramController extends Controller
 
     public function indexNotResult()
     {
-        $events = $this->getCurrentEventsQuery()
-            ->where('ra.visible', 1)   // ToDo: Events können noch nicht mit visible abgefragt werden
-            ->get();
-
-        // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
-        $eventId=0;
-        foreach($events as $event) {
-            $eventId=$event->event_id;
-        }
+        $event = $this->getCurrentEvent();
+        $eventId = $event?->id ?? 0;
+        $eventTitle = $event?->ueberschrift ?? '';
 
         $teamFilter = session('team_filter');
         $teamFilterActive = session('team_filter_active', true);
@@ -91,7 +89,7 @@ class ProgramController extends Controller
             [
                 'races'        => $races,
                 'ueberschrift' => 'Programm von verlosten Rennen die noch nicht gestartet sind.',
-                'event'        => $events->first()->ueberschrift,
+                'event'        => $eventTitle,
                 'teamFilter'   => $teamFilter ? RegattaTeam::find($teamFilter) : null,
                 'teamFilterActive' => $teamFilterActive,
             ]);
@@ -99,15 +97,9 @@ class ProgramController extends Controller
 
     public function indexResult()
     {
-        $events = $this->getCurrentEventsQuery()
-            ->where('ra.visible', 1)   // ToDo: Events koennen noch nicht mit visible abgefragt werden
-            ->get();
-
-        // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
-        $eventId=0;
-        foreach($events as $event) {
-            $eventId=$event->event_id;
-        }
+        $event = $this->getCurrentEvent();
+        $eventId = $event?->id ?? 0;
+        $eventTitle = $event?->ueberschrift ?? '';
 
         $teamFilter = session('team_filter');
         $teamFilterActive = session('team_filter_active', true);
@@ -119,7 +111,7 @@ class ProgramController extends Controller
                     ->orWhere('status', '4');
             })
             ->where(function($query) {
-                $query->where('veroeffentlichungUhrzeit', '<', Carbon::now()->toTimeString())
+                 $query->where('veroeffentlichungUhrzeit', '<', Carbon::now()->toTimeString())
                     ->orWhere('rennDatum', '<', Carbon::now()->toDateString());
             })
             ->orderby('rennDatum' , 'desc')
@@ -136,7 +128,7 @@ class ProgramController extends Controller
             [
                 'races'        => $races,
                 'ueberschrift' => 'Ergebnisse der Rennen',
-                'event'        => $events->first()->ueberschrift,
+                'event'        => $eventTitle,
                 'teamFilter'   => $teamFilter ? RegattaTeam::find($teamFilter) : null,
                 'teamFilterActive' => $teamFilterActive
             ]);
@@ -176,14 +168,9 @@ class ProgramController extends Controller
 
     public function laneOccupancy($raceId)
     {
-        $events = $this->getCurrentEventsQuery()
-            ->where('ra.visible', 1)
-            ->get();
-
-        $eventId=0;
-        foreach($events as $event) {
-            $eventId=$event->event_id;
-        }
+        $event = $this->getCurrentEvent();
+        $eventId = $event?->id ?? 0;
+        $eventTitle = $event?->ueberschrift ?? '';
 
         $race = Race::find($raceId);
 
@@ -267,21 +254,16 @@ class ProgramController extends Controller
                 'previousRace' => $previousRace,
                 'nextRace'     => $nextRace,
                 'ueberschrift' => 'Bahnbelegung',
-                'eventname'    => $events->first()->ueberschrift,
+                'eventname'    => $eventTitle,
                 'teamFilter'   => session('team_filter') ? RegattaTeam::find(session('team_filter')) : null
             ]);
     }
 
     public function result($raceId)
     {
-        $events = $this->getCurrentEventsQuery()
-            ->where('ra.visible', 1)
-            ->get();
-
-        $eventId=0;
-        foreach($events as $event) {
-            $eventId=$event->event_id;
-        }
+        $event = $this->getCurrentEvent();
+        $eventId = $event?->id ?? 0;
+        $eventTitle = $event?->ueberschrift ?? '';
 
         $race = Race::find($raceId);
 
@@ -371,7 +353,7 @@ class ProgramController extends Controller
                 'nextRace'       => $nextRace,
                 'lanes'             => $lanes,
                 'ueberschrift'  => 'Bahnbelegung',
-                'eventname'    => $events->first()->ueberschrift,
+                'eventname'    => $eventTitle,
                 'teamFilter'      => session('team_filter') ? RegattaTeam::find(session('team_filter')) : null
             ]);
     }
@@ -379,12 +361,8 @@ class ProgramController extends Controller
     // Neue Seite zur Auswahl der Mannschaft als Filter
     public function selectTeamFilter()
     {
-        $events = $this->getCurrentEventsQuery()->get();
-
-        $eventId = 0;
-        foreach($events as $event) {
-           $eventId        = $event->event_id;
-        }
+        $event = $this->getCurrentEvent();
+        $eventId = $event?->id ?? 0;
 
         // Nur Teams, die in Rennen des aktuellen Events gemeldet sind
         $teams = RegattaTeam::where('regatta_id', $eventId)
@@ -531,17 +509,10 @@ class ProgramController extends Controller
     }
 
     /**
-     * Gibt die aktuelle Event-Query zurück.
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * Gibt das aktuelle Regatta-Event zurück.
      */
-    private function getCurrentEventsQuery()
+    private function getCurrentEvent(): ?Event
     {
-        return Event::join('races as ra', 'events.id', '=', 'ra.event_id')
-            ->where('ra..status' , '>',1)
-            ->where('events.regatta', '1')
-            ->where('events.verwendung', 0)
-            ->orderby('events.datumvon', 'desc')
-            ->limit(1);
+        return $this->eventSelectionService->getNextRegattaEventWithAnmeldetext(14);
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
 use App\Models\RegattaTeam;
 use App\Models\Race;
 use App\Models\Tabele;
 use App\Models\RegattaInformation;
 use App\Models\SportSection;
 use App\Models\Lane;
+use App\Services\EventSelectionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +18,12 @@ class PresentationController extends Controller
 {
     protected $regattaStarted = false;
     protected $event = null;
+    private EventSelectionService $eventSelectionService;
+
+    public function __construct(EventSelectionService $eventSelectionService)
+    {
+        $this->eventSelectionService = $eventSelectionService;
+    }
 
     private function initEventAndRegattaStarted()
     {
@@ -52,15 +58,8 @@ class PresentationController extends Controller
 
         // Hintergrundbild initialisieren
         if (!Session::has('presentation_background_image')) {
-            $serverdomain = parse_url(url('/'), PHP_URL_HOST);
-            $serverdomain = str_replace('www.', '', $serverdomain);
-
             $backgroundImage = null;
-            $eventGroupHeader = DB::table('event_groups')
-                ->where('liveDomain', $serverdomain)
-                ->where('visible', 1)
-                ->orderby('id', 'desc')
-                ->first();
+            $eventGroupHeader = app(\App\Services\EventSelectionService::class)->getCurrentEventGroupHeader();
 
             if ($eventGroupHeader && $eventGroupHeader->headerBild) {
                 $backgroundImage = env('VEREIN_URL')."/storage/groupEventHeader/". $eventGroupHeader->headerBild;
@@ -83,7 +82,7 @@ class PresentationController extends Controller
     private function ermittleRegattaStarted()
     {
         if ($this->event) {
-            $eventId = $this->event->event_id;
+            $eventId = $this->event->id;
             $started = Race::where('event_id', $eventId)
                 ->where('status', '>', 3)
                 ->exists();
@@ -109,13 +108,7 @@ class PresentationController extends Controller
 
     private function getCurrentEvent()
     {
-        $event = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-            ->where('events.regatta' , '1')
-            ->where('events.verwendung' , 0)
-            ->orderby('events.datumvon' , 'desc')
-            ->first();
-
-        return $event;
+        return $this->eventSelectionService->getNextRegattaEventWithAnmeldetext(14);
     }
 
     /**
@@ -127,7 +120,7 @@ class PresentationController extends Controller
     private function checkForNewRaceResult()
     {
         if (!$this->event) return null;
-        $eventId = $this->event->event_id;
+        $eventId = $this->event->id;
 
         // Hole das zuletzt angezeigte Ergebnis-Datum und -Uhrzeit aus der Session
         $lastDatum = session('lastShownResultRennDatum', null);
@@ -193,7 +186,7 @@ class PresentationController extends Controller
     private function checkAndRedirectLiveStream()
     {
         $event = $this->event;
-        $raceWithLiveStream = Race::where('event_id', $event?->event_id)
+        $raceWithLiveStream = Race::where('event_id', $event?->id)
             ->where('liveStream', 1)
             ->orderBy('rennDatum')
             ->orderBy('rennUhrzeit')
@@ -232,7 +225,7 @@ class PresentationController extends Controller
             return $redirect;
         }
 
-        $eventId = $event->event_id;
+        $eventId = $event->id;
 
         // Teams nach Wertungsgruppen sortieren
         $teams = RegattaTeam::where('regatta_id', $eventId)
@@ -312,7 +305,7 @@ class PresentationController extends Controller
             return $redirect;
         }
 
-        $eventId = $event->event_id;
+        $eventId = $event->id;
 
         $newResult = $this->checkForNewRaceResult();
         if ($newResult) {
@@ -428,7 +421,7 @@ class PresentationController extends Controller
     {
         $this->initEventAndRegattaStarted();
         $event = $this->event;
-        $eventId = $event->event_id;
+        $eventId = $event->id;
 
         // Prüfung auf neues Ergebnis und ggf. Redirect
         $newResult = $this->checkForNewRaceResult();
@@ -483,7 +476,7 @@ class PresentationController extends Controller
         }
 
         $now = now();
-        $eventId = $event?->event_id;
+        $eventId = $event?->id;
 
         $nextRace = Race::where('event_id', $eventId)
             ->where('rennDatum', $now->format('Y-m-d'))
@@ -573,7 +566,7 @@ class PresentationController extends Controller
         $event = $this->event;
 
         // 1. Suche aktuelles Rennen mit Livestream
-        $raceWithLiveStream = Race::where('event_id', $event->event_id)
+        $raceWithLiveStream = Race::where('event_id', $event->id)
             ->where('liveStream', 1)
             ->orderBy('rennDatum')
             ->orderBy('rennUhrzeit')
@@ -581,7 +574,7 @@ class PresentationController extends Controller
 
         // 2. Falls nicht gefunden, suche das nächstältere Rennen mit liveStreamURL
         if (!$raceWithLiveStream || empty($raceWithLiveStream->liveStreamURL)) {
-            $raceWithLiveStream = Race::where('event_id', $event->event_id)
+            $raceWithLiveStream = Race::where('event_id', $event->id)
                 ->whereNotNull('liveStreamURL')
                 ->where('liveStreamURL', '!=', '')
                 ->orderBy('rennDatum')
@@ -612,7 +605,7 @@ class PresentationController extends Controller
             return $redirect;
         }
 
-        $eventId = $event->event_id;
+        $eventId = $event->id;
 
         // Lade Tabellen mit Tabellendaten und Team
         $now = now();
@@ -665,7 +658,7 @@ class PresentationController extends Controller
             return $redirect;
         }
 
-        $eventId = $event->event_id;
+        $eventId = $event->id;
 
         // Prüfen, ob bereits ein Ergebnis existiert (status > 2)
         $hasResults = Race::where('event_id', $eventId)
@@ -789,7 +782,7 @@ class PresentationController extends Controller
             return $redirect;
         }
 
-        $eventId = $event?->event_id;
+        $eventId = $event?->id;
 
         $now = now();
         $infos = RegattaInformation::where('visible', 1)
@@ -912,7 +905,7 @@ class PresentationController extends Controller
         $this->initEventAndRegattaStarted();
         $event = $this->event;
 
-        $active = Race::where('event_id', $event?->event_id)
+        $active = Race::where('event_id', $event?->id)
             ->where('liveStream', 1)
             ->exists();
 

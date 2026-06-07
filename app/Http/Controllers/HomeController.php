@@ -7,14 +7,21 @@ use App\Models\board;
 use App\Models\RegattaInformation;
 use App\Models\Report;
 use App\Models\SportSection;
-use App\Models\Event;
 use App\Models\Race;
 use App\Models\instruction;
 use App\Models\Document;
+use App\Services\EventSelectionService;
 use Illuminate\Support\Carbon;
 
 class HomeController extends Controller
 {
+    private EventSelectionService $eventSelectionService;
+
+    public function __construct(EventSelectionService $eventSelectionService)
+    {
+        $this->eventSelectionService = $eventSelectionService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,21 +29,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $events = Event::join('races as ra' , 'events.id' , '=' , 'ra.event_id')
-            ->where('ra..status' , '>',1)
-            ->where('events.regatta' , '1')
-            ->where('events.verwendung' , 0)
-            ->orderby('events.datumvon' , 'desc')
-            ->limit(1)
-            ->get();
+        $selectedEvent = $this->eventSelectionService->getNextRegattaEventWithAnmeldetext(14);
+        $hasTable = $this->eventSelectionService->currentEventHasVisibleTables(14);
+        $events = $selectedEvent ? collect([$selectedEvent]) : collect();
 
         $eventId = 0;
         $sportSectionId = 0;
 
-        // Es wird $event->event_id verwendet weil die id in events und races vorhanden ist und events->id mit races->id überschrieben
-        foreach($events as $event) {
-            $sportSectionId = $event->sportSection_id;
-            $eventId        = $event->event_id;
+        if ($selectedEvent) {
+            $sportSectionId = $selectedEvent->sportSection_id;
+            $eventId = $selectedEvent->id;
         }
 
         $temp=0;
@@ -126,7 +128,8 @@ class HomeController extends Controller
                 'raceProgrammCount'       => $raceProgrammCount,
                 'raceResoultCount'           => $raceResoultCount,
                 'eventDokumentes'          => $eventDokumentes,
-                'regattaInformations'        => $regattaInformations
+                'regattaInformations'        => $regattaInformations,
+                'hasTable'                   => $hasTable,
             ]
         );
     }

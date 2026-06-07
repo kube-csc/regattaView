@@ -8,17 +8,21 @@ use App\Models\Pointsystem;
 use App\Http\Requests\StoreTabeleRequest;
 use App\Http\Requests\UpdateTabeleRequest;
 use App\Models\Tabledata;
+use App\Services\EventSelectionService;
 use Illuminate\Support\Carbon;
 
 class TabeleController extends Controller
 {
-    public function __construct()
+    private EventSelectionService $eventSelectionService;
+
+    public function __construct(EventSelectionService $eventSelectionService)
     {
+        $this->eventSelectionService = $eventSelectionService;
         $currentDateTime = Carbon::now();
         $this->currentDate = $currentDateTime->toDateString();
         $this->currentTime = $currentDateTime->toTimeString();
         //Temp: Testdaten
-        //$this->currentDate = "2023-08-26"; // For testing purposes, set a fixed date
+        //$this->currentDate = "2026-06-07"; // For testing purposes, set a fixed date
         //$this->currentTime = "20:30:00"; // For testing purposes, set a fixed time
     }
 
@@ -29,21 +33,17 @@ class TabeleController extends Controller
      */
     public function index()
     {
-        $events = $this->getCurrentEventsQuery()->get();
-
-        // Es wird $event->event_id verwendet weil die id in events und races vorhanden wird und events->id mit races->id überschrieben
-        $eventId=0;
-        foreach($events as $event) {
-            $eventId=$event->event_id;
-        }
+        $event = $this->getCurrentEvent();
+        $eventId = $event?->id ?? 0;
+        $eventTitle = $event?->ueberschrift ?? '';
 
         $tabeles = Tabele::where('event_id', $eventId)
             ->where('tabelleVisible', 1)
             ->where('wertungsart', '!=', 3) // Wertungsart 3 = Lauf
-//            ->where(function($query) {
-//                $query->where('finaleAnzeigen', '<', Carbon::now()->toTimeString())
-//                    ->orWhere('tabelleDatumVon', '<', Carbon::now()->toDateString());
-//            })
+            ->where(function($query) {
+                $query->where('finaleAnzeigen', '<', Carbon::now()->toTimeString())
+                    ->orWhere('tabelleDatumVon', '<', Carbon::now()->toDateString());
+            })
             ->where(function($query) {
                 $query->where([
                     ['finaleAnzeigen', '<', $this->currentTime],
@@ -60,27 +60,24 @@ class TabeleController extends Controller
             ->orderby('tabelleLevelVon')
             ->get();
 
+        if ($tabeles->count() === 1) {
+            return redirect()->route('table.show', ['tableId' => $tabeles->first()->id]);
+        }
+
         return view('table.index')->with(
             [
                 'tabeles'      => $tabeles,
                 'ueberschrift' => 'Tabellen',
-                'eventname'    => $events->first()->ueberschrift,
+                'eventname'    => $eventTitle,
             ]);
     }
 
     /**
-     * Gibt die aktuelle Event-Query zurück.
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * Gibt das aktuelle Regatta-Event zurück.
      */
-    private function getCurrentEventsQuery()
+    private function getCurrentEvent(): ?Event
     {
-        return Event::join('races as ra', 'events.id', '=', 'ra.event_id')
-            ->where('ra..status' , '>',1)
-            ->where('events.regatta', '1')
-            ->where('events.verwendung', 0)
-            ->orderby('events.datumvon', 'desc')
-            ->limit(1);
+        return $this->eventSelectionService->getNextRegattaEventWithAnmeldetext(14);
     }
 
     /**
