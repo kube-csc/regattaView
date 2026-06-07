@@ -1,10 +1,35 @@
 <h1>Präsentation von Regatten</h1>
-<p>Version: V00.14.02</p>
+<p>Version: V00.14.03</p>
 <p>
 Eingesetzt z.B. für die Rennsport- und Drachenbootregatta eines Kanu-Vereins
 </p>
 
 <a href="https://live.kel-datteln.de">Beispiel einer Regatta</a>
+
+<h3>Automatische Event-Auswahl</h3>
+<p>
+Die Anwendung zeigt automatisch das passende Regatta-Event an.
+Als Benutzer müssen Sie kein Event manuell umschalten.
+</p>
+
+<h4>Was muss in der Vereinsverwaltung gepflegt sein?</h4>
+<ul>
+  <li>Für die gewünschte Domain muss eine passende Eventgruppe hinterlegt und sichtbar sein.</li>
+  <li>Das Event muss als aktives Regatta-Event angelegt sein.</li>
+  <li>Start- und Enddatum des Events müssen korrekt gepflegt sein.</li>
+  <li>Der Anmeldetext sollte gepflegt sein, damit das Event korrekt berücksichtigt wird.</li>
+</ul>
+
+<h4>Wie wird das aktuelle Event gefunden?</h4>
+<ol>
+  <li>Wenn gerade ein Event läuft, wird dieses angezeigt.</li>
+  <li>Wenn kein Event läuft, wird das zuletzt gestartete passende Event verwendet.</li>
+  <li>Beginnt das nächste Event in weniger als 14 Tagen, wechselt die Anzeige automatisch auf dieses Event.</li>
+  <li>Gibt es kein aktuelles oder kommendes Event, wird als Fallback das zuletzt beendete Event angezeigt.</li>
+</ol>
+<p>
+Hinweis: Änderungen in der Vereinsverwaltung werden in der Regel innerhalb von bis zu 10 Minuten sichtbar.
+</p>
 
 <h2>Installierte Programme</h2>
 <ul>
@@ -78,17 +103,17 @@ Dort werden die benötigten Angaben in einem Formular eingegeben – es sind kei
 Technische Details und Einrichtungshinweise sind in der Datei <code>resources/views/layouts/headerPrompt.md</code> dokumentiert.
 </p>
 
-<h2>Live Einblendung z.B. OBS</h2>
+<h2>Live Einblendung z.B. OBS – Bauchbinde</h2>
 <p>
-Es gibt URL's für sie Einblendung für aktuelle Renninformationen. Diesen können z.B. in OBS eingebunden werden.
-Es wird immer die aktuellen Daten eingetragen, wenn das Ergebnis zeitgleich mit den aktullen Rennen erfolgt.
-Alternativ kann ein Rennen auch als aktuell in der Regattaverwaltung angepint werden.
+Es gibt URLs für die Einblendung aktueller Renninformationen. Diese können z.B. in OBS als Browser-Quelle eingebunden werden.
+Es werden immer die aktuellen Daten angezeigt. Alternativ kann ein Rennen in der Regattaverwaltung manuell als aktuell angepinnt werden.
 </p>
 <ul>
-    <li>http://[Domain]/OBSLive/Ergebniss</li>
-    <li>http://[Domain]/OBSLive/Ergebnissall</li>
-    <li>http://[Domain]/OBSLive/Bahnbelegung</li>
-    <li>http://[Domain]/OBSLive/Naechstesrennen</li>
+    <li><code>http://[Domain]/OBSLive/Bahnbelegung</code> - Aktuelle Bahnbelegung</li>
+    <li><code>http://[Domain]/OBSLive/Bauchbinde</code> - Bauchbinde: Einblendung des aktuell laufenden Rennens (Lower Third)</li>
+    <li><code>http://[Domain]/OBSLive/Aktuellesrennen</code> - Detailansicht des aktuell laufenden Rennens</li>
+    <li><code>http://[Domain]/OBSLive/Ergebniss</code> - Aktuelles Ergebnis</li>
+    <li><code>http://[Domain]/OBSLive/ErgebnisseUnveroeffentlicht</code> -Ergebnisse auch wenn diese noch nicht veröffentlicht werden sollen</li>
 </ul>
 
 <h2>Team-Steckbrief</h2>

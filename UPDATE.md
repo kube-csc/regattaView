@@ -1,4 +1,26 @@
 ## Update Anleitung
+**Version V00.14.03**
+
+## OBSLive – (Refactoring)
+- Die OBS-Ansicht für die Live-Einblendung wurde fachlich korrekt benannt: `nextRace()` wurde in `bauchbinde()` umbenannt.
+- Route umbenannt von `obsLive.nextRace` auf `obsLive.bauchbinde`.
+- View umbenannt von `obsLive/nextRace.blade.php` auf `obsLive/bauchbinde.blade.php`.
+- URL geändert: `/OBSLive/Naechstesrennen` -> `/OBSLive/Bauchbinde`.
+- URL geändert: `/OBSLive/Ergebnissall` -> `/OBSLive/ErgebnisseUnveroeffentlicht`.
+
+## Event-Auswahl (Neu)
+- Die Ermittlung des aktuellen Events erfolgt zentral über den `EventSelectionService`.
+- Die App reagiert auf die Domain-Zuordnung der Eventgruppe (`event_groups.liveDomain`) und berücksichtigt nur passende sichtbare Gruppen/Events.
+- 14-Tage-Vorschau: Die Auswahl wechselt automatisch zum nächsten Event, wenn dieses in weniger als 14 Tagen beginnt.
+- Priorität der Auswahl: laufendes Event -> letztes gestartetes Event -> nächstes kommendes Event -> zuletzt abgelaufenes Event (Fallback).
+- Die Auswahl wird gecacht (10 Minuten), um die Datenbanklast zu reduzieren.
+
+## Installation
+- Keine Datenbankänderungen erforderlich.
+- Bei aktiviertem Cache nach Änderungen ausführen: `php artisan config:clear` und `php artisan route:clear`.
+
+---
+
 **Version V00.14.02**
 ## Presentation
 - Ergebnisse und Bahnbelegung werden nun konsequent nach `rennDatum` und `rennUhrzeit` sortiert.
