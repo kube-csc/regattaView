@@ -21,51 +21,33 @@ class OBSLiveController extends Controller
     {
         $eventId = $this->eventId();
 
-        $races = Race::where('event_id', $eventId)
+        $race = Race::where('event_id', $eventId)
             ->where('visible', 1)
             ->where('status', 4)
-            ->orderBy('aktuellLiveVideo' , 'desc')
+            ->orderBy('aktuellLiveVideo' , 'asc')
             ->orderBy('rennDatum')
             ->orderBy('rennUhrzeit', 'desc')
-            ->limit(1)
-            ->get();
+            ->first();
 
-        if ($races->count() == 1) {
-            foreach ($races as $race) {
-                $raceId = $race->id;
-            }
-            $race = Race::find($raceId);
-
-            $lanes = Lane::where('rennen_id', $raceId)
-                ->where('platz', '>', 0)
-                ->orderBy('platz')
-                ->get();
-
-            if (    $race->rennDatum < Carbon::now()->toDateString() ||
-                 (
-                    $race->rennDatum == Carbon::now()->toDateString() &&
-                    $race->veroeffentlichungUhrzeit < Carbon::now()->toTimeString()
-                 )
-               )
-            {
-                return view('obsLive.result')->with(
-                    [
-                        'race' => $race,
-                        'lanes' => $lanes,
-                        'victoCremony' => 0,
-                    ]);
-            }
-            else {
-                return view('obsLive.result')->with(
-                    [
-                        'race' => $race,
-                        'lanes' => $lanes,
-                        'victoCremony' => 1,
-                    ]);
-            }
+        if (!$race) {
+            return view('obsLive.emty');
         }
 
-        return view('obsLive.emty');
+        $lanes = Lane::where('rennen_id', $race->id)
+            ->where('platz', '>', 0)
+            ->orderBy('platz')
+            ->get();
+
+        $now = Carbon::now();
+        $releaseAt = Carbon::parse($race->rennDatum . ' ' . $race->veroeffentlichungUhrzeit);
+        $victoCremony = $now->lt($releaseAt) ? 1 : 0;
+
+        return view('obsLive.result')->with(
+            [
+                'race' => $race,
+                'lanes' => $lanes,
+                'victoCremony' => $victoCremony,
+            ]);
     }
 
     public function resultall()
@@ -75,30 +57,28 @@ class OBSLiveController extends Controller
         $race = Race::where('event_id', $eventId)
             ->where('visible', 1)
             ->where('status', 4)
-            ->orderBy('aktuellLiveVideo' , 'desc')
+            ->orderBy('aktuellLiveVideo' , 'asc')
             ->orderBy('rennDatum')
             ->orderBy('rennUhrzeit', 'desc')
-            //->limit(1)
-            //->get();
             ->first();
 
-        //if ($races->count() == 1) {
-        if ($race) {
-            $lanes = Lane::where('rennen_id', $race->id)
-                ->where('platz', '>', 0)
-                ->orderBy('platz')
-                ->get();
-
-            return view('obsLive.result')->with(
-                [
-                    'race' => $race,
-                    'lanes' => $lanes,
-                    'victoCremony' => 0,
-                ]);
+        if (!$race) {
+            return view('obsLive.emty');
         }
 
-        return view('obsLive.emty');
+        $lanes = Lane::where('rennen_id', $race->id)
+            ->where('platz', '>', 0)
+            ->orderBy('platz')
+            ->get();
+
+        return view('obsLive.result')->with(
+            [
+                'race' => $race,
+                'lanes' => $lanes,
+                'victoCremony' => 0,
+            ]);
     }
+
 
     public function laneOccupancy()
     {
@@ -138,7 +118,7 @@ class OBSLiveController extends Controller
         return view('obsLive.emty');
     }
 
-    public function nextRace()
+    public function bauchbinde()
     {
         $eventId = $this->eventId();
 
@@ -153,18 +133,11 @@ class OBSLiveController extends Controller
             ->orderBy('aktuellLiveVideo' , 'desc')
             ->orderBy('rennDatum')
             ->orderBy('rennUhrzeit')
-            //->limit(1)
             ->first();
 
-        //if ($races->count() == 1) {
         if ($race) {
-            ///foreach ($races as $race) {
-            ///    $raceId = $race->id;
-            ///}
-            ///$race = Race::find($raceId);
-            //$race = Race::find($race->id);
 
-            return view('obsLive.nextRace')->with(
+            return view('obsLive.bauchbinde')->with(
                 [
                     'race' => $race
                 ]);
@@ -180,15 +153,18 @@ class OBSLiveController extends Controller
 
         $race = Race::where('event_id', $eventId)
             ->where('visible', 1)
-            ->where('aktuellLiveVideo', 1)
+            ->where(function($query) {
+                $query->where('status', 2)
+                    ->orWhere(function($query) {
+                        $query->where('aktuellLiveVideo', 1);
+                    });
+            })
             ->orderBy('aktuellLiveVideo' , 'desc')
             ->orderBy('rennDatum')
             ->orderBy('rennUhrzeit')
             ->first();
 
         if ($race) {
-
-            //$race = Race::find($race->id);
 
             return view('obsLive.currentRace')->with(
                 [

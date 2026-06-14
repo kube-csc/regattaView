@@ -143,11 +143,12 @@ class EventSelectionService
             if ($allEvents->isEmpty()) {
                 // Kein aktuelles oder zukünftiges Event gefunden – letztes abgelaufenes Event anzeigen
                 $lastExpiredQuery = clone $baseQuery;
-                $lastExpired = $lastExpiredQuery
+                $lastExpiredQuery = $lastExpiredQuery
                     ->whereDate('events.datumbis', '<', $today)
                     ->orderByDesc('events.datumbis')
-                    ->orderByDesc('events.datumvon')
-                    ->first();
+                    ->orderByDesc('events.datumvon');
+
+                $lastExpired = $lastExpiredQuery->first();
 
                 return $lastExpired ?? null;
             }
@@ -203,7 +204,7 @@ class EventSelectionService
 
         $cacheKey = sprintf('events:%d:has_visible_tables', $event->id);
 
-        return Cache::remember($cacheKey, now()->addMinutes(20), function () use ($event) {
+        return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($event) {
             return Tabele::where('event_id', $event->id)
                 ->where('tabelleVisible', 1)
                 ->exists();
