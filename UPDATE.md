@@ -2,9 +2,6 @@
 **Version V00.14.03**
 
 ## OBSLive – (Refactoring)
-- Die OBS-Ansicht für die Live-Einblendung wurde fachlich korrekt benannt: `nextRace()` wurde in `bauchbinde()` umbenannt.
-- Route umbenannt von `obsLive.nextRace` auf `obsLive.bauchbinde`.
-- View umbenannt von `obsLive/nextRace.blade.php` auf `obsLive/bauchbinde.blade.php`.
 - URL geändert: `/OBSLive/Naechstesrennen` -> `/OBSLive/Bauchbinde`.
 - URL geändert: `/OBSLive/Ergebnissall` -> `/OBSLive/ErgebnisseUnveroeffentlicht`.
 
@@ -17,7 +14,9 @@
 
 ## Installation
 - Keine Datenbankänderungen erforderlich.
+- Benötigt wird die Vereinsverwaltung mindestens in Version V00.10.07.
 - Bei aktiviertem Cache nach Änderungen ausführen: `php artisan config:clear` und `php artisan route:clear`.
+- Benötigt wird die Vereinsverwaltung mindestens in Version V00.10.05, um die Domain-Zuordnung der Eventgruppen zu nutzen.
 
 ---
 
@@ -42,6 +41,7 @@
 ## Lokale Overrides
 - `config/presentation.php` lädt optional `config/presentation_options.php`.
 - Lokale Werte werden per `array_replace_recursive(...)` über die Standardwerte gemerged.
+- Aus `config/presentation_options.example.php` muss zusätzlich `config/presentation_options.php` erstellt werden.
 - Neue Vorlage `config/presentation_options.example.php` mit allen verfügbaren Parametern (auskommentiert) hinzugefügt.
 - `config/presentation_options.php` ist in `.gitignore` eingetragen und wird bei `git pull` nicht überschrieben.
 

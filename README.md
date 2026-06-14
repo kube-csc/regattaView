@@ -6,13 +6,13 @@ Eingesetzt z.B. für die Rennsport- und Drachenbootregatta eines Kanu-Vereins
 
 <a href="https://live.kel-datteln.de">Beispiel einer Regatta</a>
 
-<h3>Automatische Event-Auswahl</h3>
+<h2>Automatische Event-Auswahl</h2>
 <p>
 Die Anwendung zeigt automatisch das passende Regatta-Event an.
 Als Benutzer müssen Sie kein Event manuell umschalten.
 </p>
 
-<h4>Was muss in der Vereinsverwaltung gepflegt sein?</h4>
+<h3>Was muss in der Vereinsverwaltung gepflegt sein?</h3>
 <ul>
   <li>Für die gewünschte Domain muss eine passende Eventgruppe hinterlegt und sichtbar sein.</li>
   <li>Das Event muss als aktives Regatta-Event angelegt sein.</li>
@@ -20,7 +20,7 @@ Als Benutzer müssen Sie kein Event manuell umschalten.
   <li>Der Anmeldetext sollte gepflegt sein, damit das Event korrekt berücksichtigt wird.</li>
 </ul>
 
-<h4>Wie wird das aktuelle Event gefunden?</h4>
+<h3>Wie wird das aktuelle Event gefunden?</h3>
 <ol>
   <li>Wenn gerade ein Event läuft, wird dieses angezeigt.</li>
   <li>Wenn kein Event läuft, wird das zuletzt gestartete passende Event verwendet.</li>
@@ -103,17 +103,17 @@ Dort werden die benötigten Angaben in einem Formular eingegeben – es sind kei
 Technische Details und Einrichtungshinweise sind in der Datei <code>resources/views/layouts/headerPrompt.md</code> dokumentiert.
 </p>
 
-<h2>Live Einblendung z.B. OBS – Bauchbinde</h2>
+<h2>Live Einblendung z.B. OBS</h2>
 <p>
 Es gibt URLs für die Einblendung aktueller Renninformationen. Diese können z.B. in OBS als Browser-Quelle eingebunden werden.
 Es werden immer die aktuellen Daten angezeigt. Alternativ kann ein Rennen in der Regattaverwaltung manuell als aktuell angepinnt werden.
 </p>
 <ul>
-    <li><code>http://[Domain]/OBSLive/Bahnbelegung</code> - Aktuelle Bahnbelegung</li>
-    <li><code>http://[Domain]/OBSLive/Bauchbinde</code> - Bauchbinde: Einblendung des aktuell laufenden Rennens (Lower Third)</li>
-    <li><code>http://[Domain]/OBSLive/Aktuellesrennen</code> - Detailansicht des aktuell laufenden Rennens</li>
-    <li><code>http://[Domain]/OBSLive/Ergebniss</code> - Aktuelles Ergebnis</li>
-    <li><code>http://[Domain]/OBSLive/ErgebnisseUnveroeffentlicht</code> -Ergebnisse auch wenn diese noch nicht veröffentlicht werden sollen</li>
+    <li><code>http://[Domain]/OBSLive/Bahnbelegung</code> – Aktuelle Bahnbelegung</li>
+    <li><code>http://[Domain]/OBSLive/Bauchbinde</code> – Bauchbinde: Einblendung des aktuell laufenden Rennens (Lower Third)</li>
+    <li><code>http://[Domain]/OBSLive/Aktuellesrennen</code> – Detailansicht des aktuell laufenden Rennens</li>
+    <li><code>http://[Domain]/OBSLive/Ergebniss</code> – Aktuelles Ergebnis</li>
+    <li><code>http://[Domain]/OBSLive/ErgebnisseUnveroeffentlicht</code> -Ergebnisse, auch wenn diese noch nicht veröffentlicht werden sollen</li>
 </ul>
 
 <h2>Team-Steckbrief</h2>
@@ -154,28 +154,6 @@ Diese Datei muss vorher aus <b>config/presentation_options.example.php</b> erste
 Zusätzlich gibt es in den Optionen u.a. den Schalter <code>show_background_image</code> (1 = aktiv, 0 = aus).
 </p>
 
-<h3>Update-sichere lokale Konfiguration der SlideShow</h3>
-<p>
-Damit lokale Anpassungen bei Updates nicht überschrieben werden, unterstützt die Anwendung eine lokale Override-Datei:
-</p>
-<ul>
-  <li>Zuerst <code>config/presentation_options.php</code> aus <code>config/presentation_options.example.php</code> erstellen.</li>
-  <li>Basiswerte liegen in <code>config/presentation.php</code>.</li>
-  <li>Anschließend nur die gewünschten lokalen Abweichungen in <code>config/presentation_options.php</code> setzen.</li>
-  <li>Die Datei <code>config/presentation_options.example.php</code> enthält alle verfügbaren Werte als auskommentierte Vorlage.</li>
-  <li>Beim Laden der Konfiguration werden lokale Werte rekursiv über <code>array_replace_recursive(...)</code> über die Basiswerte gelegt.</li>
-  <li><code>config/presentation_options.php</code> ist in <code>.gitignore</code> eingetragen und bleibt bei Updates erhalten.</li>
-</ul>
-<p>
-Empfehlung: <strong>Nur</strong> lokale Abweichungen in <code>config/presentation_options.php</code> pflegen und <code>config/presentation.php</code> als Update-Standard unverändert lassen.
-</p>
-
-<ul>
-  <li><strong>Entwicklung:</strong> Nach Änderungen an <code>config/presentation_options.php</code> <code>php artisan config:clear</code> ausführen.</li>
-  <li><strong>Produktion:</strong> Nach dem Clear zusätzlich <code>php artisan config:cache</code> ausführen.</li>
-  <li><strong>Hinweis:</strong> Ohne Refresh des Config-Caches werden Änderungen ggf. nicht sofort wirksam.</li>
-</ul>
-
 <ul>
   <li>Willkommensseite (Welcome)</li>
   <li>Informationsseite (Information)</li>
@@ -192,7 +170,7 @@ Empfehlung: <strong>Nur</strong> lokale Abweichungen in <code>config/presentatio
 <p>
 Für die Verwaltung der Regatta muss die APP Vereinsverwaltung installiert werden.
 <a href="https://github.com/kube-csc/vereinsverwaltung" target="_blank"></a>
-zum GitHub Projekt Vereinsverwaltung ab V00.10.05
+zum GitHub Projekt Vereinsverwaltung ab V00.10.07
 </p>
 
 <h2>Installation</h2>
@@ -209,10 +187,29 @@ zum GitHub Projekt Vereinsverwaltung ab V00.10.05
    </ul>
 </ul>
 
+<h3>Konfiguration der SlideShow</h3>
+<p>
+Sie können die SlideShow lokal anpassen, ohne dass Ihre Einstellungen bei einem Update verloren gehen. Dafür gibt es eine eigene Datei für lokale Einstellungen.
+</p>
+
+<h4>Für Anwender</h4>
+<ul>
+  <li>Einmalig <code>config/presentation_options.php</code> aus <code>config/presentation_options.example.php</code> erstellen.</li>
+  <li>Nur gewünschte Werte in <code>config/presentation_options.php</code> anpassen (z.B. Anzeigezeiten oder Seitenlimits).</li>
+  <li><code>config/presentation.php</code> nicht direkt bearbeiten, damit Updates einfacher bleiben.</li>
+  <li>Nach einer Änderung <code>php artisan config:clear</code> ausführen.</li>
+  <li>In produktiven Umgebungen danach zusätzlich <code>php artisan config:cache</code> ausführen.</li>
+</ul>
+<p>
+Hinweis: Ohne Refresh des Config-Caches werden Änderungen ggf. nicht sofort wirksam.
+</p>
+
 <h2>Update</h2>
 <ul>
    <li>git pull origin main</li>
+   <li>Bitte die Anweisungen in <code>UPDATE.md</code> beachten.</li>
 </ul>
+
 <h2>Zugehörige Projekte</h2>
 <h3>Regatta Management</h3>  
 <p>
